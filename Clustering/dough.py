@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
-import os, time
+import os
+import time
 import datetime
-import pickle, gzip
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib as mpl
 from sklearn import preprocessing as pp
+from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 now = datetime.datetime.now()
@@ -80,13 +81,17 @@ def slice_data(raw_data, part=''):
     return raw_data_s
 
 
-def pca_calc_variance_ratio(pca, num):
-    ipc = pd.DataFrame(pca.explained_variance_ratio_).T
+def pca_calc_variance_ratio(raw_data, num, file_suffix=''):
+    pca = PCA()
+    sol = pca.fit(raw_data.to_numpy())
+    ipc = pd.DataFrame(sol.explained_variance_ratio_).T
     evr = []
     for i in range(1, num, 1):
         evr.append(ipc.loc[:, 0:i].sum(axis=1).values[0])
     evr = pd.DataFrame(evr).transpose()
-    evr.to_csv("variance_ratio.csv", encoding='ANSI')
+    if file_suffix != '':
+        file_path = "pca_variance_ratio_" + file_suffix + ".csv"
+        evr.to_csv(file_path, encoding='ANSI')
     return evr
 
 
@@ -107,3 +112,30 @@ def get_kmeans_cluster_num(raw_data, max_num=25, file_suffix=''):
     if file_suffix != '':
         pd.DataFrame(kmeans_inertia).T.to_csv(file_name, encoding='ANSI')
     return cluster_num
+
+
+def get_pca_vec(raw_data, vec_num=3, file_suffix=''):
+    pca = PCA()
+    train_pca = pca.fit(raw_data.to_numpy())
+    sol_pca = pd.DataFrame(train_pca.components_)
+    if file_suffix != '':
+        file_path = 'pca_' + file_suffix + '.csv'
+        sol_pca.to_csv(file_path, encoding='ANSI')
+    sol_pca.drop(sol_pca.index[4:], inplace=True, axis=0)
+    sol_pca_sign = sol_pca.apply(lambda x: x / abs(x)).T
+    sol_pca_sign = sol_pca_sign.add_prefix('s')
+    sol_pca_abs = abs(sol_pca).T.add_prefix('a')
+    sol_pca_cb = pd.concat([sol_pca_abs, sol_pca_sign], axis=1)
+    re_cb = []
+    for i in range(vec_num):
+        a_str = 'a' + str(i)
+        s_str = 's' + str(i)
+        re_cb.append(sol_pca_cb[[a_str, s_str]].sort_values(by=sol_pca_cb.columns[i], ascending=False))
+    result = pd.concat([pd.DataFrame(re_cb[0].index) + 1, pd.DataFrame(re_cb[0]['s0'].to_numpy())], axis=1)
+    for i in range(1, vec_num):
+        s_str = 's' + str(i)
+        result = pd.concat([result, pd.DataFrame(re_cb[i].index) + 1, pd.DataFrame(re_cb[i][s_str].to_numpy())], axis=1)
+    if file_suffix != '':
+        file_path = 'pca_' + file_suffix + '_result.csv'
+        result.to_csv(file_path, encoding='ANSI')
+    return result

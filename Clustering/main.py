@@ -29,39 +29,12 @@ raw_data_gc = dh.slice_data(raw_data, part='c')
 
 
 # pca
-pca_a = PCA()
-pca_b = PCA()
-pca_c = PCA()
+dh.get_pca_vec(raw_data_ga, vec_num=4, file_suffix='a')
+dh.get_pca_vec(raw_data_gb, vec_num=4, file_suffix='b')
+dh.get_pca_vec(raw_data_gc, vec_num=4, file_suffix='c')
 
-train_PCA_GA = pca_a.fit(raw_data_ga.to_numpy())
-pf_a = pd.DataFrame(train_PCA_GA.components_)
-pf_a.to_csv('pca_a.csv', encoding='ANSI')
-pf_a.drop(pf_a.index[4:], inplace=True, axis=0)
-pf_a_sign = pf_a.apply(lambda x: x/abs(x)).T
-pf_a_sign = pf_a_sign.add_prefix('s')
-
-pf_a_abs = abs(pf_a).T.add_prefix('a')
-pf_a_abs = pd.concat([pf_a_abs, pf_a_sign], axis=1)
-
-re_a0 = pf_a_abs[['a0', 's0']].sort_values(by=pf_a_abs.columns[0], ascending=False)
-print(re_a0)
-re_a1 = pf_a_abs[['a1', 's1']].sort_values(by=pf_a_abs.columns[1], ascending=False)
-re_a2 = pf_a_abs[['a2', 's2']].sort_values(by=pf_a_abs.columns[2], ascending=False)
-re_a3 = pf_a_abs[['a3', 's3']].sort_values(by=pf_a_abs.columns[3], ascending=False)
-re_a = pd.concat([pd.DataFrame(re_a0.index)+1, pd.DataFrame(re_a0['s0'].to_numpy()),
-                  pd.DataFrame(re_a1.index)+1, pd.DataFrame(re_a1['s1'].to_numpy()),
-                  pd.DataFrame(re_a2.index)+1, pd.DataFrame(re_a2['s2'].to_numpy()),
-                  pd.DataFrame(re_a3.index)+1, pd.DataFrame(re_a3['s3'].to_numpy())], axis=1, ignore_index=False)
-re_a.to_csv('pca_a_result.csv', encoding='ANSI')
-
-train_PCA_GB = pca_b.fit(raw_data_gb.to_numpy())
-pf_b = pd.DataFrame(train_PCA_GB.components_)
-pf_b.to_csv('pca_b.csv', encoding='ANSI')
-
-train_PCA_GC = pca_c.fit(raw_data_gc.to_numpy())
-pf_c = pd.DataFrame(train_PCA_GC.components_)
-pf_c.to_csv('pca_c.csv', encoding='ANSI')
-
+dh.pca_calc_variance_ratio(raw_data_gb, 10, file_suffix='b')
+dh.pca_calc_variance_ratio(raw_data_gc, 10, file_suffix='c')
 
 # determining kmeans cluster number
 """
