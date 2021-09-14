@@ -9,14 +9,14 @@ import matplotlib as mpl
 from sklearn import preprocessing as pp
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import precision_recall_curve, average_precision_score
-from sklearn.metrics import roc_curve, auc, roc_auc_score
 now = datetime.datetime.now()
 color = sns.color_palette()
-kmeans_elbow_threshold = 0.90
+kmeans_elbow_threshold = 0.80
 
 
 def preprocessing_csv(file_path):
+    # get csv from file_path(=String) and return raw_data(=pd.DataFrame)
+    # preprocess given csv file to readable csv
     new_file_path = 'user_data.csv'
     header_size = 48
     # all : 103
@@ -41,19 +41,43 @@ def preprocessing_csv(file_path):
     return raw_data
 
 
-def preprocessing_data(raw_data, norm=0):
+def preprocessing_data(raw_data, norm=False):
+    # get raw_data(=pd.DataFrame) and return normalized data(=pd.DataFrame)
     # delete wrong birth, replace gender(0:1 = female:male)
     # normalize method based on norm (0: -4, 1: mean)
     str_expr = "(birth > 1900) and (birth < " + str(now.year) + ")"
     data = raw_data.query(str_expr).replace('여', 0).replace('남', 1)
     data['birth'] = data['birth'].apply(lambda x: now.year - x + 1)
     data = data.rename(columns={"birth": "age"})
-    if norm == 0:  # normalize to -3 ~ 3
-        data = data - 4
-        age_sc = data['age'].max() - data['age'].min()
-        data['age'] = data['age'].apply(lambda x: ((x + 4) / age_sc - 1) * 6)
-        data['gender'] = data['gender'].apply(lambda x: (x + 3.5) * 6)
+    age_min = data['age'].min()
+    age_sc = data['age'].max() - data['age'].min()
+    data['age'] = data['age'].apply(lambda x: ((x - age_min) / age_sc) * 6 + 1)
+    data['gender'] = data['gender'].apply(lambda x: x * 6 + 1)
+    data = data - 4
+    if norm:  # normalize to 0 mean
+        mean_series = data.iloc[:, 2:].mean(axis=1)
+        for i in range(data.shape[0]):
+            data.iloc[i, 2:] = data.iloc[i, 2:] - mean_series.iloc[i]
     return data
+
+
+def slice_data(raw_data, part=''):
+    # get raw_data(=pd.DataFrame) and return raw_data_s(=pd.DataFrame)
+    # slice given data based on part
+    # all : 103
+    # non-parametric : 9 ['ID', 's_data', 'f_date', 'region', 'O1', 'O2', 'O3', 'phone_num', 'prize_per']
+    # parametric : 94 (2 - 55 - 29 - 8) = 0~1, 2~56, 57~85, 86~93
+    if part == 'a':
+        raw_data_s = raw_data.drop(raw_data.columns[0:2], axis=1)
+        raw_data_s = raw_data_s.drop(raw_data.columns[57:94], axis=1)
+    elif part == 'b':
+        raw_data_s = raw_data.drop(raw_data.columns[0:57], axis=1)
+        raw_data_s = raw_data_s.drop(raw_data.columns[86:94], axis=1)
+    elif part == 'c':
+        raw_data_s = raw_data.drop(raw_data.columns[0:86], axis=1)
+    else:
+        raw_data_s = None
+    return raw_data_s
 
 
 def pca_calc_variance_ratio(pca, num):
