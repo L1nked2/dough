@@ -81,12 +81,12 @@ def slice_data(raw_data, part=''):
     return raw_data_s
 
 
-def pca_calc_variance_ratio(raw_data, num, file_suffix=''):
+def get_pca_variance_ratio(raw_data, max_num=10, file_suffix=''):
     pca = PCA()
     sol = pca.fit(raw_data.to_numpy())
     ipc = pd.DataFrame(sol.explained_variance_ratio_).T
     evr = []
-    for i in range(1, num, 1):
+    for i in range(1, max_num, 1):
         evr.append(ipc.loc[:, 0:i].sum(axis=1).values[0])
     evr = pd.DataFrame(evr).transpose()
     if file_suffix != '':
@@ -136,6 +136,15 @@ def get_pca_vec(raw_data, vec_num=3, file_suffix=''):
         s_str = 's' + str(i)
         result = pd.concat([result, pd.DataFrame(re_cb[i].index) + 1, pd.DataFrame(re_cb[i][s_str].to_numpy())], axis=1)
     if file_suffix != '':
-        file_path = 'pca_' + file_suffix + '_result.csv'
-        result.to_csv(file_path, encoding='ANSI')
+        file_path_re = 'pca_' + file_suffix + '_result.csv'
+        result.to_csv(file_path_re, encoding='ANSI')
     return result
+
+
+def get_pca_transform(raw_data, n_components=0.99, file_suffix=''):
+    pca = PCA(n_components=n_components)
+    data_reduction = pd.DataFrame(pca.fit_transform(raw_data.to_numpy()))
+    if file_suffix != '':
+        file_path = 'pca_' + file_suffix + '_dim_reduction.csv'
+        data_reduction.to_csv(file_path, encoding='ANSI')
+    return data_reduction

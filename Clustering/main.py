@@ -32,9 +32,12 @@ raw_data_gc = dh.slice_data(raw_data, part='c')
 dh.get_pca_vec(raw_data_ga, vec_num=4, file_suffix='a')
 dh.get_pca_vec(raw_data_gb, vec_num=4, file_suffix='b')
 dh.get_pca_vec(raw_data_gc, vec_num=4, file_suffix='c')
-
-dh.pca_calc_variance_ratio(raw_data_gb, 10, file_suffix='b')
-dh.pca_calc_variance_ratio(raw_data_gc, 10, file_suffix='c')
+data_pca_a = dh.get_pca_transform(raw_data_ga, n_components=3, file_suffix='a')
+data_pca_b = dh.get_pca_transform(raw_data_gb, n_components=3, file_suffix='b')
+data_pca_c = dh.get_pca_transform(raw_data_gc, n_components=3, file_suffix='c')
+dh.get_pca_variance_ratio(raw_data_ga, max_num=10, file_suffix='a')
+dh.get_pca_variance_ratio(raw_data_gb, max_num=10, file_suffix='b')
+dh.get_pca_variance_ratio(raw_data_gc, max_num=10, file_suffix='c')
 
 # determining kmeans cluster number
 """
@@ -46,27 +49,33 @@ print(cluster_num_b)
 print(cluster_num_c)
 """
 cluster_num_a = 5
-cluster_num_b = 4
+cluster_num_b = 5
 cluster_num_c = 3
-
+# cluster_num_a = dh.get_kmeans_cluster_num(data_pca_a, max_num=25, file_suffix='a')
+# cluster_num_b = dh.get_kmeans_cluster_num(data_pca_b, max_num=25, file_suffix='b')
+# cluster_num_c = dh.get_kmeans_cluster_num(data_pca_c, max_num=25, file_suffix='c')
+print(cluster_num_a, cluster_num_b, cluster_num_c)
 
 # kmeans only place
 kmeans_label_a = pd.DataFrame(data=[], index=range(row_num), columns=['label'])
 kmeans_centroids_a = pd.DataFrame(data=[], index=range(cluster_num_a), columns=['centroids'])
 kmeans_result_a = KMeans(n_clusters=cluster_num_a, n_init=30)
-kmeans_result_a.fit(raw_data_ga.to_numpy())
+kmeans_result_a.fit(data_pca_a.to_numpy())
 kmeans_label_a = pd.DataFrame(kmeans_result_a.labels_)
 kmeans_centroids_a = pd.DataFrame(kmeans_result_a.cluster_centers_)
 kmeans_label_a.to_csv('kmeans_label_a.csv', encoding='ANSI')
 kmeans_centroids_a.to_csv('kmeans_centroids_a.csv', encoding='ANSI')
 
 # parameter by cluster
+"""
 mean_series = kmeans_centroids_a.iloc[:, :].mean(axis=0)
+print(kmeans_centroids_a)
 for i in range(kmeans_centroids_a.shape[0]):
     kmeans_centroids_a.iloc[:, i] = kmeans_centroids_a.iloc[:, i] - mean_series.iloc[i]
 kmeans_centroids_a_quantized = kmeans_centroids_a.applymap(lambda x: x/abs(x) if abs(x) > 0.8 else 0)
 #print(kmeans_centroids_a_vectorized)
 kmeans_centroids_a_quantized.to_csv('kmeans_centroids_a_quantized.csv', encoding='ANSI')
+"""
 
 
 # kmeans only food
@@ -91,16 +100,4 @@ kmeans_centroids_c = pd.DataFrame(kmeans_result_c.cluster_centers_)
 kmeans_label_c.to_csv('kmeans_label_c.csv', encoding='ANSI')
 kmeans_centroids_c.to_csv('kmeans_centroids_c.csv', encoding='ANSI')
 
-"""
-pca = PCA()
 
-train_PCA_GA = pca.fit(kmeans_centroids_a.to_numpy())
-pf_a = pd.DataFrame(train_PCA_GA.components_)
-pf_a.to_csv('pca_cluster_a.csv', encoding='ANSI')
-train_PCA_GB = pca.fit(kmeans_centroids_b.to_numpy())
-pf_b = pd.DataFrame(train_PCA_GB.components_)
-pf_b.to_csv('pca_cluster_b.csv', encoding='ANSI')
-train_PCA_GC = pca.fit(kmeans_centroids_c.to_numpy())
-pf_c = pd.DataFrame(train_PCA_GC.components_)
-pf_c.to_csv('pca_cluster_c.csv', encoding='ANSI')
-"""
