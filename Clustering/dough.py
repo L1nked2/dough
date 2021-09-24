@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 now = datetime.datetime.now()
 color = sns.color_palette()
-kmeans_elbow_threshold = 0.80
+kmeans_elbow_threshold = 0.90
 
 
 def preprocessing_csv(file_path):
@@ -101,15 +101,15 @@ def get_kmeans_cluster_num(raw_data, max_num=25, file_suffix=''):
         kmeans_result = KMeans(n_clusters=init_cluster_num, n_init=30)
         kmeans_result.fit(raw_data.to_numpy())
         kmeans_inertia.loc[init_cluster_num] = kmeans_result.inertia_
-    file_name = 'kmeans_inertia_' + file_suffix + '.csv'
-    cluster_num = 0
+    cluster_num = 2
     prev_slope = kmeans_inertia['inertia'][3]-kmeans_inertia['inertia'][2]
     for i in range(3, max_num-1):
-        cluster_num = i
         if ((kmeans_inertia['inertia'][i+1]-kmeans_inertia['inertia'][i]) / prev_slope) > kmeans_elbow_threshold:
             break
+        cluster_num = i
         prev_slope = kmeans_inertia['inertia'][i+1]-kmeans_inertia['inertia'][i]
     if file_suffix != '':
+        file_name = 'kmeans_inertia_' + file_suffix + '.csv'
         pd.DataFrame(kmeans_inertia).T.to_csv(file_name, encoding='ANSI')
     return cluster_num
 
