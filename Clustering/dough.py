@@ -148,3 +148,16 @@ def get_pca_transform(raw_data, n_components=0.99, file_suffix=''):
         file_path = 'pca_' + file_suffix + '_dim_reduction.csv'
         data_reduction.to_csv(file_path, encoding='ANSI')
     return data_reduction
+
+
+def get_kmeans_result(data_pca, n_clusters=10, file_suffix=''):
+    kmeans_result = KMeans(n_clusters=n_clusters, n_init=30)
+    kmeans_result.fit(data_pca.to_numpy())
+    kmeans_label = pd.DataFrame(kmeans_result.labels_)
+    kmeans_centroids = pd.DataFrame(kmeans_result.cluster_centers_)
+    if file_suffix != '':
+        file_path_label = 'kmeans_label_' + file_suffix + '.csv'
+        file_path_centroids = 'kmeans_centroids_' + file_suffix + '.csv'
+        kmeans_label.to_csv(file_path_label, encoding='ANSI')
+        kmeans_centroids.to_csv(file_path_centroids, encoding='ANSI')
+    return kmeans_result
