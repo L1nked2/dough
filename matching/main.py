@@ -16,14 +16,15 @@ from sklearn.cluster import KMeans
 centroids_a = dhm.read_csv(filetype='centroids', file_suffix='a')
 centroids_b = dhm.read_csv(filetype='centroids', file_suffix='b')
 centroids_c = dhm.read_csv(filetype='centroids', file_suffix='c')
+centroids = [centroids_a.to_numpy(), centroids_b.to_numpy(), centroids_c.to_numpy()]
 
 # init pca
 pca_vector_a = dhm.read_csv(filetype='pca_vectors', file_suffix='a')
 pca_vector_b = dhm.read_csv(filetype='pca_vectors', file_suffix='b')
 pca_vector_c = dhm.read_csv(filetype='pca_vectors', file_suffix='c')
-pca_vector_a_inv = np.linalg.inv(pca_vector_a.to_numpy())
-pca_vector_b_inv = np.linalg.inv(pca_vector_b.to_numpy())
-pca_vector_c_inv = np.linalg.inv(pca_vector_c.to_numpy())
+pca_vector_a_inv = np.linalg.inv(pca_vector_a.to_numpy().T)
+pca_vector_b_inv = np.linalg.inv(pca_vector_b.to_numpy().T)
+pca_vector_c_inv = np.linalg.inv(pca_vector_c.to_numpy().T)
 
 # init coefficient
 coef_result_a = dhm.read_csv(filetype='coef_result', file_suffix='a')
@@ -55,11 +56,7 @@ user_parameter_sparse_c = dhm.slice_part(user_parameter_sparse, part='c')
 user_pos_a = dhm.get_position(pca_vector_a_inv, coef_result_a, user_parameter_sparse_a, part='a')
 user_pos_b = dhm.get_position(pca_vector_b_inv, coef_result_b, user_parameter_sparse_b, part='b')
 user_pos_c = dhm.get_position(pca_vector_c_inv, coef_result_c, user_parameter_sparse_c, part='c')
-
-print(user_pos_a)
-print(user_pos_b)
-print(user_pos_c)
-
-print(dhm.calc_session(user_pos_a, user_pos_b, user_pos_c))
+user_pos = [user_pos_a, user_pos_b, user_pos_c]
+print(dhm.calc_session(user_pos, centroids))
 
 
