@@ -126,4 +126,7 @@ dist
 # Serverless Webpack directories
 .webpack/
 
+# secure info
+service-account.json
+
 # End of https://www.toptal.com/developers/gitignore/api/node
