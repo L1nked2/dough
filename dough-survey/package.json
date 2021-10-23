@@ -4,12 +4,13 @@
   "description": "dough survey",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node --experimental-json-modules main.js",
     "test": "echo Error: no test specified && exit 1"
   },
   "author": "Erjin Lee",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.23.0",
     "body-parser": "^1.19.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
@@ -18,7 +19,8 @@
     "firebase-admin": "^10.0.0",
     "firebase-functions": "^3.15.7",
     "firebaseui": "^5.0.0",
-    "http-status-codes": "^2.1.4"
+    "http-status-codes": "^2.1.4",
+    "qs": "^6.10.1"
   },
   "type": "module"
 }

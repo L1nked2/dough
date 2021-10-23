@@ -1,10 +1,12 @@
-import { Router } from 'express';
-const router = Router();
+import express from "express";
+import axios from "axios";
+import QueryString from "qs";
+const router = express.Router();
 
-// import main from './main.js';
-//router.use('/main', main);
-
-import login from './login.js';
-router.use('/login', login);
+/* GET login page. */
+router.get('/', function(req, res) {
+    
+    res.render('login.ejs');
+});
 
 export default router;
