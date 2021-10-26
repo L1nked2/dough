@@ -141,10 +141,10 @@ const kakao = {
 /* GET login page. */
 router.get('/', function(req, res) {
     if(req.query.auth) {
-        res.send('user auth');
+        res.render('login.ejs');
     }
     else {
-        res.render('login.ejs');
+        res.render('login_kakao.ejs');
     }
 });
 

@@ -10,28 +10,19 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="javascript:kakaoLogin();"><img src="http://localhost:3000/images/kakao_login_medium_narrow.png" alt="카카오계정 로그인" style="height: 100px;"/></a>
+    <a href="http://localhost:3000"><img src="http://localhost:3000/images/kakao_login_medium_narrow.png" alt="카카오계정 로그인" style="height: 100px;"/></a>
     <script>
-        window.Kakao.init("c6d8dd20d5ff2084f591d8b34cbe2608");
-        function kakaoLogin() {
-            window.Kakao.Auth.login({
-                redirectUri: 'http://localhost:3000/login/callback/kakao',///
-                scope: 'gender', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
-                success: function(response) {
-                    console.log(response) // 로그인 성공하면 받아오는 데이터
-                    window.Kakao.API.request({ // 사용자 정보 가져오기 
-                        url: '/v2/user/me',
-                        success: (res) => {
-                            const kakao_account = res.kakao_account;
-                            console.log(kakao_account)
-                        }
-                    });
-                },
-                fail: function(error) {
-                    console.log(error);
-                }
-            });
-        }
+        firebase.auth().signInWithCustomToken(token)
+        .then((userCredential) => {
+            // Signed in
+            var user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+        });
     </script>
 </body>
 </html>
