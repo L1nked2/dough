@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['.venv\\Lib\\site-packages', 'C:\\Users\\K\\Desktop\\dough\\matching'],
+             pathex=['C:\\Users\\K\\Desktop\\dough\\matching'],
              binaries=[],
              datas=[],
              hiddenimports=[],
