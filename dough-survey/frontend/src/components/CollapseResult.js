@@ -33,7 +33,6 @@ function CollapseResult(props) {
         setIsActive(isOpen ? "" : "active")
         setContHeight(isOpen ? "0px" : `${content.current.scrollHeight}px`);
         setIsRotate(isOpen ? "collapseIcon" : "collapseIcon rotate");
-        console.log(props.content);
     }
 
     return(
