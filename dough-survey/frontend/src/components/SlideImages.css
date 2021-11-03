@@ -1,9 +1,9 @@
 .mySwiper {
   width: 100%;
-  height: 45vh;
+  height: 40vh;
   z-index: 5;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .swiper-slide {
@@ -35,5 +35,5 @@
 }
 
 .swiper-slide {
-  width: 45vh;
+  width: 40vh;
 }
