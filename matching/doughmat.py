@@ -42,9 +42,13 @@ def preprocessing_data(raw_data, norm=False):
     data = raw_data - score_mean
     data['ID'] = data['ID'] + score_mean
     if norm:  # normalize to 0 mean
-        mean_series = data.iloc[:, 1:].mean(axis=1)
+        mean_series_a = data.iloc[:, 1:parameter_len_a + 1].mean(axis=1)
+        mean_series_b = data.iloc[:, parameter_len_a + 1:parameter_len_a + parameter_len_b + 1].mean(axis=1)
+        mean_series_c = data.iloc[:, -parameter_len_c:].mean(axis=1)
         for i in range(data.shape[0]):
-            data.iloc[i, 1:] = data.iloc[i, 1:] - mean_series.iloc[i]
+            data.iloc[i, 1:parameter_len_a + 1] -= mean_series_a.iloc[i]
+            data.iloc[i, parameter_len_a + 1:parameter_len_a + parameter_len_b + 1] -= mean_series_b.iloc[i]
+            data.iloc[i, -parameter_len_c:] -= mean_series_c.iloc[i]
     return data
 
 
@@ -96,6 +100,7 @@ def get_position(pca_inv, coef, user_parameter_sparse, part=''):
 
 def get_distance(vec_a, vec_b):
     if len(vec_a) != len(vec_b):
+        raise ArithmeticError
         return -1
     distance = 0
     length = len(vec_a)
