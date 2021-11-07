@@ -8,8 +8,9 @@
   margin: 0;
   display: flex;
   width: 528px;
+  min-width: 320px;
   background-color: white;
-  font-family: "SpoqaRegular";
+  font-family: "SpoqaMedium";
 }
 
 @media (max-width: 528px){

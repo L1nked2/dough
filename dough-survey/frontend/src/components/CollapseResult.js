@@ -4,29 +4,13 @@ import './CollapseResult.css';
 import { RightOutlined } from '@ant-design/icons';
 
 
-function Chevron(props) {
-    return(
-        <svg
-            className={props.className}
-            height={props.height}
-            width={props.width}
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 320 512"
-        >
-            <path 
-                fill={props.fill} 
-                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" 
-            />
-        </svg>
-    );
-}
 
 function CollapseResult(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [isActive, setIsActive] = useState("");
     const [contHeight, setContHeight] = useState("0px");
     const [isRotate, setIsRotate] = useState("collapseIcon");
-
+    
     const content = useRef(null);
     function toggleCollapse() {
         setIsOpen(!isOpen);
@@ -34,11 +18,11 @@ function CollapseResult(props) {
         setContHeight(isOpen ? "0px" : `${content.current.scrollHeight}px`);
         setIsRotate(isOpen ? "collapseIcon" : "collapseIcon rotate");
     }
-
+    
     return(
         <div className="collapse"> 
             <button className={`panelHeader ${isActive}`} onClick={toggleCollapse}>
-                <Chevron className={`${isRotate}`} width={10} fill={"rgba(0, 0, 0, 0.36)"} />
+                <Chevron className={`${isRotate}`} width={9} fill={"rgba(0, 0, 0, 0.36)"} />
                 내 취향 테스트 결과
             </button>
             <div ref={content} style={{maxHeight: `${contHeight}`}} className="collapseContent" >
@@ -49,3 +33,18 @@ function CollapseResult(props) {
 }
 
 export default CollapseResult;
+
+function Chevron(props) {
+    return(
+        <svg
+            className={props.className}
+            height={props.height}
+            width={props.width}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 5.978 9.746"
+        >
+            <path id="패스_6629" data-name="패스 6629" d="M0,4.533,4.167,0,8.333,4.533" transform="translate(5.239 0.706) rotate(90)" 
+            fill='none' stroke="rgba(0,0,0,0.36)" stroke-linecap="round" stroke-width="1"/>
+        </svg>
+    );
+}

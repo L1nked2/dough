@@ -18,8 +18,7 @@
 
 .logoWhite {
     margin-top: 40vh;
-    margin-left: 180px;
-    margin-right: 180px;
+    height: 10vh;
     margin-bottom: 15px;
 }
 
@@ -31,16 +30,17 @@
 }
 
 .kakaoLogin {
+    margin: auto;
     margin-top: 70px;
-    margin-right: 110px;
-    margin-left: 110px;
     padding-top: 15px;
     padding-bottom: 15px;
+    padding-left: 4em;
+    padding-right: 4em;
 
     border-radius: 40px;
     background-color: #FEE500;
     border: none;
-    
+
     color: rgba(0,0,0,0.85);
     font-weight: normal;
     font-size: 18px;

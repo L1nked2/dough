@@ -1,0 +1,50 @@
+.myShopHeader {
+    padding-left: 27px;
+    padding-bottom: 10px;
+    vertical-align: bottom;
+}
+.myShopHeader #myShop {
+    font-size: 36px;
+    margin-right: 25px;
+}
+.myShopHeader .locationButton {
+    position: relative;
+    top: 7px;
+    cursor: pointer;
+}
+.myShopHeader .locationButton #location{
+    position: relative;
+    font-size: 15px;
+    color: rgba(0,0,0,0.6);
+    margin-left: 4px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #707070;
+    bottom: 8px;
+}
+
+.shopCategory {
+    width: inherit;
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+}
+
+.shopCategory > div {
+    text-align: center;
+    float: left;
+    width: 33.333%;
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    font-size: 17px;
+    font-family: SpoqaRegular;
+    color: rgba(0,0,0,0.36);
+    cursor: pointer;
+}
+
+.shopCategory .active {
+    padding-bottom: 4px;
+    border-bottom: 3px solid #3FB8D5;
+    color: rgba(0,0,0,0.65);
+}
