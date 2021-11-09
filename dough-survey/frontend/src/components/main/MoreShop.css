@@ -1,0 +1,14 @@
+.moreShopHeader {
+    padding-left: 27px;
+    padding-bottom: 5px;
+    vertical-align: bottom;
+    margin-top: 30px;
+    font-size: 25px;
+    /* font-family: SpoqaMedium; */
+}
+
+.moreShopList {
+    display: flex;
+    height: 70vh;
+    background-color: #F2F2F2;
+}

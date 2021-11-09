@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from 'react';
-import SlideImages from '../components/SlideImages'
+import SlideImages from '../common/SlideImages'
 import './MyShop.css';
 
 function MyShop(props) {

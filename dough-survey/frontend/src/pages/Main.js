@@ -6,7 +6,7 @@ import Session from './Session'
 import Favorite from './Favorite' 
 import Profile from './Profile' 
 
-import Navbar from '../components/Navbar'
+import Navbar from '../components/common/Navbar'
 
 import '../App.css'
 

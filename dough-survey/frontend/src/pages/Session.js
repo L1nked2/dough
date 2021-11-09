@@ -1,6 +1,6 @@
 import React from 'react'
 import './Session.css';
-import Header from '../components/Header'
+import Header from '../components/common/Header'
 
 function Session(props) {
   return (

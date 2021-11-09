@@ -2,17 +2,6 @@ import React from 'react';
 import './Navbar.css';
 import { AiOutlineHome, AiOutlineFileText, AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 
-// function Navbar() {
-//   return (
-//     <nav className="Navbar">
-//       <div><a href="/"><AiOutlineHome className="NavIcons" /></a></div>
-//       <div><a href="/session"><AiOutlineFileText className="NavIcons" /></a></div>
-//       <div><AiOutlineHeart className="NavIcons" /></div>
-//       <div><a href="/profile"><AiOutlineUser className="NavIcons" /></a></div>
-//     </nav>
-//   );
-// }
-
 function Navbar(props) {
   return (
     <nav className="Navbar">

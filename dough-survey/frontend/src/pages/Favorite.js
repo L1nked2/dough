@@ -1,6 +1,6 @@
 import React from 'react'
 import './Favorite.css';
-import Header from '../components/Header'
+import Header from '../components/common/Header'
 
 function Favorite(props) {
   return (
