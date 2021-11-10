@@ -9,7 +9,7 @@ function Home(props) {
   return (
     <div className="Home-page">
       <Header changeIsHome={props.changeIsHome}/>
-      <CollapseResult content="My Test Result"/>
+      <CollapseResult />
       <MyShop />
       <MoreShop />
     </div>

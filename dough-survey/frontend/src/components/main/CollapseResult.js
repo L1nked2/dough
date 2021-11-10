@@ -1,11 +1,9 @@
 import React, {useState, useRef} from 'react';
-import { Collapse } from 'antd';
 import './CollapseResult.css';
-import { RightOutlined } from '@ant-design/icons';
+import MyResult from './MyResult'
 
 
-
-function CollapseResult(props) {
+function CollapseResult() {
     const [isOpen, setIsOpen] = useState(false);
     const [isActive, setIsActive] = useState("");
     const [contHeight, setContHeight] = useState("0px");
@@ -26,7 +24,7 @@ function CollapseResult(props) {
                 내 취향 테스트 결과
             </button>
             <div ref={content} style={{maxHeight: `${contHeight}`}} className="collapseContent" >
-                <div className="myResult" dangerouslySetInnerHTML={{ __html: props.content}} />
+                <MyResult resultName="골목길 이자카야" value1="80" value2="60" value3="20" value4="5" value5="90"/>
             </div>
         </div>
     );

@@ -12,13 +12,18 @@ function MyShop(props) {
     <div className="myShop">
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
-        <span className="locationButton"><MapIcon width={18}/><span id="location">서울/강남역</span></span>
+        <span className="locationButton"><MapIcon width={17}/><span id="location">서울/강남역</span></span>
       </div>
       <nav className="shopCategory">
         <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
         <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
         <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
       </nav>
+      <div className="menuChange">
+        <div className="menuChangeButton">음식 종류 바꾸기
+          <span>{`>`}</span>
+        </div>
+      </div>
       {slideCategory[0] && <SlideImages name="restaurant"/>}
       {slideCategory[1] && <SlideImages name="cafe"/>}
       {slideCategory[2] && <SlideImages name="bar"/>}
