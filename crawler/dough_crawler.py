@@ -1,111 +1,148 @@
 from selenium import webdriver
 from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
-
-
-# '맛집 리스트' URL 수집시 자원 활용
-class Toplist:
-    def __init__(self):
-        initpage()
-
-    # 더보기 버튼 클릭
-    def more(self):
-        while (1):
-            try:
-                driver.find_element_by_xpath("//a[@class='btn-more']").click()
-            except ElementNotVisibleException:
-                break
-            except WebDriverException:
-                break
-
-
-# 해쉬태그 URL 속 URL 수집시 자원 활용
-class PageURL:
-    def __init__(self, url):
-        connect(url)
-
-    # 더보기 버튼 클릭
-    def more(self):
-        while (1):
-            try:
-                driver.find_element_by_xpath("//button[@class='more_btn']").click()
-            except ElementNotVisibleException:
-                break
-            except WebDriverException:
-                break
-            except AttributeError:
-                break
-
-
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-from time import sleep
+import copy
+import requests
+import json
+import datetime
+from firestore_lib import *
 
-# 맛집 이름 리스트 생성
-R_name_list = []
-def hConnect(url):
-    driver.get('https://www.mangoplate.com' + url)
+naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
+naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary/'
+naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant/'
 
-class Parsing :
+with open("naver_query.json", "r", encoding='UTF8') as naver_json:
+    naver_query_json = json.load(naver_json)
+parse_table_naver = dict(
+    name='place_name',
+    fullRoadAddress='place_road_address',
+    address='place_legacy_address',
+    categories='place_category',
+    bizhourInfo='place_operating_time',
+    menus='place_menu',
+    menuImages='place_photo_menu',
+    phone='place_telephone',
+    x='place_coor_x',
+    y='place_coor_y',
+)
 
 
-    #지하철역 주변 맛집 URL 수집
-    def getHotLink(self):
-        html_doc = driver.page_source
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        hotlink = []
-        for link in soup.find_all('a'):
+class DoughCrawler:
+    def __init__(self, target_url=None, **kwargs):
+        self.place_link_list = []
+        self.duplicate_prone_flag = False
+        self.naver_arg_set_flag = False
+        self.place_db_list = []
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x1080')
+        options.add_argument("disable-gpu")
+        self.driver = webdriver.Chrome('./chromedriver.exe', options=options)
+        self.driver.implicitly_wait(3)
+        self.driver.refresh()
+        self.driver_get(target_url, **kwargs)
+        return
+
+    def driver_get(self, target_url, **kwargs):
+        if target_url:
             try:
-                if link.get('href').find('restaurants') != -1 :
-                    if link.get('href').find('restaurant_key') == -1 :
-                        hotlink.append(link.get('href'))
+                self.driver.get(target_url.format(**kwargs))
+            except AttributeError:
+                print('AttributeError, check target_url and attributes')
+        return
+
+    def set_arg_naver(self, query=''):
+        naver_query_json['variables']['input']['query'] = query
+        self.naver_arg_set_flag = True
+        return
+
+    @staticmethod
+    def _set_naver_query_page(page):
+        naver_query_json['variables']['input']['start'] = 50 * page + 1
+        return
+
+    def init_place_link_list(self):
+        self.place_link_list.clear()
+        return
+
+    def get_place_link_list_mangoplate(self, *substring):
+        page_src = self.driver.page_source
+        soup = BeautifulSoup(page_src, 'html.parser')
+        for item in soup.find_all('a'):
+            try:
+                if item.get('href').find(*substring) != -1:
+                    self.place_link_list.append(item.get('href'))
             except AttributeError:
                 continue
-        return list(set(hotlink))
+        self.duplicate_prone_flag = True
+        return self.place_link_list
 
-    #수집한 맛집 정보 파싱, 전처리
-    def parsingHot(self, url):
-        hConnect(url)
-        driver.implicitly_wait(3)
-        html_doc = driver.page_source
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        #맛집 이름
-        title = soup.find("h1",{"class": "restaurant_name"})
-        #맛집 평점
-        #rating = soup.find("strong",{"class": "rate-point"})//별점 없으면 parsing error 발생
-        #맛집 정보
-        info = dict()
-        info['이름'] = title.get_text()
-        #맛집 이름 추가
-        R_name_list.append(title.get_text())
-        print(R_name_list)
-        with open('listing.txt', 'w', encoding='UTF8') as f:
-            for name in R_name_list:
-                f.write(name+'\n')
+    def get_place_link_list_naver(self):
+        if not self.naver_arg_set_flag:
+            raise AttributeError
+        naver_header = {"method": "POST", "content-type": "application/json"}
+        for page in range(6):
+            self._set_naver_query_page(page)
+            naver_query_str = json.dumps(naver_query_json)
+            res = requests.post(url=naver_graphql_url, headers=naver_header, data=naver_query_str)
+            item_list = res.json()['data']['restaurants']['items']
+            for item in item_list:
+                try:
+                    self.place_link_list.append(item['id'])
+                except AttributeError:
+                    continue
+        self.duplicate_prone_flag = True
+        return self.place_link_list
 
-        #info['평점'] = rating.get_text().replace('\n', '')//별점 없으면 parsing error 발생
-        table = soup.find("tbody")
-        for thtd in table.find_all("tr"):
-            if thtd.th.get_text() != "메뉴":
-                temp = thtd.th.get_text().replace(' ', '')
-                info[temp.replace('\n', '')] = thtd.td.get_text().replace('\n', '')
-            else:
-                info[thtd.th.get_text()] = thtd.td.get_text()
-        return info
-        #except AttributeError:
-        #    print("없음")
+    def _remove_duplicates(self):
+        if self.duplicate_prone_flag:
+            self.place_link_list = list(set(self.place_link_list))
+        return
 
+    def get_place_info_mangoplate(self, root_url, station_name):
+        self._remove_duplicates()
+        place_db = DB(place_db_empty)
+        for link in self.place_link_list:
+            actual_link = root_url + link
+            self.driver_get(actual_link)
+            page_src = self.driver.page_source
+            soup = BeautifulSoup(page_src, 'html.parser')
+            place_db.update_pair('station_name', station_name)
+            for key in place_db.get_keys():
+                if key == 'place_name':
+                    result = soup.find('h1', attrs={'class': 'restaurant_name'})
+                    if result:
+                        place_db.update_pair(key, result.get_text())
+                        print(result.get_text())
+                elif key == 'place_address':
+                    pass
+                else:
+                    pass
+        self.place_db_list.append(place_db)
+        return
 
-#웹페이지 불러오기
-def initpage():
-    driver.get(url)
+    def get_place_info_naver(self, station_name):
+        self._remove_duplicates()
+        place_db = DB(place_db_empty)
+        params = {"lang": "ko"}
+        for link in self.place_link_list:
+            actual_link = naver_restaurant_api_root_url + str(link)
+            res = requests.get(url=actual_link, params=params).json()
 
-# 레스토랑 서칭
-def hConnect(url):
-    driver.get('https://www.mangoplate.com/' + url)
+            restaurant_link = naver_restaurant_root_url + str(link)
+            place_db.update_pair('place_naver_link', restaurant_link)
+            place_db.update_pair('station_name', station_name)
+            place_db.update_pair('place_last_timestamp', datetime.date.today().isoformat())
+            img_array = []
+            for item in res['menus']:
+                del item['isRecommended']
+            for item in res['menuImages']:
+                img_array.append(item['imageUrl'])
+            res['menuImages'] = img_array
+            for key in parse_table_naver:
+                place_db.update_pair(parse_table_naver[key], res[key])
+            print(place_db.to_dict())
 
-# 해쉬태그 서칭
-def connect(n):
-    driver.get(f'https://www.mangoplate.com/search/{place}?keyword=&page=' + str(n))
-
-
+        return
