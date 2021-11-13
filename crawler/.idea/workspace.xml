@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8676586a-691f-4772-8a55-6a18a5f4a383" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/naver_query.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dough_crawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/dough_crawler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/firestore_lib.py" beforeDir="false" afterPath="$PROJECT_DIR$/firestore_lib.py" afterDir="false" />
@@ -97,8 +96,20 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/google/cloud/firestore.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
