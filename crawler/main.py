@@ -1,41 +1,24 @@
 from dough_crawler import *
 from firestore_lib import *
 
-
+"""
+max_page = 1
 # 장소 받기
 print("핫 플레이스 검색: ")
 place = input()
-url = 'https://www.mangoplate.com/search/' + place
-
-# ChromeDriver로 접속, 자원 로딩시간 3초
-try:
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    driver = webdriver.Chrome('./chromedriver.exe', options=options)
-    driver.implicitly_wait(3)
-    driver.refresh()
-except:
-    print("크롬드라이버 연결 에러")
-
-p = Parsing()
-page = 1
-PageInURL = dict()
-# 카테고리 별 URL 속 맛집 URL 수집
-while (page < 11):
-    hotlinklist = []
-    connectPageURL = PageURL(page)
-    hotlinklist.append(p.getHotLink())
-    PageInURL[page] = hotlinklist
-    page += 1
+target_root = 'https://www.mangoplate.com'
+target_url = target_root + '/search/{place}?keyword=&page={page}'
+dhc = DoughCrawler()
+for page in range(1, max_page + 1):
+    dhc.driver_get(target_url, place=place, page=page)
+    dhc.get_place_link_list_mangoplate('restaurant')
+# print(dhc.place_link_list)
 
 # 맛집 정보 파싱
-for page in PageInURL.keys():
-    for urllist in PageInURL[page]:
-        for url in urllist:
-            try:
-                info = p.parsingHot(url)
-                info['pageN'] = page
-                insertDB(info)
-            except:
-                print("Parsing Error")
-                continue
+dhc.get_place_info_mangoplate(target_root, place)
+"""
+station_name = '강남역'
+dhc = DoughCrawler()
+dhc.set_arg_naver(query=station_name + '맛집')
+dhc.get_place_link_list_naver()
+dhc.get_place_info_naver(station_name)
