@@ -6,8 +6,160 @@
     font-size: 25px;
 }
 
-.moreShopList {
+.nullList {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.03);
+    height: 15vh;
+}
+
+.eachShop {
     display: flex;
-    height: 70vh;
-    background-color: #F2F2F2;
+    flex-direction: row;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.03);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.eachShop .image {
+    display: inline-block;
+    width: 38%;
+    padding-right: 20px;
+}
+.eachShop .image #image {
+    width: 100%;
+    aspect-ratio: 1;
+    background-size: cover;
+    border-radius: 10px;
+}
+
+.eachShop .information{
+    width: 62%;
+    display: flex;
+    flex-direction: column;
+}
+
+.eachShop .information .rankAndDistance {
+    /* flex: 1; */
+    display: flex;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.36);
+    font-family: SpoqaRegular;
+    font-size: 15px;
+}
+.eachShop .information .rankAndDistance #rank{
+    margin-right: 50px;
+}
+.eachShop .information .rankAndDistance #distance{
+    margin-left: 2px;
+}
+
+.eachShop .information .name {
+    /* flex: 2; */
+    color: #7E7E7E;
+    font-size: 26px;
+}
+
+
+.eachShop .information .subimages {
+    /* overflow: hidden; */
+    /* flex: 7; */
+    display: flex;
+    align-items: center;
+}
+
+.eachShop .information .subimages > #subimage{
+    margin-right: 5px;
+    width: calc(100%/62*38 - 20px - 23px - 40px);
+    aspect-ratio: 1;
+    background-size: cover;
+    border-radius: 5px;
+}
+
+.eachShop .information .subimages #plusButton{
+    width: calc(90%/62*38 - 20px - 23px - 40px);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eachShop > .shopModal {
+    background-color: khaki;
+    width: 100%;
+    z-index: 20;
+}
+
+
+
+/* matching the size of fonts and images with each device-width(uncompleted) */
+
+@media (max-width: 768px){
+    .eachShop .information .rankAndDistance {
+        font-size: 17px;
+    }
+    .eachShop .information .name {
+        font-size: 28px;
+    }
+    .eachShop .information .subimages > #subimage{
+        width: calc(100%/62*38 - 20px - 26px - 44px);
+    }
+    .eachShop .information .subimages #plusButton{
+        width: calc(90%/62*38 - 20px - 26px - 44px);
+    }
+}
+@media (max-width: 580px){
+    .eachShop .information .rankAndDistance {
+        font-size: 15px;
+    }
+    .eachShop .information .name {
+        font-size: 26px;
+    }
+    .eachShop .information .subimages > #subimage{
+        width: calc(100%/62*38 - 20px - 23px - 40px);
+    }
+    .eachShop .information .subimages #plusButton{
+        width: calc(90%/62*38 - 20px - 23px - 40px);
+    }
+}
+@media (max-width: 528px){
+    .eachShop .information .rankAndDistance {
+        font-size: 14px;
+    }
+    .eachShop .information .name {
+        font-size: 24px;
+    }
+    .eachShop .information .subimages > #subimage{
+        width: calc(100%/62*38 - 20px - 22px - 37px);
+    }
+    .eachShop .information .subimages #plusButton{
+        width: calc(90%/62*38 - 20px - 22px - 37px);
+    }
+}
+@media (max-width: 470px){
+    .eachShop .information .rankAndDistance {
+        font-size: 13px;
+    }
+    .eachShop .information .name {
+        font-size: 22px;
+    }
+    .eachShop .information .subimages > #subimage{
+        width: calc(100%/62*38 - 20px - 20px - 34px);
+    }
+    .eachShop .information .subimages #plusButton{
+        width: calc(90%/62*38 - 20px - 20px - 34px);
+    }
+}
+@media (max-width: 450px){
+    .eachShop .information .rankAndDistance {
+        font-size: 12px;
+    }
+    .eachShop .information .name {
+        font-size: 20px;
+    }
+    .eachShop .information .subimages > #subimage{
+        width: calc(100%/62*38 - 20px - 18px - 31px);
+    }
+    .eachShop .information .subimages #plusButton{
+        width: calc(90%/62*38 - 20px - 18px - 31px);
+    }
 }

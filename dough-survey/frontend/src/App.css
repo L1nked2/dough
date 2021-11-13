@@ -9,6 +9,7 @@
   display: flex;
   width: 528px;
   min-width: 320px;
+  min-height: 100vh;
   background-color: white;
   font-family: "SpoqaMedium";
 }
@@ -23,7 +24,9 @@
       width: 100%;
   }
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 @font-face {
   font-family: "SpoqaBold";
   src: url("./fonts/SpoqaHanSansNeo-Bold.ttf");

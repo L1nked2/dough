@@ -71,3 +71,9 @@
 .menuChange .menuChangeButton > span{
     margin-left: 10px;
 }
+
+.newPage {
+    width: 100%;
+    border: none;
+    height: 50vh;
+}

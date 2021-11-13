@@ -1,11 +1,10 @@
 .Home-page {
     text-align: left;
     padding-top: 60px;
+    padding-bottom: 50px;
     width: inherit;
-    /* scroll-snap-type: y proximity;
-    scroll-padding: 60px;
-    overflow-y: scroll; */
 }
+
 
 .sampleComp {
     height: 70vh;

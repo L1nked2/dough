@@ -1,6 +1,9 @@
 import React, {useState, useEffect } from 'react';
-import SlideImages from '../common/SlideImages'
+import SlideImages from '../common/SlideImages';
+import MoreShop from '../main/MoreShop';
 import './MyShop.css';
+
+import sampleImage from "../../img/login_background.png";
 
 function MyShop(props) {
   const [slideCategory, setSlideCategory] = useState([true, false, false]);
@@ -24,9 +27,11 @@ function MyShop(props) {
           <span>{`>`}</span>
         </div>
       </div>
-      {slideCategory[0] && <SlideImages name="restaurant"/>}
-      {slideCategory[1] && <SlideImages name="cafe"/>}
-      {slideCategory[2] && <SlideImages name="bar"/>}
+      {slideCategory[0] && <><SlideImages sampleImage={sampleImage} name="restaurant"/><MoreShop name="음식점"/></>}
+      {slideCategory[1] && <><SlideImages sampleImage={sampleImage} name="cafe"/><MoreShop name="카페"/></>}
+      {slideCategory[2] && <><SlideImages sampleImage={sampleImage} name="bar"/><MoreShop name="술집"/></>}
+
+      
     </div>
   );
 }

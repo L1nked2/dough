@@ -11,7 +11,6 @@ function Home(props) {
       <Header changeIsHome={props.changeIsHome}/>
       <CollapseResult />
       <MyShop />
-      <MoreShop />
     </div>
   );
 }
