@@ -1,0 +1,36 @@
+.shopPage {
+    position: fixed;
+    top: 60px;
+    width: inherit;
+    min-height: calc(100vh - 110px);
+    max-height: calc(100vh - 110px);
+    background-color: seashell;
+    overflow-y: scroll;
+    z-index: 15;
+}
+
+.subHeader {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: inherit;
+    height: 60px;
+    background-color: white;
+}
+.subNavbar {
+    position: fixed;
+    bottom: 0;
+    width: inherit;
+    height: 50px;
+    background-color: white;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}

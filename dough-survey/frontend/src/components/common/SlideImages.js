@@ -19,19 +19,21 @@ function SlideImages(props) {
     // install Swiper modules
     SwiperCore.use([Scrollbar]);
 
+    const openShopPage = () => {
+      props.openModal();
+      props.setShopPageContents({name: "치돈치돈"});
+    }
+
     return (
       <Swiper scrollbar={{"hide": true}} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} className="mySwiper">
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}>
-            <div><div style={{fontSize:20, marginBottom:20}}>1순위</div><div style={{fontSize:30, marginBottom:20}}>치돈치돈</div></div>
+          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}>
+            <div>
+              <div style={{fontSize:20, marginBottom:20}}>1순위</div>
+              <div style={{fontSize:30, marginBottom:20}}>치돈치돈</div>
+            </div>
           </SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 2</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 3</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 4</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 5</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 6</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 7</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 8</div></SwiperSlide>
-          <SwiperSlide style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 9</div></SwiperSlide>
+          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 2</div></SwiperSlide>
+          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 3</div></SwiperSlide>
       </Swiper>
     );
   }

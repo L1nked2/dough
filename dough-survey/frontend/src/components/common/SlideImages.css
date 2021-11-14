@@ -14,6 +14,7 @@
   width: 90%;
   padding-bottom: 90%;
   background-size: cover;
+  cursor: pointer;
 }
 .swiper-slide > div {
   width: 100%;

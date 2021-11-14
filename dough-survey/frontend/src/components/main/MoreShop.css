@@ -81,14 +81,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
-
-.eachShop > .shopModal {
-    background-color: khaki;
-    width: 100%;
-    z-index: 20;
-}
-
 
 
 /* matching the size of fonts and images with each device-width(uncompleted) */

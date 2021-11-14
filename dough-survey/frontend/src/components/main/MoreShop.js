@@ -1,6 +1,5 @@
 import React, {useState, useEffect } from 'react';
 import './MoreShop.css';
-import Modal from 'react-modal';
 
 import sampleImage from "../../img/login_background.png";
 
@@ -10,9 +9,10 @@ function MoreShop(props) {
     { rank: 5, name: '바른돈가', distance: 10 },
     { rank: 6, name: '정돈', distance: 10 }
   ]; /* example lists */
+
   const renderShopList = shopList.map(shop => {
     return (
-      <EachMoreShop key={shop.rank} shop={shop} />
+      <EachMoreShop openModal={props.openModal} setShopPageContents={props.setShopPageContents} key={shop.rank} shop={shop} />
     );
   });
   return (
@@ -24,8 +24,13 @@ function MoreShop(props) {
 }
 
 function EachMoreShop(props) {
+  const openShopPage = () => {
+    props.openModal();
+    props.setShopPageContents({name: props.shop.name});
+  }
+
   return (
-    <div className="eachShop">
+    <div onClick={openShopPage} className="eachShop">
       <div className="image">
         <div id="image" style={{backgroundImage: `url(${sampleImage})`}}/>
       </div>
