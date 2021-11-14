@@ -130,7 +130,6 @@ class DoughCrawler:
         for link in self.place_link_list:
             actual_link = naver_restaurant_api_root_url + str(link)
             res = requests.get(url=actual_link, params=params).json()
-
             restaurant_link = naver_restaurant_root_url + str(link)
             place_db.update_pair('place_naver_link', restaurant_link)
             place_db.update_pair('station_name', station_name)

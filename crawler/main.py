@@ -1,5 +1,6 @@
 from dough_crawler import *
 from firestore_lib import *
+import time
 
 """
 max_page = 1
@@ -22,3 +23,4 @@ dhc = DoughCrawler()
 dhc.set_arg_naver(query=station_name + '맛집')
 dhc.get_place_link_list_naver()
 dhc.get_place_info_naver(station_name)
+# time.sleep(3)

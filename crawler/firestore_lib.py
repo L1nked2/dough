@@ -11,10 +11,15 @@ firebase_admin.initialize_app(cred, {
     'projectId': 'dough-survey',
 })
 firebase_db = firestore.client()
+firebase_transaction = firebase_db.transaction()
+place_ref = firebase_db.collection('place_db')
+
+service_domain = "https://www.babyak.kr"
 
 # data types and key-value pairs
 place_db_empty = dict(
     place_name=None,
+    place_uuid=None,
     place_road_address=None,
     place_legacy_address=None,
     place_category=None,
@@ -27,19 +32,22 @@ place_db_empty = dict(
     place_naver_link=None,
     place_photo_inside=[],
     place_photo_menu=[],
+    place_photo_food=[],
     place_photo_inside_main_src=None,
-    place_photo_menu_main_src_1=None,
-    place_photo_menu_main_src_2=None,
+    place_photo_food_main_src_1=None,
+    place_photo_food_main_src_2=None,
     place_telephone=None,
     place_last_timestamp=None,
     station_name=None,
     distance_to_station=None,
     place_coor_x=None,
     place_coor_y=None,
+    place_views=0,
 )
 
 place_db_thumb_empty = dict(
     place_name=None,
+    place_uuid=None,
     place_category=None,
     place_kind=None,
     place_cluster_a=None,
@@ -47,10 +55,12 @@ place_db_thumb_empty = dict(
     place_cluster_c=None,
     place_photo_inside_src=None,
     place_photo_menu_main_src=None,
+    place_views=0,
 )
 
 station_db_empty = dict(
-    # []
+    place_list=[],
+    station_views=0,
 )
 
 
@@ -127,22 +137,29 @@ class DB:
         return self._data
 
 
-def upload_db(*db_list):
+@firestore.transactional
+def _update_place_transaction(transaction, db):
+    naver_link = db['place_naver_link']
+    snapshot = place_ref.where('place_naver_link', '==', naver_link).stream(transaction=transaction)
+    if snapshot
+
+
+
+def upload_db(db_list, db_type=''):
     """
     upload data to database using given data_dict
 
     :param db_list:
+    :param db_type:
     :return:
     """
-
-    for db in db_list:
-        kind = db.get_value('place_kind')
-        if kind in cafe_list or kind in pub_list:
-            pass
-
-        else:
-            db.update_value('place_category', '식사')
-            print('POST TO place_DB. Category is 식사')
-            doc_ref = db.collection("place_db")
-            doc_ref.add(db.to_dict())
+    if db_type == 'place':
+        for db in db_list:
+            _update_place_transaction(firebase_transaction, db)
+    elif db_type == 'station':
+        pass
+    elif db_type == 'user':
+        pass
+    else:
+        return False
 
