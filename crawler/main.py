@@ -20,7 +20,9 @@ dhc.get_place_info_mangoplate(target_root, place)
 """
 station_name = '강남역'
 dhc = DoughCrawler()
-dhc.set_arg_naver(query=station_name + '맛집')
+dhc.set_arg_naver(station=station_name, search_keyword='맛집')
 dhc.get_place_link_list_naver()
 dhc.get_place_info_naver(station_name)
+print('naver_info get done')
+upload_db(dhc.place_db_list, db_type='place')
 # time.sleep(3)

@@ -6,12 +6,15 @@ import copy
 import requests
 import json
 import datetime
+from haversine import haversine
 from firestore_lib import *
 
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
 naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary/'
 naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant/'
+naver_station_query_root_url = 'https://map.naver.com/v5/api/search'
 
+NAVER_PAGE_MAX = 6  # maximum 6
 with open("naver_query.json", "r", encoding='UTF8') as naver_json:
     naver_query_json = json.load(naver_json)
 parse_table_naver = dict(
@@ -34,6 +37,7 @@ class DoughCrawler:
         self.duplicate_prone_flag = False
         self.naver_arg_set_flag = False
         self.place_db_list = []
+        self.station_info = dict()
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
         options.add_argument('headless')
@@ -53,8 +57,12 @@ class DoughCrawler:
                 print('AttributeError, check target_url and attributes')
         return
 
-    def set_arg_naver(self, query=''):
-        naver_query_json['variables']['input']['query'] = query
+    def set_arg_naver(self, station='', search_keyword=''):
+        naver_query_json['variables']['input']['query'] = station + search_keyword
+        station_query_table = dict(query=station, displayCount=1, lang='ko')
+        station_res = requests.get(naver_station_query_root_url,
+                                   params=station_query_table).json()
+        self.station_info = station_res['result']['place']['list'][0]
         self.naver_arg_set_flag = True
         return
 
@@ -83,7 +91,7 @@ class DoughCrawler:
         if not self.naver_arg_set_flag:
             raise AttributeError
         naver_header = {"method": "POST", "content-type": "application/json"}
-        for page in range(6):
+        for page in range(NAVER_PAGE_MAX):
             self._set_naver_query_page(page)
             naver_query_str = json.dumps(naver_query_json)
             res = requests.post(url=naver_graphql_url, headers=naver_header, data=naver_query_str)
@@ -141,7 +149,14 @@ class DoughCrawler:
                 img_array.append(item['imageUrl'])
             res['menuImages'] = img_array
             for key in parse_table_naver:
-                place_db.update_pair(parse_table_naver[key], res[key])
-            print(place_db.to_dict())
-
+                try:
+                    place_db.update_pair(parse_table_naver[key], res[key])
+                except KeyError:
+                    place_db.update_pair(parse_table_naver[key], None)
+            station_coor = (float(self.station_info['y']), float(self.station_info['x']))
+            place_coor = (float(place_db.get_value('place_coor_y')), float(place_db.get_value('place_coor_x')))
+            distance_to_station = haversine(station_coor, place_coor)
+            place_db.update_pair('distance_to_station', distance_to_station)
+            #print(place_db.to_dict())
+            self.place_db_list.append(copy.deepcopy(place_db))
         return

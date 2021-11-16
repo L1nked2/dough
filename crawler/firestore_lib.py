@@ -1,9 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-import copy
-import string
-import random
+import uuid
 
 # Use the application default credentials
 cred = credentials.Certificate('./service-account.json')
@@ -12,6 +10,7 @@ firebase_admin.initialize_app(cred, {
 })
 firebase_db = firestore.client()
 firebase_transaction = firebase_db.transaction()
+counter_ref = firebase_db.collection('counter')
 place_ref = firebase_db.collection('place_db')
 
 service_domain = "https://www.babyak.kr"
@@ -55,11 +54,14 @@ place_db_thumb_empty = dict(
     place_cluster_c=None,
     place_photo_inside_src=None,
     place_photo_menu_main_src=None,
+    distance_to_station=None,
     place_views=0,
 )
 
 station_db_empty = dict(
     place_list=[],
+    station_coor_x=None,
+    station_coor_y=None,
     station_views=0,
 )
 
@@ -140,9 +142,23 @@ class DB:
 @firestore.transactional
 def _update_place_transaction(transaction, db):
     naver_link = db['place_naver_link']
-    snapshot = place_ref.where('place_naver_link', '==', naver_link).stream(transaction=transaction)
-    if snapshot
-
+    snapshot = place_ref.where('place_naver_link', '==', naver_link).get(transaction=transaction)
+    is_snapshot_empty = len([d for d in snapshot])
+    if is_snapshot_empty:
+        print('snapshot exists')
+        for doc in snapshot:
+            print(f'{doc.id} => {doc.to_dict()}')
+    else:
+        counter_snapshot = counter_ref.document('place').get(transaction=firebase_transaction)
+        place_counter = counter_snapshot.to_dict()
+        transaction.set(place_ref.document(str(place_counter['place_num']).zfill(8)), db, merge=True)
+        place_counter['place_num'] = place_counter['place_num'] + 1
+        db['place_uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, service_domain)
+        transaction.update(counter_ref.document('place'), place_counter)
+        print('place transaction successful')
+        return True
+    print('place transaction aborted')
+    return False
 
 
 def upload_db(db_list, db_type=''):
@@ -155,11 +171,12 @@ def upload_db(db_list, db_type=''):
     """
     if db_type == 'place':
         for db in db_list:
-            _update_place_transaction(firebase_transaction, db)
+            print(db.to_dict()['place_name'])
+            _update_place_transaction(firebase_transaction, db.to_dict())
     elif db_type == 'station':
         pass
     elif db_type == 'user':
         pass
     else:
         return False
-
+    return True
