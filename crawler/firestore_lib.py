@@ -1,19 +1,26 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from google.cloud import storage
+from google.oauth2 import service_account
 import uuid
+import requests
+
+bucket_root_url = 'dough-survey.appspot.com'
+cdn_root_url = 'https://storage.googleapis.com/dough-survey.appspot.com/'
 
 # Use the application default credentials
 cred = credentials.Certificate('./service-account.json')
 firebase_admin.initialize_app(cred, {
     'projectId': 'dough-survey',
 })
+credentials = service_account.Credentials.from_service_account_file(
+    './service-account.json')
+firebase_cloud_storage = storage.Client(credentials=credentials)
 firebase_db = firestore.client()
 firebase_transaction = firebase_db.transaction()
 counter_ref = firebase_db.collection('counter')
 place_ref = firebase_db.collection('place_db')
-
-service_domain = "https://www.babyak.kr"
 
 # data types and key-value pairs
 place_db_empty = dict(
@@ -38,7 +45,7 @@ place_db_empty = dict(
     place_telephone=None,
     place_last_timestamp=None,
     station_name=None,
-    distance_to_station=None,
+    distance_to_station=None,  # to be changed
     place_coor_x=None,
     place_coor_y=None,
     place_views=0,
@@ -54,12 +61,13 @@ place_db_thumb_empty = dict(
     place_cluster_c=None,
     place_photo_inside_src=None,
     place_photo_menu_main_src=None,
+    parent_station=None,
     distance_to_station=None,
     place_views=0,
 )
 
 station_db_empty = dict(
-    place_list=[],
+    place_thumb_list=[],
     station_coor_x=None,
     station_coor_y=None,
     station_views=0,
@@ -78,41 +86,6 @@ class DB:
         self._data = dict()
         for key, value in init_list.items():
             self._data[key] = value
-        return
-
-    def add_list(self, list_name, new_element):
-        """
-        update new list to dictionary using array-like structure
-        init index 0 with new_element if new element exists
-
-        :param list_name: str, new list name
-        :param new_element: index 0 element of new list
-
-        :return: None, raise error if list_name exists already
-        """
-        if list_name + '_length' in self._data:
-            raise NameError
-        else:
-            self._data[list_name] = []
-            self._data[list_name].append(new_element)
-        return
-
-    def update_list(self, list_name, new_element):
-        """
-        update new element to dictionary using array-like structure
-        insert new_element to lowest available index of list
-
-        :param list_name: str, list_name that exists in dictionary
-        :param new_element: str, new element to be inserted
-        :return: None, raise error if list_name is not available
-        """
-        if not (list_name in self._data):
-            raise AttributeError
-        else:
-            if new_element in self._data[list_name]:
-                pass
-            else:
-                self._data[list_name].append(new_element)
         return
 
     def add_pair(self, key, value):
@@ -153,7 +126,6 @@ def _update_place_transaction(transaction, db):
         place_counter = counter_snapshot.to_dict()
         transaction.set(place_ref.document(str(place_counter['place_num']).zfill(8)), db, merge=True)
         place_counter['place_num'] = place_counter['place_num'] + 1
-        db['place_uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, service_domain)
         transaction.update(counter_ref.document('place'), place_counter)
         print('place transaction successful')
         return True
@@ -180,3 +152,26 @@ def upload_db(db_list, db_type=''):
     else:
         return False
     return True
+
+
+def img_upload_from_link(img_link, img_type=None, place_uuid=None, img_suffix=''):
+    if img_type is None:
+        raise TypeError
+    if place_uuid is None:
+        raise AttributeError
+    else:
+        target_name = 'restaurant_' + img_type + '_images/' + place_uuid + img_suffix + '.jpg'
+        file_path = './temp_img/' + place_uuid + img_suffix + '.jpg'
+    f = open(file_path, 'wb')
+    response = requests.get(img_link)
+    f.write(response.content)
+    f.close()
+    bucket = firebase_cloud_storage.get_bucket(bucket_root_url)
+    blob = bucket.blob(target_name)
+    try:
+        blob.upload_from_filename(file_path)
+    except FileNotFoundError:
+        print('File not found', place_uuid)
+        return None
+    img_url = cdn_root_url + target_name
+    return img_url
