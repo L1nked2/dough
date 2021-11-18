@@ -13,6 +13,7 @@ naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
 naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary/'
 naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant/'
 naver_station_query_root_url = 'https://map.naver.com/v5/api/search'
+service_domain = "https://www.babyak.kr"
 
 NAVER_PAGE_MAX = 6  # maximum 6
 with open("naver_query.json", "r", encoding='UTF8') as naver_json:
@@ -138,25 +139,29 @@ class DoughCrawler:
         for link in self.place_link_list:
             actual_link = naver_restaurant_api_root_url + str(link)
             res = requests.get(url=actual_link, params=params).json()
-            restaurant_link = naver_restaurant_root_url + str(link)
-            place_db.update_pair('place_naver_link', restaurant_link)
-            place_db.update_pair('station_name', station_name)
-            place_db.update_pair('place_last_timestamp', datetime.date.today().isoformat())
-            img_array = []
-            for item in res['menus']:
-                del item['isRecommended']
-            for item in res['menuImages']:
-                img_array.append(item['imageUrl'])
-            res['menuImages'] = img_array
-            for key in parse_table_naver:
-                try:
-                    place_db.update_pair(parse_table_naver[key], res[key])
-                except KeyError:
-                    place_db.update_pair(parse_table_naver[key], None)
-            station_coor = (float(self.station_info['y']), float(self.station_info['x']))
-            place_coor = (float(place_db.get_value('place_coor_y')), float(place_db.get_value('place_coor_x')))
-            distance_to_station = haversine(station_coor, place_coor)
-            place_db.update_pair('distance_to_station', distance_to_station)
+            try:
+                restaurant_link = naver_restaurant_root_url + str(link)
+                place_db.update_pair('place_naver_link', restaurant_link)
+                place_db.update_pair('station_name', station_name)
+                place_db.update_pair('place_last_timestamp', datetime.date.today().isoformat())
+                img_array = []
+                for item in res['menus']:
+                    del item['isRecommended']
+                for item in res['menuImages']:
+                    img_array.append(item['imageUrl'])
+                res['menuImages'] = img_array
+                for key in parse_table_naver:
+                    try:
+                        place_db.update_pair(parse_table_naver[key], res[key])
+                    except KeyError:
+                        place_db.update_pair(parse_table_naver[key], None)
+                place_db.update_pair('place_uuid', uuid.uuid5(uuid.NAMESPACE_DNS, service_domain))
+                station_coor = (float(self.station_info['y']), float(self.station_info['x']))
+                place_coor = (float(place_db.get_value('place_coor_y')), float(place_db.get_value('place_coor_x')))
+                distance_to_station = haversine(station_coor, place_coor)
+                place_db.update_pair('distance_to_station', distance_to_station)
+            except TypeError:
+                continue
             #print(place_db.to_dict())
             self.place_db_list.append(copy.deepcopy(place_db))
         return
