@@ -51,7 +51,8 @@
 }
 
 .menuChange {
-    padding: 10px;
+    padding-top: 30px;
+    padding-right: 5%;
     background-color: rgba(0,0,0,0.03);
     display: flex;
     justify-content: right;
@@ -76,4 +77,22 @@
     width: 100%;
     border: none;
     height: 50vh;
+}
+
+.fadeOverlay-enter {
+    opacity: 0.01;
+}
+  
+.fadeOverlay-enter-active {
+    opacity: 1;
+    transition: all 200ms ease-in;
+}
+  
+.fadeOverlay-exit {
+    opacity: 1;
+}
+  
+.fadeOverlay-exit-active {
+    opacity: 0.01;
+    transition: all 200ms ease-in;
 }

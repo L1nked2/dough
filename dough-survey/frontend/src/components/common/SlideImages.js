@@ -25,7 +25,7 @@ function SlideImages(props) {
     }
 
     return (
-      <Swiper scrollbar={{"hide": true}} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} className="mySwiper">
+      <Swiper scrollbar={{"hide": true}} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} className={`mySwiper ${props.name}`}>
           <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}>
             <div>
               <div style={{fontSize:20, marginBottom:20}}>1순위</div>
