@@ -18,18 +18,21 @@ function Main() {
     const changeIsFavorite = () => {setPageComponent([false, false, true, false]);}
     const changeIsProfile = () => {setPageComponent([false, false, false, true]);}
 
+    const changeState =  {changeToHome: changeIsHome,
+                          changeToSession: changeIsSession,
+                          changeToFavorite: changeIsFavorite,
+                          changeToProfile: changeIsProfile};
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pageComponent])
-
+    
     return(
         <div className="layout" >
-            {pageComponent[0] && <Home changeIsHome={changeIsHome}/>}
-            {pageComponent[1] && <Session changeIsHome={changeIsHome}/>}
-            {pageComponent[2] && <Favorite changeIsHome={changeIsHome}/>}
-            {pageComponent[3] && <Profile changeIsHome={changeIsHome}/>}
-            <Navbar pageComponent={pageComponent} changeIsHome={changeIsHome} 
-                    changeIsSession={changeIsSession} changeIsFavorite={changeIsFavorite} changeIsProfile={changeIsProfile}/>
+            {pageComponent[0] && <Home changeState={changeState}/>}
+            {pageComponent[1] && <Session changeState={changeState}/>}
+            {pageComponent[2] && <Favorite changeState={changeState}/>}
+            {pageComponent[3] && <Profile changeState={changeState}/>}
+            <Navbar pageComponent={pageComponent} changeState={changeState} />
         </div>
     );
 }

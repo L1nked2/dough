@@ -9,12 +9,16 @@ import sampleImage from "../../img/login_background.png";
 import './MyShop.css';
 
 function MyShop(props) {
+  /* Nav bar button controller */
   const [slideCategory, setSlideCategory] = useState([true, false, false]);
   const changeRestaurant = () => {setSlideCategory([true, false, false]);}
   const changeCafe = () => {setSlideCategory([false, true, false]);}
   const changeBar = () => {setSlideCategory([false, false, true]);}
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  /* Menu choice modal controller */
+  const [menuModalIsOpen, setMenuModalIsOpen] = useState(false);
+  const openMenuModal = () => {setMenuModalIsOpen(true)};
+  const closeMenuModal = () => {setMenuModalIsOpen(false)};
 
   const foodList = ['분식', '곱창', '닭발', '국밥', '백반', '돼지고기', '돈카츠', '닭갈비', '소고기', 
                     '일본가정식', '일본카레', '오믈렛', '회', '스시', '샐러드', '샌드위치', '브런치',
@@ -61,7 +65,10 @@ function MyShop(props) {
     <div className="myShop">
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
-        <span className="locationButton"><MapIcon width={17}/><span id="location">서울/강남역</span></span>
+        <span onClick={props.openLocationPage} className="locationButton">
+          <MapIcon width={17}/>
+          <span id="location">{`${props.currLocation.name === "위치 선택" ? "" : "서울/"}${props.currLocation.name}`}</span>
+        </span>
       </div>
       <nav className="shopCategory">
         <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
@@ -73,12 +80,12 @@ function MyShop(props) {
       {slideCategory[0] && <>
         <div className="menuChange">
           { checkAnyActive(stateFood)
-            ? <div onClick={() => setModalIsOpen(true)} className="menuChangeButton">{`음식 | ${printActiveMenu(stateFood)}`}<span>{`>`}</span></div>
-            : <div onClick={() => setModalIsOpen(true)} className="menuChangeButton">음식 종류 바꾸기<span>{`>`}</span></div>
+            ? <div onClick={openMenuModal} className="menuChangeButton">{`음식 | ${printActiveMenu(stateFood)}`}<span>{`>`}</span></div>
+            : <div onClick={openMenuModal} className="menuChangeButton">음식 종류 바꾸기<span>{`>`}</span></div>
           }
         </div>
-        <CSSTransition in={modalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
-          <MenuModal name="음식" list={stateFood} setList={setStateFood} setModalIsOpen={setModalIsOpen} />
+        <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+          <MenuModal name="음식" list={stateFood} setList={setStateFood} closeMenuModal={closeMenuModal} />
         </CSSTransition>
         <SlideImages 
           openModal={props.openPage} 
@@ -108,12 +115,12 @@ function MyShop(props) {
       {slideCategory[2] && <>
         <div className="menuChange">
           { checkAnyActive(stateDrink)
-            ? <div onClick={() => setModalIsOpen(true)} className="menuChangeButton">{`술 | ${printActiveMenu(stateDrink)}`}<span>{`>`}</span></div>
-            : <div onClick={() => setModalIsOpen(true)} className="menuChangeButton">술 종류 바꾸기<span>{`>`}</span></div>
+            ? <div onClick={openMenuModal} className="menuChangeButton">{`술 | ${printActiveMenu(stateDrink)}`}<span>{`>`}</span></div>
+            : <div onClick={openMenuModal} className="menuChangeButton">술 종류 바꾸기<span>{`>`}</span></div>
           }
         </div>
-        <CSSTransition in={modalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
-          <MenuModal name="술" list={stateDrink} setList={setStateDrink} setModalIsOpen={setModalIsOpen} />
+        <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+          <MenuModal name="술" list={stateDrink} setList={setStateDrink} closeMenuModal={closeMenuModal} />
         </CSSTransition>
         <SlideImages 
           openModal={props.openPage} 

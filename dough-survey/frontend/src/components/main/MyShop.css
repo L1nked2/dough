@@ -21,6 +21,7 @@
     padding-bottom: 2px;
     border-bottom: 1px solid #707070;
     bottom: 8px;
+    user-select: none;
 }
 
 .shopCategory {

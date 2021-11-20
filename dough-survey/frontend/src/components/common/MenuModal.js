@@ -20,7 +20,7 @@ function MenuModal(props) {
     };
     function applyStates () {
         props.setList(stateList);
-        props.setModalIsOpen(false);
+        props.closeMenuModal();
     };
 
     return (
@@ -38,7 +38,7 @@ function MenuModal(props) {
                     })}
                 </div>
                 <div className="buttonSection">
-                    <div className="close" onClick={() => props.setModalIsOpen(false)}>닫기</div>
+                    <div className="close" onClick={() => props.closeMenuModal()}>닫기</div>
                     <div className="apply" onClick={applyStates}>적용하기</div>
                 </div>
             </div>
