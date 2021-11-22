@@ -129,4 +129,7 @@ dist
 # secure info
 service-account.json
 
+# img files
+temp_img/
+
 # End of https://www.toptal.com/developers/gitignore/api/node

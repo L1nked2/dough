@@ -1,6 +1,8 @@
 from dough_crawler import *
 from firestore_lib import *
 import time
+import csv
+
 
 """
 max_page = 1
@@ -18,15 +20,36 @@ for page in range(1, max_page + 1):
 # 맛집 정보 파싱
 dhc.get_place_info_mangoplate(target_root, place)
 """
-img_upload_from_link(test_link, img_type='menu', place_uuid='135151-shgd13-135asdg')
-print('upload_successful', url)
-time.sleep(10)
-station_name = '이태원'
 dhc = DoughCrawler()
-dhc.set_arg_naver(station=station_name, search_keyword='와인바')
+
+dhc.clear()
+station_name = '강남역'
+dhc.set_arg_naver(station=station_name, search_keyword='맛집', delay=1)
+print('naver_link_list_get start')
 dhc.get_place_link_list_naver()
+print('naver_link_list_get done')
+print('naver_info_get start')
 dhc.get_place_info_naver(station_name)
-print('naver_info get done')
+print('naver_info_get done')
 time.sleep(10)
+print('upload_db start')
 upload_db(dhc.place_db_list, db_type='place')
+print('upload_db done')
+
+# test code for category analysis
+db_list = dhc.get_db_list()
+category_set_1 = set()
+category_set_2 = set()
+for item in db_list:
+    category_set_1.add(item.get_value('place_category')[0])
+    category_set_2.add(item.get_value('place_category')[1])
+f1 = open('category_output_1.csv', 'w+', encoding='utf-8', newline='')
+f2 = open('category_output_2.csv', 'w+', encoding='utf-8', newline='')
+wr1 = csv.writer(f1)
+wr2 = csv.writer(f2)
+wr1.writerow(list(category_set_1))
+wr2.writerow(list(category_set_2))
+f1.close()
+f2.close()
+print('all process done')
 # time.sleep(3)

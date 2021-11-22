@@ -36,16 +36,17 @@ place_db_empty = dict(
     place_kind=None,
     place_menu=[],
     place_naver_link=None,
+    place_photo_validity=False,
+    place_photo_provided=[],
     place_photo_inside=[],
-    place_photo_menu=[],
     place_photo_food=[],
+    place_photo_menu=[],
     place_photo_inside_main_src=None,
     place_photo_food_main_src_1=None,
     place_photo_food_main_src_2=None,
     place_telephone=None,
     place_last_timestamp=None,
-    station_name=None,
-    distance_to_station=None,  # to be changed
+    parent_stations=None,
     place_coor_x=None,
     place_coor_y=None,
     place_views=0,
@@ -59,8 +60,10 @@ place_db_thumb_empty = dict(
     place_cluster_a=None,
     place_cluster_b=None,
     place_cluster_c=None,
-    place_photo_inside_src=None,
-    place_photo_menu_main_src=None,
+    place_photo_inside_main_src=None,
+    place_photo_food_main_src_1=None,
+    place_photo_food_main_src_2=None,
+    place_telephone=None,
     parent_station=None,
     distance_to_station=None,
     place_views=0,
@@ -68,6 +71,7 @@ place_db_thumb_empty = dict(
 
 station_db_empty = dict(
     place_thumb_list=[],
+    station_name=None,
     station_coor_x=None,
     station_coor_y=None,
     station_views=0,
@@ -154,15 +158,17 @@ def upload_db(db_list, db_type=''):
     return True
 
 
-def img_upload_from_link(img_link, img_type=None, place_uuid=None, img_suffix=''):
+def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None):
     if img_type is None:
+        print('img_upload: type is empty')
         raise TypeError
     if place_uuid is None:
+        print('img_upload: uuid is empty')
         raise AttributeError
     else:
-        target_name = 'restaurant_' + img_type + '_images/' + place_uuid + img_suffix + '.jpg'
-        file_path = './temp_img/' + place_uuid + img_suffix + '.jpg'
-    f = open(file_path, 'wb')
+        target_name = f'restaurant_{img_type}_images/{place_uuid}_{img_type}_{img_num}.jpg'
+        file_path = f'./temp_img/{place_name}/{img_type}/{place_uuid}_{img_type}_{img_num}.jpg'
+    f = open(file_path, 'wb+')
     response = requests.get(img_link)
     f.write(response.content)
     f.close()
