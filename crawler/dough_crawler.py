@@ -1,20 +1,20 @@
 import time
-
-from selenium import webdriver
-from selenium.common.exceptions import *
-from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
 import copy
 import os
 import requests
 import json
 import datetime
+import re
+from selenium import webdriver
+from selenium.common.exceptions import *
+from selenium.webdriver.common.keys import Keys
+from bs4 import BeautifulSoup
 from haversine import haversine
 from firestore_lib import *
 
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
-naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary/'
-naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant/'
+naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary'
+naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant'
 naver_station_query_root_url = 'https://map.naver.com/v5/api/search'
 service_domain = "https://www.babyak.kr"
 
@@ -29,7 +29,7 @@ parse_table_naver = dict(
     name='place_name',
     fullRoadAddress='place_road_address',
     address='place_legacy_address',
-    categories='place_category',
+    category='place_category',
     bizhourInfo='place_operating_time',
     menus='place_menu',
     menuImages='place_photo_menu',
@@ -39,19 +39,21 @@ parse_table_naver = dict(
 )
 
 
-def check_db_existence(restaurant_link):
-    return False
-
-
 class DoughCrawler:
-    def __init__(self, target_url=None, **kwargs):
+    def __init__(self, **kwargs):
+        # attributes initializing
         self.place_link_list = []
         self.duplicate_prone_flag = False
+        self.site_cookies = None
         self.naver_arg_set_flag = False
         self.photo_error_list = []
         self.place_db_list = []
         self.station_info = dict()
         self.delay = 0
+        self.current_place_db = None
+        self.do_img_send = True
+        self.__dict__.update((k, v) for k, v in kwargs.items())
+        # webdriver initializing
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
         options.add_argument('headless')
@@ -60,16 +62,10 @@ class DoughCrawler:
         self.driver = webdriver.Chrome('./chromedriver.exe', options=options)
         self.driver.implicitly_wait(3)
         self.driver.refresh()
-        self.driver_get(target_url, **kwargs)
         return
 
-    def clear(self):
-        self.place_link_list = []
-        self.duplicate_prone_flag = False
-        self.naver_arg_set_flag = False
-        self.photo_error_list = []
-        self.place_db_list = []
-        self.station_info = dict()
+    def clear(self, **kwargs):
+        self.__init__(**kwargs)
         return
 
     def driver_get(self, target_url, **kwargs):
@@ -84,8 +80,13 @@ class DoughCrawler:
         naver_restaurant_query_json['variables']['input']['query'] = f'{station} {search_keyword}'
         station_query_table = dict(query=station, displayCount=1, lang='ko')
         station_res = requests.get(naver_station_query_root_url,
-                                   params=station_query_table).json()
+                                   params=station_query_table)
+        if station_res.status_code == 200:
+            station_res = station_res.json()
         self.station_info = station_res['result']['place']['list'][0]
+        cookie_res = requests.get("https://www.naver.com/")
+        if cookie_res.status_code == 200:
+            self.site_cookies = cookie_res.cookies.get_dict()
         self.delay = delay
         self.naver_arg_set_flag = True
         return
@@ -109,31 +110,41 @@ class DoughCrawler:
     def get_db_list(self):
         return self.place_db_list
 
-    def get_place_link_list_mangoplate(self, *substring):
-        page_src = self.driver.page_source
-        soup = BeautifulSoup(page_src, 'html.parser')
-        for item in soup.find_all('a'):
-            try:
-                if item.get('href').find(*substring) != -1:
-                    self.place_link_list.append(item.get('href'))
-            except AttributeError:
-                continue
-        self.duplicate_prone_flag = True
-        return self.place_link_list
-
     def get_place_link_list_naver(self):
         if not self.naver_arg_set_flag:
             raise AttributeError
         naver_header = {
             "method": "POST", "content-type": "application/json",
+            "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/95.0.4638.69 Safari/537.36"
         }
         for page in range(NAVER_PAGE_MAX):
             self._set_naver_restaurant_query_page(page)
             naver_query_str = json.dumps(naver_restaurant_query_json)
-            res = requests.post(url=naver_graphql_url, headers=naver_header, data=naver_query_str)
-            time.sleep(self.delay)
-            # print(res)  # test
-            item_list = res.json()['data']['restaurants']['items']
+            try:
+                res = requests.post(url=naver_graphql_url, headers=naver_header,
+                                    data=naver_query_str, cookies=self.site_cookies).json()
+            except json.decoder.JSONDecodeError:
+                print('get_place_link_list_naver: response error occurred while getting link_list, retry query')
+                is_valid = False
+                res = None
+                print("attempts:", end=" ", flush=True)
+                for i in range(MAX_QUERY_RETRY):
+                    print(f'{i+1}/{MAX_QUERY_RETRY}', end=" ", flush=True)
+                    res = requests.post(url=naver_graphql_url, headers=naver_header,
+                                        data=naver_query_str, cookies=self.site_cookies)
+                    time.sleep(self.delay * i)  # linearly increasing delay
+                    if res.status_code == 200:
+                        is_valid = True
+                        break
+                print('')
+                if is_valid and res:
+                    res = res.json()
+                else:
+                    print('get_place_link_list_naver: list fetching failed')
+                    print(res, res.headers)  # test
+                    return None
+            item_list = res['data']['restaurants']['items']
             for item in item_list:
                 try:
                     self.place_link_list.append(item['id'])
@@ -147,34 +158,12 @@ class DoughCrawler:
             self.place_link_list = list(set(self.place_link_list))
         return
 
-    def get_place_info_mangoplate(self, root_url, station_name):
-        self._remove_duplicates()
-        place_db = DB(place_db_empty)
-        for link in self.place_link_list:
-            actual_link = root_url + link
-            self.driver_get(actual_link)
-            page_src = self.driver.page_source
-            soup = BeautifulSoup(page_src, 'html.parser')
-            place_db.update_pair('station_name', station_name)
-            for key in place_db.get_keys():
-                if key == 'place_name':
-                    result = soup.find('h1', attrs={'class': 'restaurant_name'})
-                    if result:
-                        place_db.update_pair(key, result.get_text())
-                        print(result.get_text())
-                elif key == 'place_address':
-                    pass
-                else:
-                    pass
-        self.place_db_list.append(place_db)
-        return
-
-    @staticmethod
-    def _get_place_info_naver_basic(place_db, res, station_name, link):
+    def _get_place_info_naver_basic(self, res, station_name, link):
         # manipulate data
-        restaurant_link = naver_restaurant_root_url + str(link)
+        restaurant_link = f'{naver_restaurant_root_url}/{link}'
         if check_db_existence(restaurant_link):
             return False
+        place_db = self.current_place_db
         for key in parse_table_naver:
             try:
                 place_db.update_pair(parse_table_naver[key], res[key])
@@ -187,23 +176,21 @@ class DoughCrawler:
 
         # make directory for images
         place_name = place_db.get_value('place_name')
-        os.mkdir(f'./temp_img/{place_name}')
-        os.mkdir(f'./temp_img/{place_name}/menu')
-        os.mkdir(f'./temp_img/{place_name}/provided')
-        os.mkdir(f'./temp_img/{place_name}/inside')
-        os.mkdir(f'./temp_img/{place_name}/food')
+        place_uuid = place_db.get_value('place_uuid')
+        local_path = f'./temp_img/{place_name}_{place_uuid}'
+        os.mkdir(local_path)
+        os.mkdir(f'{local_path}/menu')
+        os.mkdir(f'{local_path}/provided')
+        os.mkdir(f'{local_path}/inside')
+        os.mkdir(f'{local_path}/food')
 
-        # upload images
-        img_array = []
+        # upload menu images
+        img_links = []
         for item in res['menus']:
             del item['isRecommended']
-        for index in range(len(res['menuImages'])):
-            img_upload_from_link(res['menuImages'][index]['imageUrl'],
-                                 img_type='menu',
-                                 place_name=place_db.get_value('place_name'),
-                                 place_uuid=place_db.get_value('place_uuid'),
-                                 img_num=index)
-            img_array.append(res['menuImages'][index]['imageUrl'])
+        for item in res['menuImages']:
+            img_links.append(item['imageUrl'])
+        img_array = self._upload_photo_naver(img_links, place_db, 'menu')
         res['menuImages'] = img_array
 
         # station_coor = (float(self.station_info['y']), float(self.station_info['x']))
@@ -212,76 +199,113 @@ class DoughCrawler:
         # place_db.update_pair('distance_to_station', distance_to_station)
         return True
 
-    def _get_place_info_naver_photo(self, place_db, link, relations=''):
+    def _get_place_info_naver_photo_provided(self, link):
+        img_links = []
+        target_url = f'{naver_restaurant_root_url}/{link}/photo?filterType=업체사진'
+        self.driver_get(target_url=target_url)
+        page_src = self.driver.page_source
+        soup = BeautifulSoup(page_src, 'html.parser')
+        photo_list = soup.find_all("img", id=re.compile("ibu_[1-9]?\\d"))
+        for photo_index in range(min(MAX_IMG_NUM, len(photo_list))):
+            photo_link = re.sub(r"&quality=95&type=f180_180", r"&type=w750", photo_list[photo_index].get('src'))
+            img_links.append(photo_link)
+        return img_links
+
+    def _get_place_info_naver_photo(self, link, relations=''):
         if not self.naver_arg_set_flag:
             print('naver argument not set')
             raise AttributeError
+        # webdriver method (provided)
         if relations == 'provided':
             photo_category = 'place_photo_provided'
-            query_relation = '업체사진'
-        elif relations == 'food':
-            photo_category = 'place_photo_food'
-            query_relation = '음식'
-        elif relations == 'inside':
-            photo_category = 'place_photo_inside'
-            query_relation = '내부'
+            img_links = self._get_place_info_naver_photo_provided(link)
+
+        # api method (food, inside)
         else:
-            raise AttributeError
-        naver_header = {"method": "POST", "content-type": "application/json"}
-        self._set_naver_photo_query_arg(link, relations=query_relation)
-        naver_query_str = json.dumps(naver_photo_query_json)
-        try:
-            res = requests.post(url=naver_graphql_url, headers=naver_header, data=naver_query_str).json()
-        except json.decoder.JSONDecodeError:
-            print('response error occurred, retry query')
-            is_valid = False
-            res = None
-            for i in range(MAX_QUERY_RETRY):
-                res = requests.post(url=naver_graphql_url, headers=naver_header, data=naver_query_str)
-                time.sleep(self.delay)
-                if res.status_code == 200:
-                    is_valid = True
-                    break
-            if is_valid and res:
-                res = res.json()
+            if relations == 'food':
+                photo_category = 'place_photo_food'
+                query_relation = '음식'
+            elif relations == 'inside':
+                photo_category = 'place_photo_inside'
+                query_relation = '내부'
             else:
-                print('fetching failed')
-                self.photo_error_list.append(link)
-                return
-        img_url_array = []
-        img_num = min(MAX_IMG_NUM, len(res[0]['data']['sasImages'][0]['items']))
-        for index in range(img_num):
-            url = res[0]['data']['sasImages'][0]['items'][index]['imgUrl']
-            actual_url = img_upload_from_link(url,
-                                              img_type=relations,
-                                              place_name=place_db.get_value('place_name'),
-                                              place_uuid=place_db.get_value('place_uuid'),
-                                              img_num=index)
-            img_url_array.append(actual_url)
-        place_db.update_pair(photo_category, img_url_array)
+                raise AttributeError
+
+            naver_header = {
+                "method": "POST", "content-type": "application/json",
+                "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                              "Chrome/95.0.4638.69 Safari/537.36"
+            }
+            self._set_naver_photo_query_arg(link, relations=query_relation)
+            naver_query_str = json.dumps(naver_photo_query_json)
+            try:
+                res = requests.post(url=naver_graphql_url, headers=naver_header,
+                                    data=naver_query_str, cookies=self.site_cookies).json()
+            except json.decoder.JSONDecodeError:
+                print('get_place_info_naver: response error occurred while getting photo, retry query')
+                is_valid = False
+                res = None
+                print("attempts:", end=" ", flush=True)
+                for i in range(MAX_QUERY_RETRY):
+                    print(f'{i+1}/{MAX_QUERY_RETRY}', end=" ", flush=True)
+                    res = requests.post(url=naver_graphql_url, headers=naver_header,
+                                        data=naver_query_str, cookies=self.site_cookies)
+                    time.sleep(self.delay * i)  # linearly increasing delay
+                    if res.status_code == 200:
+                        is_valid = True
+                        break
+                print('')
+                if is_valid and res:
+                    res = res.json()
+                else:
+                    print('get_place_info_naver: photo fetching failed')
+                    self.photo_error_list.append({'link': link, 'relation': relations})
+                    return
+            img_links = []
+            for item in res[0]['data']['sasImages'][0]['items']:
+                img_links.append(item['imgUrl'])
+
+        # sending images to server
+        img_url_array = self._upload_photo_naver(img_links, self.current_place_db, relations)
+        self.current_place_db.update_pair(photo_category, img_url_array)
         return
 
     def get_place_info_naver(self, station_name):
         self._remove_duplicates()
-        place_db = DB(place_db_empty)
+        self.current_place_db = DB(place_db_empty)
         params = {"lang": "ko"}
 
         for link in self.place_link_list:
-            actual_link = naver_restaurant_api_root_url + str(link)
+            actual_link = f'{naver_restaurant_api_root_url}/{link}'
             res = requests.get(url=actual_link, params=params).json()
             try:
-                validity = self._get_place_info_naver_basic(place_db, res, station_name, link)
+                validity = self._get_place_info_naver_basic(res, station_name, link)
                 if validity:
-                    self._get_place_info_naver_photo(place_db, link, relations='provided')
-                    self._get_place_info_naver_photo(place_db, link, relations='food')
-                    self._get_place_info_naver_photo(place_db, link, relations='inside')
+                    self._get_place_info_naver_photo(link, relations='provided')
+                    self._get_place_info_naver_photo(link, relations='food')
+                    self._get_place_info_naver_photo(link, relations='inside')
             except TypeError:
                 print('type error occurred while getting place_info_naver')
                 continue
-            print(place_db.to_dict()['place_name'])
-            self.place_db_list.append(copy.deepcopy(place_db))
+            self.place_db_list.append(copy.deepcopy(self.current_place_db))
+            print(self.current_place_db.to_dict()['place_name'], 'added to db list')
         if not self.photo_error_list:
             print('photo error list')
             for link in self.photo_error_list:
                 print(link)
         return
+
+    def _upload_photo_naver(self, img_links, place_db, img_type):
+        img_url_array = []
+        img_num = min(MAX_IMG_NUM, len(img_links))
+        for index in range(img_num):
+            url = img_links[index]
+            crawled_url = img_upload_from_link(url,
+                                               img_type=img_type,
+                                               place_name=place_db.get_value('place_name'),
+                                               place_uuid=place_db.get_value('place_uuid'),
+                                               img_num=index,
+                                               do_img_send=self.do_img_send
+                                               )
+            img_url_array.append(crawled_url)
+        return img_url_array

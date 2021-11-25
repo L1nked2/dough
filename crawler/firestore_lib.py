@@ -158,7 +158,7 @@ def upload_db(db_list, db_type=''):
     return True
 
 
-def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None):
+def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None, do_img_send=True):
     if img_type is None:
         print('img_upload: type is empty')
         raise TypeError
@@ -166,18 +166,25 @@ def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=No
         print('img_upload: uuid is empty')
         raise AttributeError
     else:
-        target_name = f'restaurant_{img_type}_images/{place_uuid}_{img_type}_{img_num}.jpg'
-        file_path = f'./temp_img/{place_name}/{img_type}/{place_uuid}_{img_type}_{img_num}.jpg'
+        target_name = f'restaurant_images/{place_uuid}/{img_type}_{img_num}.jpg'
+        file_path = f'./temp_img/{place_name}_{place_uuid}/{img_type}/{img_num}.jpg'
     f = open(file_path, 'wb+')
     response = requests.get(img_link)
     f.write(response.content)
     f.close()
-    bucket = firebase_cloud_storage.get_bucket(bucket_root_url)
-    blob = bucket.blob(target_name)
-    try:
-        blob.upload_from_filename(file_path)
-    except FileNotFoundError:
-        print('File not found', place_uuid)
-        return None
-    img_url = cdn_root_url + target_name
+    if do_img_send:
+        bucket = firebase_cloud_storage.get_bucket(bucket_root_url)
+        blob = bucket.blob(target_name)
+        try:
+            blob.upload_from_filename(file_path)
+        except FileNotFoundError:
+            print('File not found', place_name, place_uuid)
+            return None
+        img_url = cdn_root_url + target_name
+    else:
+        img_url = img_link
     return img_url
+
+
+def check_db_existence(restaurant_link):
+    return False
