@@ -1,0 +1,66 @@
+.shopPage {
+    position: fixed;
+    top: 60px;
+    width: inherit;
+    min-height: calc(100vh - 110px);
+    max-height: calc(100vh - 110px);
+    background-color: seashell;
+    overflow-y: scroll;
+    z-index: 15;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.subHeader {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: inherit;
+    height: 60px;
+    background-color: white;
+}
+
+
+.subNavbar {
+    position: fixed;
+    bottom: 0;
+    width: inherit;
+    height: 50px;
+    background-color: white;
+
+    display: flex;
+    justify-content: center;
+    font-size: 19px;
+    color: rgba(0,0,0,0.36);
+}
+.subNavbar .buttons{
+    position: relative;
+    width: 60%;
+    height: inherit;
+    display: flex;
+    align-items: center;
+}
+.subNavbar .buttons .likeButton {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+}
+.subNavbar .buttons .shareButton {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+}

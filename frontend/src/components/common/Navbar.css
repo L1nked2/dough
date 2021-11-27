@@ -8,11 +8,15 @@
     overflow: hidden;
     display: flex;
     align-items: center;
+    justify-content: center;
     z-index: 10;
     min-width: 320px;
+
+    border-top: 1px solid #D1D1D1;
 }
 
 .Navbar > div {
+    margin-top: 2px;
     text-align: center;
     float: left;
     width: 25%;

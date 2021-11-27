@@ -44,7 +44,7 @@ function EachMoreShop(props) {
         <div className="subimages">
           <div id="subimage" style={{backgroundImage: `url(${sampleImage})`}}/>
           <div id="subimage" style={{backgroundImage: `url(${sampleImage})`}}/>
-          <div id="plusButton"><Plus width={25}/></div>
+          <div id="plusButton"><Plus width={15}/></div>
         </div>
       </div>
     </div>
@@ -62,12 +62,10 @@ function Location(props) {
 
 function Plus(props) {
   return(
-    <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 22 22">
-      <circle id="타원_267" data-name="타원 267" cx="11" cy="11" r="11" fill="rgba(0,0,0,0.18)" opacity="0.26"/>
-      <g id="그룹_261" data-name="그룹 261" transform="translate(-2682.444 -3158.556)">
-        <path id="패스_896" data-name="패스 896" d="M193.573,51.229h-4.261V46.967a1.041,1.041,0,0,0-1.041-1.041h0a1.041,1.041,0,0,0-1.041,1.041v4.261h-4.261a1.041,1.041,0,0,0-1.041,1.041h0a1.041,1.041,0,0,0,1.041,1.041h4.261v4.261a1.041,1.041,0,0,0,1.041,1.041h0a1.041,1.041,0,0,0,1.041-1.041V53.311h4.261a1.041,1.041,0,0,0,1.041-1.041h0A1.041,1.041,0,0,0,193.573,51.229Z" transform="translate(2505.174 3117.285)" fill="#a4a4a4"/>
-      </g>
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 9.464 15.435">
+      <path id="패스_7318" data-name="패스 7318" d="M0,8,7.012,0l7.012,8" transform="translate(8.706 0.706) rotate(90)" fill="none" stroke="rgba(0,0,0,0.36)" stroke-linecap="round" stroke-width="1"/>
     </svg>
+
   );
 }  
 
