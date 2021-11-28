@@ -6,11 +6,11 @@
 }
 
 .mySwiper.cafe{
-  padding-top: calc(15px + 58.2px);
+  padding-top: calc(30px + 10px + 20px + 1.1em);
 }
 
 .swiper-slide {
-  font-size: 19px;
+  font-size: 1.4em;
   color: white;
   font-family: "SpoqaBold";
   border-radius: 25px;

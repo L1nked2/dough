@@ -5,7 +5,7 @@
     margin-top: 10px;
 }
 .myShopHeader #myShop {
-    font-size: 36px;
+    font-size: 2.6em;
     margin-right: 25px;
 }
 .myShopHeader .locationButton {
@@ -15,7 +15,7 @@
 }
 .myShopHeader .locationButton #location{
     position: relative;
-    font-size: 15px;
+    font-size: 1.2em;
     color: rgba(0,0,0,0.6);
     margin-left: 4px;
     padding-bottom: 2px;
@@ -39,10 +39,11 @@
     padding-top: 7px;
     padding-bottom: 7px;
 
-    font-size: 17px;
+    font-size: 1.4em;
     font-family: SpoqaRegular;
     color: rgba(0,0,0,0.36);
     cursor: pointer;
+    user-select: none;
 }
 
 .shopCategory .active {
@@ -68,6 +69,8 @@
     padding-left: 20px;
     padding-right: 10px;
     cursor: pointer;
+    font-size: 1.1em;
+    user-select: none;
 }
 
 .menuChange .menuChangeButton > span{

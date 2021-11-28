@@ -21,6 +21,7 @@
     background-color: white;
     font-size: 1.1em;
     border-bottom: 1px solid rgba(0,0,0,0.18);
+    user-select: none;
 }
 .locationPage .selection {
     position: fixed;
@@ -33,6 +34,7 @@
     color: white;
     background-color: #A4A4A4;
     cursor: pointer;
+    user-select: none;
 }
 .locationPage .selection.active {
     background-color: #3FB8D5;
@@ -55,6 +57,8 @@
     padding-left: 30px;
     padding-top: 8vh;
     padding-bottom: 4vh;
+    display: flex;
+    justify-content: left;
 }
 .locationPage .name .currLoc {
     color: rgba(0,0,0,0.36);
@@ -164,6 +168,7 @@
 .station .spellStation{
     display: flex;
     flex-direction: row;
+    align-items: center;
     padding-bottom: 20px;
 }
 .station .spellStation .eachStation{
@@ -184,6 +189,7 @@
     right: 30px;
     color: rgba(0, 0, 0, 0.36);
     font-size: 0.8em;
+    user-select: none;
 }
 
 @media (max-width: 528px){

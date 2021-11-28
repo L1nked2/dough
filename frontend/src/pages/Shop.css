@@ -4,19 +4,12 @@
     width: inherit;
     min-height: calc(100vh - 110px);
     max-height: calc(100vh - 110px);
-    background-color: seashell;
+    background-color: white;
     overflow-y: scroll;
     z-index: 15;
+    font-family: "SpoqaRegular";
 }
 
-.backButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 15%;
-    height: 100%;
-    cursor: pointer;
-}
 
 .subHeader {
     display: flex;
@@ -27,8 +20,153 @@
     height: 60px;
     background-color: white;
 }
+.subHeader .backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
 
+.shopPage > .name {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 2.6em;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-family: "SpoqaMedium";
+}
 
+.simpleInfo {
+    width: 100%;
+    font-size: 1.2em;
+    display: flex;
+    color: rgba(0,0,0,0.65);
+}
+.simpleInfo .price{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.simpleInfo .price .temp{
+    position: absolute;
+    right: 30px;
+    display: flex;
+    gap: 3px;
+}
+.simpleInfo .location{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    gap: 3px;
+}
+
+.fourPictures {
+    padding: 30px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.twoPictures {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.twoPictures > img {
+    width: calc(50% - 5px);
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.shopPage .information {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 1.2em;
+}
+.information .eachInformation {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.information .eachInformation .icon{
+    width: calc(10% - 20px);
+    padding-top: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+.information .eachInformation .icon.naver{
+    padding-top: 0px;
+}
+.information .eachInformation .contents{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.information .eachInformation .contents .eachMenu{
+    display: inline-flex;
+    flex-direction: row;
+    position: relative;
+}
+.information .eachInformation .contents .eachMenu .name{
+    flex-shrink: 0;
+    
+}
+.information .eachInformation .contents .eachMenu .line{
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-left: 1em;
+    margin-right: 1em;
+    height: auto;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.18) 80%, rgba(255,255,255,0) 20%);
+    background-position: center right;
+    background-size: 15px 1px;
+    background-repeat: repeat-x;
+}
+.information .eachInformation .contents .eachMenu .price{
+    flex-shrink: 0;
+    margin-left: auto;
+}
+.information .eachInformation .contents.reviews{
+    overflow-y: hidden;
+}
+.information .eachInformation .contents .eachReview{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-right: 11.11%;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    cursor: pointer;
+    text-decoration: none;
+    color: rgba(0,0,0,0.9);
+}
+.information .eachInformation .contents .eachReview .title{
+    margin-bottom: 10px;
+}
+.information .eachInformation .contents .eachReview .content{
+    height: 3em;
+    overflow-y: hidden;
+    font-size: 0.917em;
+    color: rgba(0,0,0,0.65);
+}
+
+.expandButton{
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0,0,0,0.03);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
 .subNavbar {
     position: fixed;
     bottom: 0;
@@ -38,8 +176,9 @@
 
     display: flex;
     justify-content: center;
-    font-size: 19px;
+    font-size: 1.4em;
     color: rgba(0,0,0,0.36);
+    border-top: 1px solid #D1D1D1;
 }
 .subNavbar .buttons{
     position: relative;
@@ -47,6 +186,7 @@
     height: inherit;
     display: flex;
     align-items: center;
+    user-select: none;
 }
 .subNavbar .buttons .likeButton {
     display: flex;
@@ -55,6 +195,7 @@
     left: 0%;
     gap: 0.7em;
     cursor: pointer;
+    margin-bottom: 2px;
 }
 .subNavbar .buttons .shareButton {
     display: flex;
@@ -63,4 +204,5 @@
     right: 0%;
     gap: 0.7em;
     cursor: pointer;
+    margin-bottom: 2px;
 }

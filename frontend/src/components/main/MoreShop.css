@@ -3,7 +3,7 @@
     padding-bottom: 5px;
     vertical-align: bottom;
     margin-top: 30px;
-    font-size: 25px;
+    font-size: 1.8em;
 }
 
 .nullList {
@@ -14,16 +14,16 @@
 .eachShop {
     display: flex;
     flex-direction: row;
-    margin-left: 25px;
-    margin-right: 25px;
+    margin-left: 30px;
+    margin-right: 30px;
     border-bottom: 2px solid rgba(0, 0, 0, 0.03);
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 .eachShop .image {
     display: inline-block;
     width: 38%;
-    padding-right: 20px;
+    padding-right: 30px;
 }
 .eachShop .image #image {
     width: 100%;
@@ -39,12 +39,11 @@
 }
 
 .eachShop .information .rankAndDistance {
-    /* flex: 1; */
     display: flex;
     align-items: center;
-    color: rgba(0, 0, 0, 0.36);
+    color: rgba(0, 0, 0, 0.65);
     font-family: SpoqaRegular;
-    font-size: 15px;
+    font-size: 1.1em;
 }
 .eachShop .information .rankAndDistance #rank{
     margin-right: 50px;
@@ -53,16 +52,23 @@
     margin-left: 2px;
 }
 
-.eachShop .information .name {
-    /* flex: 2; */
-    color: #7E7E7E;
-    font-size: 26px;
+.eachShop .information .nameAndMenu {
+    display: flex;
+    align-items: center;
+}
+.eachShop .information .nameAndMenu #name {
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 1.8em;
+}
+.eachShop .information .nameAndMenu #menu {
+    margin-left: 0.5em;
+    color: rgba(0, 0, 0, 0.36);
+    font-size: 1.1em;
 }
 
 
+
 .eachShop .information .subimages {
-    /* overflow: hidden; */
-    /* flex: 7; */
     position: relative;
     display: flex;
     flex-direction: row;
@@ -70,19 +76,15 @@
 }
 
 .eachShop .information .subimages > #subimage{
-    margin-right: 5px;
-    width: calc(100%/62*38 - 20px - 23px - 40px);
+    margin-right: 10px;
+    margin-top: 5px;
+    width: calc(100%/62*38 - 35px - 23px - 40px);
     aspect-ratio: 1;
     background-size: cover;
     border-radius: 5px;
 }
 
 .eachShop .information .subimages #plusButton{
-    /* width: calc(90%/62*38 - 20px - 23px - 40px);
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center; */
     position: absolute;
     right: 0;
     cursor: pointer;
@@ -95,54 +97,54 @@
     .eachShop .information .rankAndDistance {
         font-size: 17px;
     }
-    .eachShop .information .name {
+    .eachShop .information .nameAndMenu #name {
         font-size: 28px;
     }
     .eachShop .information .subimages > #subimage{
-        width: calc(100%/62*38 - 20px - 26px - 44px);
+        width: calc(100%/62*38 - 35px - 26px - 44px);
     }
 }
 @media (max-width: 580px){
     .eachShop .information .rankAndDistance {
         font-size: 15px;
     }
-    .eachShop .information .name {
+    .eachShop .information .nameAndMenu #name {
         font-size: 26px;
     }
     .eachShop .information .subimages > #subimage{
-        width: calc(100%/62*38 - 20px - 23px - 40px);
+        width: calc(100%/62*38 - 35px - 23px - 40px);
     }
 }
 @media (max-width: 528px){
     .eachShop .information .rankAndDistance {
         font-size: 14px;
     }
-    .eachShop .information .name {
+    .eachShop .information .nameAndMenu #name {
         font-size: 24px;
     }
     .eachShop .information .subimages > #subimage{
-        width: calc(100%/62*38 - 20px - 22px - 37px);
+        width: calc(100%/62*38 - 35px - 22px - 37px);
     }
 }
 @media (max-width: 470px){
     .eachShop .information .rankAndDistance {
         font-size: 13px;
     }
-    .eachShop .information .name {
+    .eachShop .information .nameAndMenu #name {
         font-size: 22px;
     }
     .eachShop .information .subimages > #subimage{
-        width: calc(100%/62*38 - 20px - 20px - 34px);
+        width: calc(100%/62*38 - 35px - 20px - 34px);
     }
 }
 @media (max-width: 450px){
     .eachShop .information .rankAndDistance {
         font-size: 12px;
     }
-    .eachShop .information .name {
+    .eachShop .information .nameAndMenu #name {
         font-size: 20px;
     }
     .eachShop .information .subimages > #subimage{
-        width: calc(100%/62*38 - 20px - 18px - 31px);
+        width: calc(100%/62*38 - 35px - 18px - 31px);
     }
 }

@@ -10,22 +10,34 @@ import { CSSTransition } from "react-transition-group";
 
 function Home(props) {
   const [openShopPage, setOpenShopPage] = useState(false);
-  const [shopPageContents, setShopPageContents] = useState({name: "none"});
-  const openPage = () => {setOpenShopPage(true)};
-  const closePage = () => {setOpenShopPage(false)};
+  const [shopPageContents, setShopPageContents] = useState({name: "none", like: false});
+  const openPage = () => {
+    setOpenShopPage(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const closePage = () => {
+    setOpenShopPage(false);
+    document.body.style.overflow = 'unset';
+  };
   
   /* Current location information */
   const [currLocation, setCurrLocation] = useState({name: "위치 선택", line: "none", range: "none"});
   const [locationModalIsOpen, setLocationModalIsOpen] = useState(false);
-  const openLocationPage = () => {setLocationModalIsOpen(true)};
-  const closeLocationPage = () => {setLocationModalIsOpen(false)};
+  const openLocationPage = () => {
+    setLocationModalIsOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const closeLocationPage = () => {
+    setLocationModalIsOpen(false);
+    document.body.style.overflow = 'unset';
+  };
 
 
   return (
     <div className="Home-page">
 
       <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <ShopModal closePage={closePage} shopPageContents={shopPageContents} />
+        <ShopModal closePage={closePage} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
       </CSSTransition>
       <CSSTransition in={locationModalIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
         <LocationModal currLocation={currLocation} setCurrLocation={setCurrLocation} closePage={closeLocationPage} />
