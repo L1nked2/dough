@@ -32,7 +32,7 @@ function Login() {
     }
 
     window.Kakao.init("c6d8dd20d5ff2084f591d8b34cbe2608");
-
+    
     return( 
         <div className="layout"> 
             <div className="backgroundImage">

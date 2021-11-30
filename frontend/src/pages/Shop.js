@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Shop.css';
 import naverBlogIcon from "../img/naverblog.svg";
 
 function ShopModal(props) {
+    let isGoBackClicked = false;
     // const [shopPageContent, setShopPageContent] = useState(props.shopPageContents);
     const [shopPageContent, setShopPageContent] = useState(sampleShop);
 
@@ -18,11 +19,11 @@ function ShopModal(props) {
     }
 
     const reviewContent = useRef(null);
-    const [reviewHeight, setReviewHeight] = useState(350);
+    const [reviewHeight, setReviewHeight] = useState(345);
     const [closeExpandButton, setCloseExpandButton] = useState(false);
     function expandReviewHeight () {
-        if (reviewContent.current.scrollHeight >= (reviewHeight + 364)) {
-            setReviewHeight(reviewHeight + 364);
+        if (reviewContent.current.scrollHeight >= (reviewHeight + 360)) {
+            setReviewHeight(reviewHeight + 360);
         }
         else {
             setReviewHeight(reviewContent.current.scrollHeight);
@@ -30,10 +31,22 @@ function ShopModal(props) {
         }
     }
     
+    const goBack = () => {
+        window.history.back();
+        props.closePage();
+    }
+    useEffect (() => {
+        window.history.pushState({page: "shop_modal"}, "shop_modal");
+        window.addEventListener("popstate",props.closePage);
+        return () => {
+            window.removeEventListener("popstate",props.closePage);
+        }
+    }, []);
+
     return (
         <div className="shopPage">
             <div className="subHeader">
-                <div onClick={() => {closePage()}} className="backButton"><BackButton width={15}/></div>
+                <div onClick={() => {goBack()}} className="backButton"><BackButton width={15}/></div>
             </div>
             <div className="name">{shopPageContent.name}</div>
             <div className="simpleInfo">

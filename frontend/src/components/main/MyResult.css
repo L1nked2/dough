@@ -1,9 +1,10 @@
 .resultHeader {
     text-align: center;
     padding-top: 40px;
-    padding-bottom: 10px;
-    font-size: 25px;
-    color: rgba(0, 0, 0, 0.65);
+    padding-bottom: 20px;
+    font-size: 1.8em;
+    color: #000000a6;
+    font-family: "SpoqaMedium";
 }
 
 .resultContainer {
@@ -18,12 +19,20 @@
 }
 .resultContainer .leftWord {
     flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2px;
+    gap: 1px;
 }
 .resultContainer .centerLine {
     flex: 5;
 }
 .resultContainer .rightWord {
     flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2px;
+    gap: 1px;
 }
 .resultContainer .centerLine .line{
     position: relative;

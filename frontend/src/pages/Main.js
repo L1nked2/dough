@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useHistory } from "react-router-dom";
 
 import Home from './Home' 
 import Session from './Session' 
@@ -10,7 +11,7 @@ import Navbar from '../components/common/Navbar'
 
 import '../App.css'
 
-function Main() {
+function Main( { history} ) {
     const [pageComponent, setPageComponent] = useState([true, false, false, false]);
 
     const changeIsHome = () => {setPageComponent([true, false, false, false]);}
@@ -28,7 +29,7 @@ function Main() {
     
     return(
         <div className="layout" >
-            {pageComponent[0] && <Home changeState={changeState}/>}
+            {pageComponent[0] && <Home changeState={changeState} history={history}/>}
             {pageComponent[1] && <Session changeState={changeState}/>}
             {pageComponent[2] && <Favorite changeState={changeState}/>}
             {pageComponent[3] && <Profile changeState={changeState}/>}

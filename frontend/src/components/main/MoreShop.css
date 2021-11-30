@@ -44,6 +44,7 @@
     color: rgba(0, 0, 0, 0.65);
     font-family: SpoqaRegular;
     font-size: 1.1em;
+    margin-bottom: 8px;
 }
 .eachShop .information .rankAndDistance #rank{
     margin-right: 50px;
@@ -55,6 +56,7 @@
 .eachShop .information .nameAndMenu {
     display: flex;
     align-items: center;
+    margin-bottom: 8px;
 }
 .eachShop .information .nameAndMenu #name {
     color: rgba(0, 0, 0, 0.9);
@@ -78,7 +80,7 @@
 .eachShop .information .subimages > #subimage{
     margin-right: 10px;
     margin-top: 5px;
-    width: calc(100%/62*38 - 35px - 23px - 40px);
+    width: calc(100%/62*38 - 69px);
     aspect-ratio: 1;
     background-size: cover;
     border-radius: 5px;

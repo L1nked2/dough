@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Location.css';
 import stationDictionary from '../data/station';
 
@@ -32,11 +32,24 @@ function LocationModal(props) {
             props.closePage();
         }
     }
+
+    const goBack = () => {
+        window.history.back();
+        props.closePage();
+    }
+    useEffect (() => {
+        window.history.pushState({page: "location_modal"}, "location_modal");
+        window.addEventListener("popstate",props.closePage);
+        return () => {
+            window.removeEventListener("popstate",props.closePage);
+        }
+    }, []);
+
     return (
         <div className="locationPage">
             <div className="subHeader">
                 위치 선택
-                <div onClick={props.closePage} className="backButton"><CloseButton width={15}/></div>
+                <div onClick={goBack} className="backButton"><CloseButton width={15}/></div>
             </div>
             <div className="name">{"서울/ "}
                 <span className={`currLoc ${currLoc === "위치 선택" ? "" : " active"}`}>{currLoc}</span>

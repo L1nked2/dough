@@ -12,6 +12,8 @@
   min-height: 100vh;
   background-color: white;
   font-family: "SpoqaMedium";
+  line-height: 1.5em;
+  -webkit-tap-highlight-color : rgba(0, 0, 0, 0);
 }
 
 @media (max-width: 528px){

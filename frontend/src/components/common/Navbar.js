@@ -1,6 +1,5 @@
 import React from 'react';
 import './Navbar.css';
-import { AiOutlineHome, AiOutlineFileText, AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 
 function Navbar(props) {
   return (

@@ -6,10 +6,10 @@ import CollapseResult from '../components/main/CollapseResult'
 import ShopModal from './Shop'
 import LocationModal from './Location'
 
-import { CSSTransition } from "react-transition-group";
-
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 function Home(props) {
   const [openShopPage, setOpenShopPage] = useState(false);
+
   const [shopPageContents, setShopPageContents] = useState({name: "none", like: false});
   const openPage = () => {
     setOpenShopPage(true);
@@ -32,10 +32,10 @@ function Home(props) {
     document.body.style.overflow = 'unset';
   };
 
+  console.log(window.history);
 
   return (
     <div className="Home-page">
-
       <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
         <ShopModal closePage={closePage} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
       </CSSTransition>

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Route, Switch, BrowserRouter as Router , useHistory} from 'react-router-dom'
-import { Redirect } from 'react-router';
+import { Route, Switch, BrowserRouter as Router , Redirect, useHistory } from 'react-router-dom'
+// import { Redirect } from 'react-router';
 import { useState, useEffect } from 'react'
-import "antd/dist/antd.css/";
 
 import Main from './pages/Main'
 import Login from './pages/Login' 
@@ -11,6 +10,7 @@ import Oauth from './pages/Oauth'
 import './App.css'
 
 function App() {  
+  let history = useHistory();
   return(
     <div className="viewPage" >
       <Router>

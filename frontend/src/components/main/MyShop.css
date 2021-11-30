@@ -3,22 +3,21 @@
     padding-bottom: 10px;
     vertical-align: bottom;
     margin-top: 10px;
+    margin-bottom: 30px;
 }
 .myShopHeader #myShop {
     font-size: 2.6em;
     margin-right: 25px;
 }
 .myShopHeader .locationButton {
-    position: relative;
-    top: 7px;
     cursor: pointer;
+    font-family: SpoqaRegular;
 }
 .myShopHeader .locationButton #location{
     position: relative;
     font-size: 1.2em;
     color: rgba(0,0,0,0.6);
     margin-left: 4px;
-    padding-bottom: 2px;
     border-bottom: 1px solid #707070;
     bottom: 8px;
     user-select: none;
@@ -36,8 +35,8 @@
     text-align: center;
     float: left;
     width: 33.333%;
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 
     font-size: 1.4em;
     font-family: SpoqaRegular;
@@ -47,7 +46,7 @@
 }
 
 .shopCategory .active {
-    padding-bottom: 4px;
+    padding-bottom: 7px;
     border-bottom: 3px solid #3FB8D5;
     color: rgba(0,0,0,0.65);
 }
