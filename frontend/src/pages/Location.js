@@ -29,7 +29,7 @@ function LocationModal(props) {
     function changeCurrLocation () {
         props.setCurrLocation({name: currLoc, line: stationLineNav, range: stationRangeNav});
         if (currLoc !== props.currLocation.name) {
-            props.closePage();
+            goBack();
         }
     }
 

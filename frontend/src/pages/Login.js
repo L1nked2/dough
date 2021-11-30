@@ -9,26 +9,16 @@ import './Login.css'
 
 function Login() {
     function clickLogin(e) {
-        console.log('hello');
         window.Kakao.Auth.login({
-            redirectUri: 'http://localhost:3000/login/callback/kakao',///
-            scope: 'gender', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
+            redirectUri: 'http://localhost:3000/login/callback/kakao',
+            scope: 'gender',
             success: function(response) {
-                console.log(response) // 로그인 성공하면 받아오는 데이터
-                window.Kakao.API.request({ // 사용자 정보 가져오기 
-                    url: '/v2/user/me',
-                    success: (res) => {
-                        const kakao_account = res.kakao_account;
-                        console.log(kakao_account)
-                    }
-                });
+                console.log(response)
             },
             fail: function(error) {
                 console.log(error);
             }
         });
-
-        
     }
 
     window.Kakao.init("c6d8dd20d5ff2084f591d8b34cbe2608");
