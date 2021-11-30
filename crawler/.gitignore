@@ -132,4 +132,13 @@ service-account.json
 # img files
 temp_img/
 
+# db files
+raw_db/
+
+# log files
+log/
+
+# category files
+category_output/
+
 # End of https://www.toptal.com/developers/gitignore/api/node

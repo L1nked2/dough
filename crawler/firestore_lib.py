@@ -36,7 +36,6 @@ place_db_empty = dict(
     place_kind=None,
     place_menu=[],
     place_naver_link=None,
-    place_photo_validity=False,
     place_photo_provided=[],
     place_photo_inside=[],
     place_photo_food=[],
@@ -79,17 +78,26 @@ station_db_empty = dict(
 
 
 class DB:
-    def __init__(self, init_list):
+    def __init__(self, init_list=None, **kwargs):
         """
         make new database using given init_list
         data is stored to _data: dictionary
 
-        :param init_list: dictionary, new list name
+        :param init_list: dictionary
         :return: None
         """
+        self.parent_station = None
+        self.kind_filled = False
+        self.img_selected = False
+        self.img_transform = False
+        self.cluster_filled = False
         self._data = dict()
-        for key, value in init_list.items():
-            self._data[key] = value
+        if init_list is not None:
+            for key, value in init_list.items():
+                self._data[key] = value
+
+        # update for attributes
+        self.__dict__.update((k, v) for k, v in kwargs.items())
         return
 
     def add_pair(self, key, value):
@@ -114,6 +122,10 @@ class DB:
 
     def to_dict(self):
         return self._data
+
+
+def check_db_existence(restaurant_link):
+    return False
 
 
 @firestore.transactional
@@ -158,7 +170,11 @@ def upload_db(db_list, db_type=''):
     return True
 
 
-def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None, do_img_send=True):
+def place_db_img_transform(place_db):
+    pass
+
+
+def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None, img_transform=True):
     if img_type is None:
         print('img_upload: type is empty')
         raise TypeError
@@ -172,7 +188,7 @@ def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=No
     response = requests.get(img_link)
     f.write(response.content)
     f.close()
-    if do_img_send:
+    if img_transform:
         bucket = firebase_cloud_storage.get_bucket(bucket_root_url)
         blob = bucket.blob(target_name)
         try:
@@ -186,5 +202,4 @@ def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=No
     return img_url
 
 
-def check_db_existence(restaurant_link):
-    return False
+
