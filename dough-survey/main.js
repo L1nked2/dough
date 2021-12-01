@@ -13,7 +13,7 @@ app.use(
 );
 
 // ===========================
-const port = 3000;
+const port = 8000;
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use("/", routes);

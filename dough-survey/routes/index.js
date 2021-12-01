@@ -5,7 +5,7 @@ const router = express.Router();
 
 /* GET login page. */
 router.get('/', function(req, res) {
-    res.render('login_kakao.ejs');
+    res.status(403).send('Forbidden');
 });
 
 export default router;
