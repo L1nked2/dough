@@ -16,8 +16,8 @@
     border: none;
     outline: none;
     transition: background-color 0.4s ease;
+    font-family: "SpoqaRegular";
 }
-
 .panelHeader:hover {
     color: rgba(0, 0, 0, 0.54);
 }

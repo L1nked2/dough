@@ -2,6 +2,7 @@ import React, { useEffect }from 'react';
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios';
 import keyData from "../service-account";
+import { Cookies } from "react-cookie";
 import qs from "qs"
 
 const REST_API_KEY = 'c6d8dd20d5ff2084f591d8b34cbe2608';
@@ -10,6 +11,7 @@ const CLIENT_SECRET = '8V39m6DgdkKg50skEcqFoDPwH0RULokQ';
 
 
 function Oauth() {
+    const cookie = new Cookies();
     const getToken = async () => {
         let kakaoAuth = new URL(window.location.href);
         const code = kakaoAuth.searchParams.get('code');
@@ -43,11 +45,27 @@ function Oauth() {
                 },
                 fail: function (err) {
                     console.log(err);
+                    window.alert("사용자 정보를 불러오는 데 실패하였습니다.");
                 }
             });
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+            cookie.set (
+                'accessToken',
+                response.data.access_token,
+                {
+                    path: '/', 
+                    maxAge: response.data.expires_in,
+                    // httpOnly: true
+                }
+            )
+            console.log(cookie);
+            console.log(cookie.get('accessToken'));
+
             window.location.replace("/main");
         }).catch (function(err) {
             console.log(err);
+            window.alert("로그인에 실패하였습니다.");
         });
     };
 

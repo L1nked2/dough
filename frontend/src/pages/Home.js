@@ -32,8 +32,6 @@ function Home(props) {
     document.body.style.overflow = 'unset';
   };
 
-  console.log(window.history);
-
   return (
     <div className="Home-page">
       <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>

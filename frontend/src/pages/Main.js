@@ -11,6 +11,8 @@ import Navbar from '../components/common/Navbar'
 
 import '../App.css'
 
+import { Cookies } from "react-cookie";
+
 function Main( { history} ) {
     const [pageComponent, setPageComponent] = useState([true, false, false, false]);
 
