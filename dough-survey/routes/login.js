@@ -24,7 +24,15 @@ const firebaseConfig = {
 const fireBaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(fireBaseApp);
 //const analytics = getAnalytics(fireBaseApp);
-import serviceAccount from "../service-account.json";
+
+import { readFile } from 'fs/promises';
+import * as path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__dirname)
+var accountPath = path.join(__dirname, '..', 'service-account.json');
+let serviceAccount = JSON.parse(await readFile(accountPath, "utf8"));
 
 // Initialize FirebaseApp with service-account.json
 firebaseAdmin.initializeApp({
@@ -139,6 +147,7 @@ const kakao = {
 }
 
 /* GET login page. */
+/*
 router.get('/', function(req, res) {
     if(req.query.auth) {
         res.render('login.ejs');
@@ -192,14 +201,13 @@ router.get('/callback/kakao', async(req, res) => {
 
     
 });
-
+*/
 
 // actual endpoint that creates a firebase token with Kakao access token
 router.post('/', (req, res) => {
     const token = req.body.token;
     if (!token) return res.status(400).send({error: 'There is no token.'})
     .send({message: 'Access token is a required parameter.'});
-    
     console.log(`Verifying Kakao token: ${token}`);
     
     createFirebaseToken(token).then((firebaseToken) => {

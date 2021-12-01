@@ -66,6 +66,7 @@ class DoughCrawler:
         self.station_info = dict()
         self.current_place_db = None
         self.place_db_list = []
+        self.place_uuid_dict = dict()
         self.photo_error_list = []
 
         # update for attributes
@@ -206,16 +207,21 @@ class DoughCrawler:
         res = requests.get(url=restaurant_link, params=params).json()
         place_db = self.current_place_db
 
-        # get menu, image_menu
-        img_links = []
+        # get menu
         try:
             for item in res['menus']:
                 del item['isRecommended']
+        except TypeError:
+            self.crawler_msg(f'menu not exists, {link}')
+
+        # get menu image
+        img_links = []
+        try:
             for item in res['menuImages']:
                 img_links.append(item['imageUrl'])
             res['menuImages'] = img_links
         except TypeError:
-            self.crawler_msg(f'menu not exists, {link}')
+            self.crawler_msg(f'menu images not exists, {link}')
 
         # get image_provided
         img_links_provided = []
@@ -331,6 +337,7 @@ class DoughCrawler:
             except TypeError:
                 self.crawler_msg(f'type error occurred while getting place_info_naver, {link}')
                 continue
+            self.place_uuid_dict[str(self.current_place_db.get_value('place_uuid'))] = len(self.place_db_list)
             self.place_db_list.append(copy.deepcopy(self.current_place_db))
             place_name = self.current_place_db.to_dict()['place_name']
             self.crawler_msg(f'{place_name} added to db list')
@@ -378,7 +385,7 @@ class DoughCrawler:
             path = f'./raw_db/{name}_db'
         else:
             path = f'./raw_db/db'
-        data_body = [self.station_info, self.place_db_list]
+        data_body = [self.station_info, self.place_db_list, self.place_uuid_dict]
         file = open(path, "wb+")
         dill.dump(data_body, file=file)
         file.close()
@@ -389,6 +396,7 @@ class DoughCrawler:
         data_body = dill.load(file)
         self.station_info = data_body[0]
         self.place_db_list = data_body[1]
+        self.place_uuid_dict = data_body[2]
         return
 
     def crawler_msg(self, string='', log=True, **kwargs):
