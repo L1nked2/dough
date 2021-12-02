@@ -72,6 +72,14 @@ class DoughCrawler:
         # update for attributes
         self.__dict__.update((k, v) for k, v in kwargs.items())
 
+        # check and make directories
+        if not os.path.isdir(f'./temp_img'):
+            os.mkdir(f'./temp_img')
+        if not os.path.isdir(f'./raw_db'):
+            os.mkdir(f'./raw_db')
+        if not os.path.isdir(f'./log'):
+            os.mkdir(f'./log')
+
         # open logfile
         if self.log:
             self.log_file = open(self.log_path, "w+")
@@ -97,7 +105,16 @@ class DoughCrawler:
         self.__init__(**kwargs)
         return
 
-    def driver_get(self, target_url, **kwargs):
+    def run_crawler_naver(self, station_name=None, search_keyword=None, options=None):
+        self.crawler_msg(f'{station_name} {search_keyword} crawling start')
+        self.clear(**options)
+        self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
+        self.get_place_link_list_naver()
+        self.get_place_info_naver()
+        self.save(name=f'{station_name}_{search_keyword}')
+        self.crawler_msg(f'{station_name} {search_keyword} crawling done')
+
+    def _driver_get(self, target_url, **kwargs):
         if target_url:
             try:
                 self.driver.get(target_url.format(**kwargs))
@@ -252,9 +269,10 @@ class DoughCrawler:
         if not os.path.isdir(local_path):
             os.mkdir(local_path)
             os.mkdir(f'{local_path}/menu')
-            os.mkdir(f'{local_path}/provided')
-            os.mkdir(f'{local_path}/inside')
             os.mkdir(f'{local_path}/food')
+            os.mkdir(f'{local_path}/inside')
+            os.mkdir(f'{local_path}/thumbnail_inside')
+            os.mkdir(f'{local_path}/thumbnail_food')
 
         # download menu, provided images
         self._download_photo(self.naver_search_query, place_db, 'menu')
@@ -352,33 +370,34 @@ class DoughCrawler:
         if img_type is None:
             self.crawler_msg('type is empty')
             raise TypeError
+
         img_url_array = place_db.get_value(f'place_photo_{img_type}')
         place_name = place_db.get_value('place_name')
         place_uuid = place_db.get_value('place_uuid')
+
+        if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
+            local_path_root = f'./temp_img/{search_query}/{place_name}_{place_uuid}'
+            if img_type == 'provided':
+                prefix = 'a'
+            elif img_type == 'food':
+                prefix = 'f'
+            else:
+                prefix = 'i'
+        elif img_type == 'menu':
+            local_path_root = f'./temp_img/{search_query}/{place_name}_{place_uuid}/{img_type}'
+            prefix = ''
+        else:
+            self.crawler_msg(f'invalid image type given;{img_type}')
+            raise AttributeError
+
         for index in range(len(img_url_array)):
             url = img_url_array[index]
-            file_path = f'./temp_img/{search_query}/{place_name}_{place_uuid}/{img_type}/{index}.jpg'
+            file_path = f'{local_path_root}/{prefix}{index}.jpg'
             if not os.path.isfile(file_path):
                 with open(file_path, 'wb+') as f:
                     response = requests.get(url)
                     f.write(response.content)
         return
-
-    # do not use
-    def _upload_photo_naver(self, img_links, place_db, img_type):  # not appropriate, to be moved to firestore_lib
-        img_url_array = []
-        img_num = min(MAX_IMG_NUM, len(img_links))
-        for index in range(img_num):
-            url = img_links[index]
-            crawled_url = img_upload_from_link(url,
-                                               img_type=img_type,
-                                               place_name=place_db.get_value('place_name'),
-                                               place_uuid=place_db.get_value('place_uuid'),
-                                               img_num=index,
-                                               img_transform=self.img_transform
-                                               )
-            img_url_array.append(crawled_url)
-        return img_url_array
 
     def save(self, name=None):
         if name is not None:
