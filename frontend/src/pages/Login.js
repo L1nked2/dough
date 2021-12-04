@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { Cookies } from 'react-cookie';
 
 import logoWhite from "../img/logo_white.svg"
 import logoKakao from "../img/kakao.svg"
@@ -8,6 +9,12 @@ import '../App.css'
 import './Login.css'
 
 function Login() {
+    const cookie = new Cookies();
+    const currAccessToken = cookie.get("accessToken");
+    if (currAccessToken) {
+        window.location.replace("/main");
+    }
+
     function clickLogin(e) {
         window.Kakao.Auth.login({
             redirectUri: 'http://localhost:3000/login/callback/kakao',

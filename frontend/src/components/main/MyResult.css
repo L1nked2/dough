@@ -13,7 +13,7 @@
     padding-right: 5%;
     text-align: center;
     font-family: SpoqaRegular;
-    font-size: 16px;
+    font-size: 1.1em;
     color: rgba(0, 0, 0, 0.65);
     margin-bottom: 80px;
 }
@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 2px;
-    gap: 1px;
+    justify-content: space-between;
 }
 .resultContainer .centerLine {
     flex: 5;
@@ -30,9 +30,10 @@
 .resultContainer .rightWord {
     flex: 2;
     display: flex;
+    height: auto;
     flex-direction: column;
     margin-top: 2px;
-    gap: 1px;
+    justify-content: space-between;
 }
 .resultContainer .centerLine .line{
     position: relative;

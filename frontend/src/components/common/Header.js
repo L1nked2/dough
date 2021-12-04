@@ -1,11 +1,12 @@
 import React from 'react';
 import './Header.css';
-import logoImage from "../../img/logo.svg"
+import BabyakLogo from '../icon/BabyakLogo';
 
 function Header(props) {
+  const logoColor = props.className ? "#FFFFFF" : "#3fb8d5";
   return (
-    <div className="Main-header">
-      <img onClick={props.changeIsHome} className="Main-logo" src={logoImage} alt="logo"/>
+    <div className={`mainHeader ${props.className}`}>
+      <div onClick={props.changeIsHome} className="mainLogo"><BabyakLogo color={logoColor}/></div>
     </div>
   );
 }

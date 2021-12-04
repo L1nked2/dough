@@ -4,12 +4,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/swiper.min.css";
-import "swiper/components/scrollbar/scrollbar.min.css";
+import "swiper/components/pagination/pagination.min.css";
 
 import "./SlideImages.css";
 
 import SwiperCore, {
-    Scrollbar
+    Pagination
 } from 'swiper';
 
 
@@ -17,25 +17,79 @@ import SwiperCore, {
 function SlideImages(props) {
     // import Swiper core and required modules
     // install Swiper modules
-    SwiperCore.use([Scrollbar]);
+    if (props.page !== 'main') {
+      SwiperCore.use([Pagination]);
+    }
 
-    const openShopPage = () => {
-      props.openModal();
-      props.setShopPageContents({name: "치돈치돈"});
+    const openShopPage = (shop) => {
+      if (props.page === 'main') {
+        props.openModal();
+        props.setShopPageContents({name: shop.name});
+      }
+      else {
+        return null
+      }
+    }
+
+    function choiceSlideElem (page, elem) {
+      if (page === 'main') {
+        return (<MainPageSlide elem={elem} />);
+      }
+      else if (page === 'recommend') {
+        return (<RecommendPageMainSlide elem={elem} />);
+      }
     }
 
     return (
-      <Swiper scrollbar={{"hide": true}} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} className={`mySwiper ${props.name}`}>
-          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}>
-            <div>
-              <div style={{fontSize:20, marginBottom:20}}>1순위</div>
-              <div style={{fontSize:30, marginBottom:20}}>치돈치돈</div>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 2</div></SwiperSlide>
-          <SwiperSlide onClick={openShopPage} style={{backgroundImage: `url(${props.sampleImage})`}}><div>{props.name} 3</div></SwiperSlide>
+      <Swiper pagination={{"el": '.swiper-pagination',"clickable": true}} loop={props.page === 'recommend'} 
+              slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} 
+              className={`mySwiper ${props.page} ${props.name}`}>
+          {props.info.map(elem => {
+            return (
+              <SwiperSlide onClick={()=>{openShopPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide ${props.page}`}>
+                { choiceSlideElem(props.page, elem) }
+              </SwiperSlide>
+            );
+          })}
+          
+          { props.page === 'recommend' ? <div class="swiper-pagination"></div> : null }
       </Swiper>
     );
   }
 
 export default SlideImages;
+
+function MainPageSlide ({elem}) {
+  return (
+    <div>
+      <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
+      <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
+    </div>
+  );
+}
+
+function RecommendPageMainSlide ({elem}) {
+  return (
+    <div>
+      <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
+        {elem.subText}
+      </div>
+      <div style={{fontSize:"2.6em", whiteSpace: "pre-wrap", lineHeight: "1.35em"}}>
+        {elem.mainText}
+      </div>
+    </div> 
+  );
+}
+
+function RecommendPageContentSlide ({elem}) {
+  return (
+    <div>
+      <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
+        {elem.subText}
+      </div>
+      <div style={{fontSize:"2.6em", whiteSpace: "pre-wrap", lineHeight: "1.35em"}}>
+        {elem.mainText}
+      </div>
+    </div> 
+  );
+}

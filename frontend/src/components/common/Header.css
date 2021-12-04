@@ -1,4 +1,4 @@
-.Main-header {
+.mainHeader {
     display: flex;
     justify-content: left;
     align-items: center;
@@ -11,8 +11,11 @@
     background-color: white;
     z-index: 10;
 }
+.mainHeader.recommend {
+    background-color: rgba(0, 0, 0, 0);
+}
 
-.Main-logo {
+.mainLogo {
     height: 40%;
     width: auto;
     object-fit: contain;

@@ -1,41 +1,69 @@
 .mySwiper {
   width: 100%;
+}
+.mySwiper.main {
   padding-top: 15px;
   padding-bottom: calc(15px + 58px);
   background-color: rgba(0,0,0,0.03);
 }
-
-.mySwiper.cafe{
+.mySwiper.main.cafe{
   padding-top: calc(30px + 10px + 20px + 1.1em);
 }
 
-.swiper-slide {
-  font-size: 1.4em;
-  color: white;
-  font-family: "SpoqaBold";
-  border-radius: 25px;
-  position: relative;
-  width: 90%;
-  padding-bottom: 90%;
-  background-size: cover;
-  cursor: pointer;
+.swiper-pagination-bullet {
+  background-color: rgba(0,0,0,0.36);
+  z-index: 40;
 }
-.swiper-slide > div {
+.swiper-pagination-bullet-active {
+  background-color: white;
+}
+
+.swiperSlide {
+  color: white;
+  position: relative;
+  background-size: cover;
+}
+.swiperSlide > div {
   width: 100%;
   height: 100%;
+  display: flex;
+  
+  flex-direction: column;
+  
+  position: absolute;
+  
+}
+.swiperSlide img {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+}
+.swiperSlide.main {
+  font-family: "SpoqaBold";
+  border-radius: 25px;
+  width: 90%;
+  padding-bottom: 90%;
+  cursor: pointer;
+}
+.swiperSlide.main > div {
   background: rgba(0,0,0,0.33);
   border-radius: 25px;
-  display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
-  position: absolute;
   text-align: center;
 }
 
-.swiper-slide img {
-  display: flex;
+.swiperSlide.recommend {
   width: 100%;
-  height: 100%;
+  height: 65vh;
+  padding: 0;
 }
-
+.swiperSlide.recommend > div {
+  background: rgba(0,0,0,0.22);
+  align-items: flex-start;
+  justify-content: left;
+  text-align: left;
+  padding-top: 43vh;
+  padding-left: 2em;
+}
