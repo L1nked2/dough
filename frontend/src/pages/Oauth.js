@@ -59,8 +59,6 @@ function Oauth() {
                     // httpOnly: true
                 }
             )
-            console.log(cookie);
-            console.log(cookie.get('accessToken'));
 
             window.location.replace("/main");
         }).catch (function(err) {

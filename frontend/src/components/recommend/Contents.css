@@ -1,0 +1,62 @@
+.myType {
+    display: flex;
+    gap: 0.5em;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 30px;
+    font-size: 1.1em;
+}
+.myType .light {
+    color: rgba(0, 0, 0, 0.36);
+}
+.myType .dark {
+    color: rgba(0, 0, 0, 0.65);
+}
+.myType .click {
+    cursor: pointer;
+    height: auto;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.recommendContent {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+.recommendContent .header {
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 0.25em;
+}
+.recommendContent .header .mainTitle {
+    font-size: 1.8em;
+    color: rgba(0, 0, 0, 0.9);
+    white-space: pre-wrap;
+    line-height: 1.5em;
+    display: flex;
+    flex-direction: row;
+}
+.recommendContent .header .mainTitle .icon{
+    height: auto;
+    margin-top: 1.45em;
+    padding-left: 1em;
+    padding-right: 1em;
+    cursor: pointer;
+}
+.recommendContent .header .subTitle {
+    font-family: SpoqaRegular;
+    font-size: 1.2em;
+    color: rgba(0, 0, 0, 0.65);
+}
+.recommendContent .header > .icon {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
+}

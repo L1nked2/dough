@@ -17,7 +17,7 @@ import SwiperCore, {
 function SlideImages(props) {
     // import Swiper core and required modules
     // install Swiper modules
-    if (props.page !== 'main') {
+    if (props.page === 'recommend') {
       SwiperCore.use([Pagination]);
     }
 
@@ -37,6 +37,9 @@ function SlideImages(props) {
       }
       else if (page === 'recommend') {
         return (<RecommendPageMainSlide elem={elem} />);
+      }
+      else if (page === 'recContent') {
+        return (<RecommendPageContentSlide elem={elem} />);
       }
     }
 
@@ -84,11 +87,11 @@ function RecommendPageMainSlide ({elem}) {
 function RecommendPageContentSlide ({elem}) {
   return (
     <div>
-      <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
-        {elem.subText}
+      <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
+        {elem.name}
       </div>
-      <div style={{fontSize:"2.6em", whiteSpace: "pre-wrap", lineHeight: "1.35em"}}>
-        {elem.mainText}
+      <div style={{fontSize:"1.1em", fontFamily: "SpoqaRegular"}}>
+        {elem.subText}
       </div>
     </div> 
   );
