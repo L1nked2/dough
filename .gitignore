@@ -1,0 +1,12 @@
+
+dough-survey/.firebaserc
+dough-survey/database.rules.json
+dough-survey/firebase-tools-instant-win.exe
+dough-survey/firebase.json
+dough-survey/firestore.indexes.json
+dough-survey/firestore.rules
+dough-survey/functions/.eslintrc.js
+dough-survey/functions/index.js
+dough-survey/functions/package-lock.json
+dough-survey/functions/package.json
+dough-survey/storage.rules
