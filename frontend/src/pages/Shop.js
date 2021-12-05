@@ -30,11 +30,12 @@ function ShopModal(props) {
     }
 
     const reviewContent = useRef(null);
+    const eachReview = useRef(null);
     const [reviewHeight, setReviewHeight] = useState(340);
     const [closeExpandButton, setCloseExpandButton] = useState(false);
     function expandReviewHeight () {
-        if (reviewContent.current.scrollHeight >= (reviewHeight + 358)) {
-            setReviewHeight(reviewHeight + 358);
+        if (reviewContent.current.scrollHeight >= (reviewHeight + 359)) {
+            setReviewHeight(reviewHeight + 359);
         }
         else {
             setReviewHeight(reviewContent.current.scrollHeight);

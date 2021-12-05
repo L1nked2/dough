@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import './Contents.css';
+import React, { useState, useRef } from 'react';
+import { CSSTransition } from "react-transition-group";
+import './NewContents.css';
 
 import SlideImages from '../common/SlideImages';
+import ExplainModal from './ExplainModal';
+import RecommendContent from './RecommendContent';
 
 import QuestionMarkIcon from '../icon/QuestionMark';
 import ShareIcon from '../icon/Share';
@@ -9,9 +12,9 @@ import Chevron from '../icon/Chevron';
 
 import sampleImage from "../../img/login_background.png";
 
-function RecommendContents(props) {
+function NewContents(props) {
 
-    const myType = "주택가 레스토랑";
+    const target = "정원 찻집 유형";
     const mainTitle = "따뜻한 감성의\n강남역 주변 카페 4곳";
     const subTitle = "따뜻한 감성을 지닌 강남역 주변 카페";
 
@@ -24,43 +27,29 @@ function RecommendContents(props) {
 
     const contents = [
         {
+            target: target,
             mainTitle: mainTitle,
             subTitle: subTitle,
             recommendInfo: recommendInfo
         },
         {
+            target: target,
             mainTitle: mainTitle,
             subTitle: subTitle,
             recommendInfo: recommendInfo
         }
-    ]
+    ];
+
     return (
         <div>
-            <div className="myType" >
-                <span className="light">내 취향 유형</span><span className="light">|</span>
-                <span className="dark">{myType}</span>
-                <div  className="click"><QuestionMarkIcon width={"1em"} color={"rgba(0,0,0,0.65"}/></div>
-            </div>
             {contents.map((elem, index) => {
                 return (
-                    <div className="recommendContent" key={index}>
-                        <div className="header">
-                            <div className="mainTitle">
-                                {elem.mainTitle}
-                                <div className="icon"><Chevron width={"0.4em"} color={"rgba(0,0,0,0.9)"}/></div>
-                            </div>
-                            <div className="subTitle">{elem.subTitle}</div>
-                            <div className="icon"><ShareIcon width={20} color={"rgba(0,0,0,0.9)"} /></div>
-                        </div>
-                        <SlideImages 
-                            info={elem.recommendInfo} 
-                            page="recContent"/>
-                    </div>
+                    <RecommendContent elem={elem} key={index}/>
                 );
             })}
         </div>
     );
 }
   
-export default RecommendContents;
+export default NewContents;
   

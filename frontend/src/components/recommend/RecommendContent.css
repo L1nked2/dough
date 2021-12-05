@@ -1,28 +1,18 @@
-.myType {
-    display: flex;
-    gap: 0.5em;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    padding-left: 30px;
-    font-size: 1.1em;
-}
-.myType .light {
-    color: rgba(0, 0, 0, 0.36);
-}
-.myType .dark {
-    color: rgba(0, 0, 0, 0.65);
-}
-.myType .click {
-    cursor: pointer;
-    height: auto;
-    display: flex;
-    align-items: center;
-    margin-bottom: 2px;
-}
-
 .recommendContent {
     padding-top: 55px;
     padding-bottom: 55px;
+}
+.recommendContent.specific {
+    padding-top: 74px;
+    padding-bottom: 6px;
+}
+.recommendContent .target {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 5px;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.36);
+    font-family: SpoqaRegular;
 }
 .recommendContent .header {
     padding-left: 30px;

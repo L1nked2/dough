@@ -1,4 +1,4 @@
-.overlay {
+.overlayMenu {
   position: fixed;
   top: 0;
   width: 528px;
@@ -13,14 +13,14 @@
 }
 
 
-.overlay .header {
+.overlayMenu .header {
   color: white;
   font-family: "SpoqaRegular";
   font-size: 1.4em;
   z-index: 150;
 }
 
-.modal {
+.overlayMenu .modal {
   width: 90%;
   z-index: 150;
   margin-top: 15px;
@@ -30,7 +30,7 @@
 }
 
 
-.reset {
+.overlayMenu .modal .reset {
   display: flex;
   font-size: 1.1em;
   color: rgba(0,0,0,0.36);
@@ -38,7 +38,7 @@
   justify-content: right;
 }
 
-.resetButton {
+.overlayMenu .modal .reset .resetButton {
   cursor: pointer;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -51,14 +51,14 @@
   justify-content: right;
 }
 
-.resetIcon{
+.overlayMenu .modal .reset .resetIcon{
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 5px;
 }
 
-.menuList {
+.overlayMenu .modal .menuList {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -74,7 +74,7 @@
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-.menuComponent {
+.overlayMenu .modal .menuList .menuComponent {
   display: flex;
   border: 1px solid rgba(0,0,0,0.18);
   border-radius: 16px;
@@ -88,12 +88,12 @@
   margin-right: 7px;
   cursor: pointer;
 }
-.menuComponent.active {
+.overlayMenu .modal .menuList .menuComponent.active {
   border: 1px solid #3FB8D5;
   color: #3FB8D5;
 }
 
-.buttonSection {
+.overlayMenu .modal .buttonSection {
   display: flex;
   justify-content: space-between;
   padding: 20px;
@@ -103,11 +103,11 @@
   font-family: "SpoqaRegular";
 }
 
-.buttonSection .close{
+.overlayMenu .modal .buttonSection .close{
   cursor: pointer;
   color: rgba(0,0,0,0.65);
 }
-.buttonSection .apply{
+.overlayMenu .modal .buttonSection .apply{
   cursor: pointer;
   color: #3FB8D5;
 }
@@ -118,13 +118,13 @@
   .overlay {
       width: 100%;
   }
-  .menuList {
+  .overlayMenu .modal .menuList {
     margin-left: 10px;
     margin-right: 10px;
     padding-left: 20px;
     padding-right: 20px;
   }
-  .menuComponent {
+  .overlayMenu .modal .menuList .menuComponent {
     margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 4px;

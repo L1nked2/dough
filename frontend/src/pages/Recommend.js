@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './Recommend.css';
 import Header from '../components/common/Header';
 import SlideImages from '../components/common/SlideImages';
-import RecommendContents from '../components/recommend/Contents';
+import MyTypeContents from '../components/recommend/MyTypeContents';
+import NewContents from '../components/recommend/NewContents';
+import OtherTypeContents from '../components/recommend/OtherTypeContent';
 import sampleImage from "../img/login_background.png";
 
 function Recommend(props) {
@@ -44,7 +46,9 @@ function Recommend(props) {
         <div className={slideCategory[1] ? "active" : ""} onClick={changeNew}>NEW</div>
         <div className={slideCategory[2] ? "active" : ""} onClick={changeOtherType}>OTHER TYPE</div>
       </nav>
-      <RecommendContents />
+      {slideCategory[0] && <MyTypeContents />}
+      {slideCategory[1] && <NewContents />}
+      {slideCategory[2] && <OtherTypeContents />}
     </div>
   );
 }

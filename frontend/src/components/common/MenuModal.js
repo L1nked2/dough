@@ -24,8 +24,19 @@ function MenuModal(props) {
         props.closeMenuModal();
     };
 
+    useEffect (() => {
+        const modal = document.getElementById('overlayMenu');
+        const button = document.getElementById('menuChangeButton');
+        window.addEventListener("click", (e) => {
+            if (e.target === modal && e.target !== button) {
+                props.closeMenuModal();
+            }
+        });
+        return () => {window.removeEventListener("click", props.closeMenuModal())};
+    },[])
+
     return (
-        <div className="overlay" >
+        <div className="overlayMenu" id="overlayMenu">
             <div className="header">{`${props.name} 종류 선택`}</div>
             <div className="modal">
                 <div className="reset">

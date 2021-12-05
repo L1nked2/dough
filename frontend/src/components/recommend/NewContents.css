@@ -1,0 +1,40 @@
+.myType {
+    display: flex;
+    gap: 0.5em;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 30px;
+    font-size: 1.1em;
+}
+.myType .light {
+    color: rgba(0, 0, 0, 0.36);
+}
+.myType .dark {
+    color: rgba(0, 0, 0, 0.65);
+}
+.myType .click {
+    cursor: pointer;
+    height: auto;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+
+.fadeOverlay-enter {
+    opacity: 0.01;
+}
+  
+.fadeOverlay-enter-active {
+    opacity: 1;
+    transition: all 200ms ease-in;
+}
+  
+.fadeOverlay-exit {
+    opacity: 1;
+}
+  
+.fadeOverlay-exit-active {
+    opacity: 0.01;
+    transition: all 200ms ease-in;
+}

@@ -99,8 +99,8 @@ function MyShop(props) {
       {slideCategory[0] && <>
         <div className="menuChange">
           { checkAnyActive(stateFood)
-            ? <div onClick={openMenuModal} className="menuChangeButton">{`음식 | ${printActiveMenu(stateFood)}`}<span>{`>`}</span></div>
-            : <div onClick={openMenuModal} className="menuChangeButton">음식 종류 바꾸기<span>{`>`}</span></div>
+            ? <div onClick={openMenuModal} className="menuChangeButton" id="menuChangeButton">{`음식 | ${printActiveMenu(stateFood)}`}<span>{`>`}</span></div>
+            : <div onClick={openMenuModal} className="menuChangeButton" id="menuChangeButton">음식 종류 바꾸기<span>{`>`}</span></div>
           }
         </div>
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -136,8 +136,8 @@ function MyShop(props) {
       {slideCategory[2] && <>
         <div className="menuChange">
           { checkAnyActive(stateDrink)
-            ? <div onClick={openMenuModal} className="menuChangeButton">{`술 | ${printActiveMenu(stateDrink)}`}<span>{`>`}</span></div>
-            : <div onClick={openMenuModal} className="menuChangeButton">술 종류 바꾸기<span>{`>`}</span></div>
+            ? <div onClick={openMenuModal} className="menuChangeButton" id="menuChangeButton">{`술 | ${printActiveMenu(stateDrink)}`}<span>{`>`}</span></div>
+            : <div onClick={openMenuModal} className="menuChangeButton" id="menuChangeButton">술 종류 바꾸기<span>{`>`}</span></div>
           }
         </div>
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>

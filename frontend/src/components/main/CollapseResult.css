@@ -3,7 +3,7 @@
     flex-direction: column;
 }
 
-.panelHeader {
+.collapse .panelHeader {
     background-color: white;
     color: rgba(0, 0, 0, 0.36);
     font-size: 1.4em;
@@ -18,21 +18,21 @@
     transition: background-color 0.4s ease;
     font-family: "SpoqaRegular";
 }
-.panelHeader:hover {
+.collapse .panelHeader:hover {
     color: rgba(0, 0, 0, 0.54);
 }
 
-.collapseIcon {
+.collapse .panelHeader .collapseIcon {
     margin-left: 10px;
     margin-right: 8px;
     transition: transform 0.4s ease;
 }
 
-.rotate {
+.collapse .panelHeader .collapseIcon.rotate {
     transform: rotate(90deg);
 }
 
-.collapseContent {
+.collapse .collapseContent {
     background-color: white;
     overflow: hidden;
     transition: max-height 0.4s ease;
