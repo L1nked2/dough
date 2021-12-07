@@ -6,8 +6,8 @@ import { Cookies } from "react-cookie";
 import qs from "qs"
 
 const REST_API_KEY = 'c6d8dd20d5ff2084f591d8b34cbe2608';
-const REDIRECT_URI = 'http://localhost:3000/login/callback/kakao';
-const CLIENT_SECRET = '8V39m6DgdkKg50skEcqFoDPwH0RULokQ';
+const REDIRECT_URI = 'https://dough-survey.web.app/login/callback/kakao';
+const CLIENT_SECRET = 'KjRkQKwcrPVGDx82f3craYzhDzdH4S8H';
 
 
 function Oauth() {

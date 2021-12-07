@@ -17,7 +17,7 @@ function Login() {
 
     function clickLogin(e) {
         window.Kakao.Auth.login({
-            redirectUri: 'http://localhost:3000/login/callback/kakao',
+            redirectUri: 'https://dough-survey.web.app/login/callback/kakao',
             scope: 'gender',
             success: function(response) {
                 console.log(response)

@@ -1,7 +1,6 @@
 // Initalize requirements
 //import expressEjsLayouts from "express-ejs-layouts";
 import * as errorController from "./controllers/errorController.js";
-import * as homeController from "./controllers/homeController.js";
 import express from "express";
 import routes from "./routes/routes.js";
 
