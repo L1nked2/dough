@@ -16,7 +16,7 @@ function Login() {
     }
 
     function clickLogin(e) {
-        window.Kakao.Auth.login({
+        window.Kakao.Auth.authorize({
             redirectUri: 'https://dough-survey.web.app/login/callback/kakao',
             scope: 'gender',
             success: function(response) {
@@ -28,7 +28,7 @@ function Login() {
         });
     }
 
-    window.Kakao.init("c6d8dd20d5ff2084f591d8b34cbe2608");
+    window.Kakao.init("423e288ffa4a8548ec18cd9fc2865e4e");
     
     return( 
         <div className="layout"> 
