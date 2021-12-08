@@ -15,12 +15,11 @@ import SwiperCore, {
 
 
 function SlideImages(props) {
-    // import Swiper core and required modules
-    // install Swiper modules
-    if (props.page === 'recommend') {
+  // import Swiper core and required modules
+  // install Swiper modules
+    if (props.page === 'recommend'){
       SwiperCore.use([Pagination]);
     }
-
     const openShopPage = (shop) => {
       if (props.page === 'main' || props.page === 'recContent') {
         props.openModal();
@@ -44,8 +43,8 @@ function SlideImages(props) {
     }
 
     return (
-      <Swiper pagination={{"el":'.swiper-pagination',"clickable": true}} loop={props.page === 'recommend'} 
-              slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+      <Swiper pagination={props.page === 'recommend' ? {clickable: true} : false} loop={props.page === 'recommend'}
+              slidesPerView={3} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
               className={`mySwiper ${props.page} ${props.name}`}>
           {props.info.map(elem => {
             return (
@@ -54,8 +53,6 @@ function SlideImages(props) {
               </SwiperSlide>
             );
           })}
-          
-          { props.page === 'recommend' ? <div class="swiper-pagination"></div> : null }
       </Swiper>
     );
   }

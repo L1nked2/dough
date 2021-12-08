@@ -14,11 +14,11 @@
 }
 
 .swiper-pagination-bullet {
-  background-color: rgba(0,0,0,0.36);
+  background: rgba(0,0,0,0.36);
   z-index: 40;
 }
 .swiper-pagination-bullet-active {
-  background-color: white;
+  background: white;
 }
 
 .swiperSlide {

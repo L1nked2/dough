@@ -38,7 +38,7 @@ function EachMoreShop(props) {
       <div className="information">
         <div className="rankAndDistance">
           <span id="rank">{`${props.shop.rank}위`}</span>
-          <LocationIcon id="icon" width={"1em"} color={"rgba(0,0,0,0.65)"}/>
+          <span id="icon"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/></span>
           <span id="distance">{`${props.shop.distance}분 거리`}</span>
         </div>
         <div className="nameAndMenu">
