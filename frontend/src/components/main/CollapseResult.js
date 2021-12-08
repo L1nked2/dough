@@ -20,7 +20,7 @@ function CollapseResult() {
     return(
         <div className="collapse"> 
             <button className={`panelHeader ${isActive}`} onClick={toggleCollapse}>
-                <Chevron className={`${isRotate}`} width={9} color={"rgba(0, 0, 0, 0.36)"} />
+                <Chevron className={`${isRotate}`} width={"0.474em"} color={"rgba(0, 0, 0, 0.36)"} />
                 내 취향 테스트 결과
             </button>
             <div ref={content} style={{maxHeight: `${contHeight}`}} className="collapseContent" >

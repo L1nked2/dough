@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './Recommend.css';
+import { CSSTransition } from "react-transition-group";
+
 import Header from '../components/common/Header';
+import ShopModal from './Shop';
 import SlideImages from '../components/common/SlideImages';
 import MyTypeContents from '../components/recommend/MyTypeContents';
 import NewContents from '../components/recommend/NewContents';
 import OtherTypeContents from '../components/recommend/OtherTypeContent';
+
 import sampleImage from "../img/login_background.png";
 
 function Recommend(props) {
@@ -35,6 +39,18 @@ function Recommend(props) {
     return;
   }
   
+  const [openShopPage, setOpenShopPage] = useState(false);
+
+  const [shopPageContents, setShopPageContents] = useState({name: "none", like: false});
+  const openPage = () => {
+    setOpenShopPage(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const closePage = () => {
+    setOpenShopPage(false);
+    document.body.style.overflow = 'unset';
+  };
+
   return (
     <div className="recommendPage">
       <Header className={headerFill?"":"recommend"} changeIsHome={props.changeState.changeToHome}/>
@@ -46,9 +62,13 @@ function Recommend(props) {
         <div className={slideCategory[1] ? "active" : ""} onClick={changeNew}>NEW</div>
         <div className={slideCategory[2] ? "active" : ""} onClick={changeOtherType}>OTHER TYPE</div>
       </nav>
-      {slideCategory[0] && <MyTypeContents />}
-      {slideCategory[1] && <NewContents />}
-      {slideCategory[2] && <OtherTypeContents />}
+
+      <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <ShopModal closePage={closePage} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
+      </CSSTransition>
+      {slideCategory[0] && <MyTypeContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
+      {slideCategory[1] && <NewContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
+      {slideCategory[2] && <OtherTypeContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
     </div>
   );
 }

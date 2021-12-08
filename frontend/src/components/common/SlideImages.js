@@ -22,7 +22,7 @@ function SlideImages(props) {
     }
 
     const openShopPage = (shop) => {
-      if (props.page === 'main') {
+      if (props.page === 'main' || props.page === 'recContent') {
         props.openModal();
         props.setShopPageContents({name: shop.name});
       }
@@ -44,8 +44,8 @@ function SlideImages(props) {
     }
 
     return (
-      <Swiper pagination={{"el": '.swiper-pagination',"clickable": true}} loop={props.page === 'recommend'} 
-              slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} 
+      <Swiper pagination={{"el":'.swiper-pagination',"clickable": true}} loop={props.page === 'recommend'} 
+              slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
               className={`mySwiper ${props.page} ${props.name}`}>
           {props.info.map(elem => {
             return (

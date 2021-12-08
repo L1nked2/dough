@@ -1,13 +1,13 @@
 .myShopHeader {
-    padding-left: 27px;
-    padding-bottom: 10px;
+    padding-left: 1.989em;
+    padding-bottom: 0.737em;
     vertical-align: bottom;
-    margin-top: 10px;
-    margin-bottom: 30px;
+    margin-top: 0.737em; /* 10px */
+    margin-bottom: 2.21em;
 }
 .myShopHeader #myShop {
     font-size: 2.6em;
-    margin-right: 25px;
+    margin-right: 0.7086em; /* 25px */
 }
 .myShopHeader .locationButton {
     cursor: pointer;
@@ -17,9 +17,9 @@
     position: relative;
     font-size: 1.2em;
     color: rgba(0,0,0,0.6);
-    margin-left: 4px;
+    margin-left: 0.246em; /* 4px */
     border-bottom: 1px solid #707070;
-    bottom: 8px;
+    bottom: 0.492em;
     user-select: none;
 }
 
@@ -35,8 +35,8 @@
     text-align: center;
     float: left;
     width: 33.333%;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0.526em; /* 10px */
+    padding-bottom: 0.526em;
 
     font-size: 1.4em;
     font-family: SpoqaRegular;
@@ -46,34 +46,36 @@
 }
 
 .shopCategory .active {
-    padding-bottom: 7px;
-    border-bottom: 3px solid #3FB8D5;
+    padding-bottom: 0.3682em;
+    border-bottom: 0.1578em solid #3FB8D5;
     color: rgba(0,0,0,0.65);
 }
 
 .menuChange {
-    padding-top: 30px;
+    padding-top: 2.211em;
     padding-right: 5%;
     background-color: rgba(0,0,0,0.03);
     display: flex;
-    justify-content: right;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    -webkit-box-pack: flex-end;
     color: #3FB8D5;
 }
 
 .menuChange .menuChangeButton {
     border: 1px solid #3FB8D5;
-    border-radius: 15px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 20px;
-    padding-right: 10px;
+    border-radius: 1.106em;
+    padding-top: 0.134em;
+    padding-bottom: 0.134em;
+    padding-left: 1.34em;
+    padding-right: 0.67em; /* 10px */
     cursor: pointer;
     font-size: 1.1em;
     user-select: none;
 }
 
 .menuChange .menuChangeButton > span{
-    margin-left: 10px;
+    margin-left: 0.67em;
 }
 
 .newPage {

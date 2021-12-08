@@ -6,7 +6,7 @@ import CollapseResult from '../components/main/CollapseResult'
 import ShopModal from './Shop'
 import LocationModal from './Location'
 
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 function Home(props) {
   const [openShopPage, setOpenShopPage] = useState(false);
 

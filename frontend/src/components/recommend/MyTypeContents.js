@@ -61,7 +61,7 @@ function MyTypeContents(props) {
             </CSSTransition>
             {contents.map((elem, index) => {
                 return (
-                    <RecommendContent elem={elem} key={index} />
+                    <RecommendContent elem={elem} key={index} openPage={props.openPage} setShopPageContents={props.setShopPageContents}/>
                 );
             })}
         </div>

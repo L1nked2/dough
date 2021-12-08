@@ -26,6 +26,8 @@ function RecommendContent(props) {
                 <div className="icon"><ShareIcon width={20} color={"rgba(0,0,0,0.9)"} /></div>
             </div>
             <SlideImages 
+                openModal={props.openPage} 
+                setShopPageContents={props.setShopPageContents}
                 info={elem.recommendInfo} 
                 page="recContent"/>
         </div>

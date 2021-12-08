@@ -2,7 +2,7 @@
     position: fixed;
     bottom: 0;
     width: inherit;
-    height: 50px;
+    height: 3.685em;
     background-color: white;
 
     overflow: hidden;
@@ -16,7 +16,7 @@
 }
 
 .Navbar > div {
-    margin-top: 2px;
+    margin-top: 0.1474em;
     text-align: center;
     float: left;
     width: 25%;

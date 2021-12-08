@@ -24,7 +24,7 @@ function Oauth() {
             code: code,
             client_secret: CLIENT_SECRET,
         });
-
+        
         const token = await axios({
             method: 'POST',
             url: "https://kauth.kakao.com/oauth/token",

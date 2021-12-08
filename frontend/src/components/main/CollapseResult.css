@@ -8,9 +8,9 @@
     color: rgba(0, 0, 0, 0.36);
     font-size: 1.4em;
     cursor: pointer;
-    padding-left: 20px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-left: 1.053em; /* 20px */
+    padding-top: 1.579em; /* 30px */
+    padding-bottom: 1.579em;
     display: flex;
     align-items: center;
     border: none;
@@ -23,8 +23,8 @@
 }
 
 .collapse .panelHeader .collapseIcon {
-    margin-left: 10px;
-    margin-right: 8px;
+    margin-left: 0.5265em; /* 10px */
+    margin-right: 0.421em;
     transition: transform 0.4s ease;
 }
 

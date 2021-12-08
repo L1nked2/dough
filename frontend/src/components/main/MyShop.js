@@ -19,8 +19,14 @@ function MyShop(props) {
 
   /* Menu choice modal controller */
   const [menuModalIsOpen, setMenuModalIsOpen] = useState(false);
-  const openMenuModal = () => {setMenuModalIsOpen(true)};
-  const closeMenuModal = () => {setMenuModalIsOpen(false)};
+  const openMenuModal = () => {
+    setMenuModalIsOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const closeMenuModal = () => {
+    setMenuModalIsOpen(false);
+    document.body.style.overflow = 'unset';
+  };
 
   const foodList = ['분식', '곱창', '닭발', '국밥', '백반', '돼지고기', '돈카츠', '닭갈비', '소고기', 
                     '일본가정식', '일본카레', '오믈렛', '회', '스시', '샐러드', '샌드위치', '브런치',
@@ -85,7 +91,7 @@ function MyShop(props) {
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
         <span onClick={props.openLocationPage} className="locationButton">
-          <MapIcon width={17} color={"rgba(0,0,0,0.36)"}/>
+          <MapIcon width={"1.253em"} color={"rgba(0,0,0,0.36)"}/>
           <span id="location">{`${props.currLocation.name === "위치 선택" ? "" : "서울/"}${props.currLocation.name}`}</span>
         </span>
       </div>

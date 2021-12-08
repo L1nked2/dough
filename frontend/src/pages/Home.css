@@ -1,14 +1,8 @@
 .Home-page {
     text-align: left;
-    padding-top: 60px;
-    padding-bottom: 50px;
+    padding-bottom: 3.685em;
     width: inherit;
-    font-size: 13.5714px;
     line-height: 1.75em;
-}
-
-.sampleComp {
-    height: 70vh;
 }
 
 .fade-enter {
@@ -27,31 +21,4 @@
 .fade-exit-active {
     opacity: 0.01;
     transition: all 200ms ease-in;
-}
-
-
-@media (max-width: 528px){
-    .Home-page {
-        font-size: 12px;
-    }
-}
-@media (max-width: 436px){
-    .Home-page {
-        font-size: 11px;
-    }
-}
-@media (max-width: 400px){
-    .Home-page {
-        font-size: 10px;
-    }
-}
-@media (max-width: 356px){
-    .Home-page {
-        font-size: 9px;
-    }
-}
-@media (max-width: 320px){
-    .Home-page {
-        font-size: 8px;
-    }
 }

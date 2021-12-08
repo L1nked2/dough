@@ -2,15 +2,15 @@
   width: 100%;
 }
 .mySwiper.main {
-  padding-top: 15px;
-  padding-bottom: calc(15px + 58px);
+  padding-top: 1.1055em;
+  padding-bottom: calc(1.1055em + 4.2746em);
   background-color: rgba(0,0,0,0.03);
 }
 .mySwiper.main.cafe{
-  padding-top: calc(30px + 10px + 20px + 1.1em);
+  padding-top: 5.522em
 }
 .mySwiper.recContent {
-  padding-top: 30px;
+  padding-top: 2.211em;
 }
 
 .swiper-pagination-bullet {
@@ -39,7 +39,7 @@
 }
 .swiperSlide.main {
   font-family: "SpoqaBold";
-  border-radius: 20px;
+  border-radius: 1.474em;
   width: 90%;
   padding-bottom: 90%;
   cursor: pointer;
@@ -48,7 +48,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.33);
-  border-radius: 20px;
+  border-radius: 1.474em;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -72,16 +72,16 @@
 
 
 .swiperSlide.recContent {
-  border-radius: 20px;
+  border-radius: 1.474em;
   width: 90%;
   padding-bottom: 90%;
   cursor: pointer;
 }
 .swiperSlide.recContent > div {
-  left: 30px;
-  bottom: 50px;
+  left: 2.211em;
+  bottom: 3.685em;
   background: rgba(0,0,0,0);
-  border-radius: 20px;
+  border-radius: 1.474em;
   align-items: flex-start;
   justify-content: flex-end;
 }
