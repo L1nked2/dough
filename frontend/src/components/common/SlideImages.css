@@ -12,6 +12,10 @@
 .mySwiper.recContent {
   padding-top: 2.211em;
 }
+.mySwiper.recListPage {
+  padding-left: 2.211em;
+}
+
 
 .swiper-pagination-bullet {
   background: rgba(0,0,0,0.36);
@@ -84,4 +88,12 @@
   border-radius: 1.474em;
   align-items: flex-start;
   justify-content: flex-end;
+}
+
+.swiperSlide.recListPage {
+  font-family: "SpoqaBold";
+  border-radius: 1.474em;
+  width: 60%;
+  padding-bottom: 60%;
+  cursor: pointer;
 }

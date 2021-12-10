@@ -8,6 +8,7 @@ import qs from "qs"
 const REST_API_KEY = 'c6d8dd20d5ff2084f591d8b34cbe2608';
 const KAKAO_JS_KEY = '423e288ffa4a8548ec18cd9fc2865e4e';
 const REDIRECT_URI = 'https://dough-survey.web.app/login/callback/kakao';
+// const REDIRECT_URI = 'http://localhost:3000/login/callback/kakao';
 const CLIENT_SECRET = 'KjRkQKwcrPVGDx82f3craYzhDzdH4S8H';
 
 

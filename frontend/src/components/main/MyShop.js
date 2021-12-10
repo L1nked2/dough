@@ -114,7 +114,7 @@ function MyShop(props) {
         </CSSTransition>
         <SlideImages 
           openModal={props.openPage} 
-          setShopPageContents={props.setShopPageContents}
+          setPageContents={props.setShopPageContents}
           info={restaurantInfo} 
           page="main"
           name="restaurant"/>
@@ -128,7 +128,7 @@ function MyShop(props) {
       {slideCategory[1] && <>
         <SlideImages 
           openModal={props.openPage} 
-          setShopPageContents={props.setShopPageContents}
+          setPageContents={props.setShopPageContents}
           info={cafeInfo} 
           page="main"
           name="cafe"/>
@@ -151,7 +151,7 @@ function MyShop(props) {
         </CSSTransition>
         <SlideImages 
           openModal={props.openPage} 
-          setShopPageContents={props.setShopPageContents}
+          setPageContents={props.setShopPageContents}
           info={barInfo} 
           page="main"
           name="bar"/>

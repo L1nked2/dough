@@ -21,9 +21,9 @@ function SlideImages(props) {
       SwiperCore.use([Pagination]);
     }
     const openShopPage = (shop) => {
+      props.openModal();
       if (props.page === 'main' || props.page === 'recContent') {
-        props.openModal();
-        props.setShopPageContents({name: shop.name});
+        props.setPageContents({name: shop.name});
       }
       else {
         return null
@@ -40,11 +40,15 @@ function SlideImages(props) {
       else if (page === 'recContent') {
         return (<RecommendPageContentSlide elem={elem} />);
       }
+      else if (page === 'recListPage') {
+        return (null);
+      }
     }
 
     return (
       <Swiper pagination={props.page === 'recommend' ? {clickable: true} : false} loop={props.page === 'recommend'}
-              slidesPerView={3} slidesPerView={'auto'} centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+              slidesPerView={3} slidesPerView={'auto'} 
+              centeredSlides={props.page !== 'recListPage'} spaceBetween={15} // viewpoint에 따라 변경 예정
               className={`mySwiper ${props.page} ${props.name}`}>
           {props.info.map(elem => {
             return (

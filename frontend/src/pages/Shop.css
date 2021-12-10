@@ -2,8 +2,8 @@
     position: fixed;
     top: 60px;
     width: inherit;
-    min-height: calc(100vh - 110px);
-    max-height: calc(100vh - 110px);
+    min-height: calc(100vh - 60px - 50px);
+    max-height: calc(100vh - 60px - 50px);
     background-color: white;
     overflow-y: scroll;
     z-index: 15;
@@ -11,195 +11,255 @@
 }
 
 
-.subHeader {
+.shopPage .subHeader {
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-box-align: center;
+
     position: fixed;
     top: 0;
     width: inherit;
     height: 60px;
     background-color: white;
 }
-.subHeader .backButton {
+.shopPage .subHeader .backButton {
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-box-align: center;
     justify-content: center;
+    -webkit-box-pack: center;
+
     width: 15%;
     height: 100%;
     cursor: pointer;
 }
 
 .shopPage > .name {
-    width: 100%;
     display: flex;
+    display: -webkit-flex;
     justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
     font-size: 2.6em;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 0.567em; /* 20px */
+    padding-bottom: 0.567em;
     font-family: "SpoqaMedium";
 }
 
-.simpleInfo {
+.shopPage .simpleInfo {
+    display: flex;
+    display: -webkit-flex;
+
     width: 100%;
     font-size: 1.2em;
-    display: flex;
     color: rgba(0,0,0,0.65);
 }
-.simpleInfo .price{
-    width: 50%;
+.shopPage .simpleInfo .price{
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-box-align: center;
+    
+    width: 50%;
     position: relative;
 }
-.simpleInfo .price .temp{
+.shopPage .simpleInfo .price .temp{
+    display: flex;
+    display: -webkit-flex;
+    
     position: absolute;
-    right: 30px;
-    display: flex;
-    gap: 3px;
+    right: 1.8425em;
+    gap: 0.184em;
 }
-.simpleInfo .location{
-    width: 50%;
+.shopPage .simpleInfo .location{
     display: flex;
+    display: -webkit-flex;
     align-items: center;
-    padding-left: 5px;
-    gap: 3px;
+    -webkit-box-align: center;
+
+    width: 50%;
+    padding-left: 0.307em;
+    gap: 0.184em;
 }
 
-.fourPictures {
-    padding: 30px;
-    padding-bottom: 40px;
+.shopPage .fourPictures {
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
-    gap: 10px;
+    -webkit-box-orient: vertical;
+    
+    padding: 2.211em; /* 30px */
+    padding-bottom: 2.948em;
+    gap: 0.737em;
 }
-.twoPictures {
+.shopPage .fourPictures .twoPictures {
     display: flex;
+    display: -webkit-flex;
     flex-direction: row;
-    gap: 10px;
+    -webkit-box-orient: horizontal;
+
+    gap: 0.737em;
 }
-.twoPictures > img {
-    width: calc(50% - 5px);
+.shopPage .fourPictures .twoPictures > img {
+    width: calc(50% - 0.3685em);
     aspect-ratio: 1;
     object-fit: cover;
 }
 
 .shopPage .information {
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
-    gap: 40px;
-    padding-left: 30px;
-    padding-right: 30px;
+    -webkit-box-orient: vertical;
+
+    gap: 2.457em;
+    padding-left: 1.8425em; /* 30px */
+    padding-right: 1.8425em;
     font-size: 1.2em;
 }
-.information .eachInformation {
+.shopPage .information .eachInformation {
     display: flex;
+    display: -webkit-flex;
     flex-direction: row;
-    gap: 20px;
+    -webkit-box-orient: horizontal;
+
+    gap: 1.474em;
 }
-.information .eachInformation .icon{
-    width: calc(10% - 20px);
-    padding-top: 3px;
+.shopPage .information .eachInformation .icon{
     display: flex;
+    display: -webkit-flex;
+
+    width: calc(11% - 1.474em);
+    padding-top: 0.221em;
     justify-content: center;
     align-items: start;
 }
-.information .eachInformation .icon.naver{
+.shopPage .information .eachInformation .icon.naver{
     padding-top: 0px;
 }
-.information .eachInformation .contents{
-    width: 90%;
+.shopPage .information .eachInformation .contents{
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-box-orient: vertical;
+
+    width: 90%;
 }
 
-.information .eachInformation .contents .eachMenu{
+.shopPage .information .eachInformation .contents .eachMenu{
     display: inline-flex;
+    display: -webkit-inline-flex;
     flex-direction: row;
+    -webkit-box-orient: horizontal;
+
     position: relative;
 }
-.information .eachInformation .contents .eachMenu .name{
+.shopPage .information .eachInformation .contents .eachMenu .name{
     flex-shrink: 0;
-    
+    -webkit-flex-shrink: 0;    
 }
-.information .eachInformation .contents .eachMenu .line{
+.shopPage .information .eachInformation .contents .eachMenu .line{
     flex-grow: 1;
+    -webkit-box-flex: 1;
     flex-shrink: 1;
+    -webkit-flex-shrink: 1;
+
     margin-left: 1em;
     margin-right: 1em;
     height: auto;
     background-image: linear-gradient(to right, rgba(0,0,0,0.18) 80%, rgba(255,255,255,0) 20%);
     background-position: center right;
-    background-size: 15px 1px;
+    background-size: 1.1055em 0.0737em;
     background-repeat: repeat-x;
 }
-.information .eachInformation .contents .eachMenu .price{
+.shopPage .information .eachInformation .contents .eachMenu .price{
     flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+
     margin-left: auto;
 }
-.information .eachInformation .contents.reviews{
+.shopPage .information .eachInformation .contents.reviews{
     overflow-y: hidden;
 }
-.information .eachInformation .contents .eachReview{
-    padding-top: 20px;
-    padding-bottom: 20px;
+.shopPage .information .eachInformation .contents .eachReview{
+    padding-top: 1.474em;
+    padding-bottom: 1.474em;
     margin-right: 11.11%;
     border-bottom: 1px solid rgba(0,0,0,0.12);
     cursor: pointer;
     text-decoration: none;
     color: rgba(0,0,0,0.9);
 }
-.information .eachInformation .contents .eachReview .title{
-    margin-bottom: 10px;
+.shopPage .information .eachInformation .contents .eachReview .title{
+    margin-bottom: 0.737em;
 }
-.information .eachInformation .contents .eachReview .content{
+.shopPage .information .eachInformation .contents .eachReview .content{
     height: 3em;
     overflow-y: hidden;
     font-size: 0.917em;
     color: rgba(0,0,0,0.65);
 }
 
-.expandButton{
+.shopPage .expandButton{
+    display: flex;
+    display: -webkit-flex;
+
     width: 100%;
     height: 50px;
     background-color: rgba(0,0,0,0.03);
-    display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
-.subNavbar {
+
+.shopPage .subNavbar {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
     position: fixed;
     bottom: 0;
     width: inherit;
     height: 50px;
     background-color: white;
 
-    display: flex;
-    justify-content: center;
     font-size: 1.4em;
     color: rgba(0,0,0,0.36);
     border-top: 1px solid #D1D1D1;
 }
-.subNavbar .buttons{
+.shopPage .subNavbar .buttons{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
     position: relative;
     width: 60%;
     height: inherit;
-    display: flex;
-    align-items: center;
     user-select: none;
 }
-.subNavbar .buttons .likeButton {
+.shopPage .subNavbar .buttons .likeButton {
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-box-align: center;
+
     position: absolute;
     left: 0%;
     gap: 0.7em;
     cursor: pointer;
     margin-bottom: 2px;
 }
-.subNavbar .buttons .shareButton {
+.shopPage .subNavbar .buttons .shareButton {
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-box-align: center;
+    
     position: absolute;
     right: 0%;
     gap: 0.7em;

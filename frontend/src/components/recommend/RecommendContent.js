@@ -12,6 +12,11 @@ function RecommendContent(props) {
     const index = props.index;
     const target = props.elem.target;
 
+    function openListPage () {
+        props.openListPage();
+        props.setListPageContents({name: elem.mainTitle});
+    }
+
     return (
         <div className={`recommendContent ${target?"specific":""}`} key={index}>
             {target && 
@@ -20,14 +25,14 @@ function RecommendContent(props) {
             <div className="header">
                 <div className="mainTitle">
                     {elem.mainTitle}
-                    <div className="icon"><Chevron width={"0.4em"} color={"rgba(0,0,0,0.9)"}/></div>
+                    <div className="icon" onClick={openListPage}><Chevron width={"0.4em"} color={"rgba(0,0,0,0.9)"}/></div>
                 </div>
                 <div className="subTitle">{elem.subTitle}</div>
                 <div className="icon"><ShareIcon width={20} color={"rgba(0,0,0,0.9)"} /></div>
             </div>
             <SlideImages 
-                openModal={props.openPage} 
-                setShopPageContents={props.setShopPageContents}
+                openModal={props.openShopPage} 
+                setPageContents={props.setShopPageContents}
                 info={elem.recommendInfo} 
                 page="recContent"/>
         </div>

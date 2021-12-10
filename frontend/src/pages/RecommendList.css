@@ -1,0 +1,141 @@
+.listPage {
+    position: fixed;
+    top: 60px;
+    width: inherit;
+    min-height: calc(100vh - 60px - 51px);
+    max-height: calc(100vh - 60px - 51px);
+    background-color: white;
+    overflow-y: scroll;
+    z-index: 15;
+    font-family: "SpoqaRegular";
+}
+
+
+.listPage .subHeader {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: space-between;
+    -webkit-box-pack: justify;
+
+    position: fixed;
+    top: 0;
+    width: inherit;
+    height: 60px;
+    background-color: white;
+}
+.listPage .subHeader .backButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
+.listPage .subHeader .shareButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.listPage .title {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
+    font-size: 1.8em;
+    font-family: "SpoqaMedium";
+    padding-top: 0.567em; /* 20px */
+    padding-bottom: 0.2em;
+    text-align: center;
+    white-space: pre-wrap;
+    line-height: 1.5em;
+}
+.listPage .subtitle {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
+    font-size: 1.2em;
+    color: rgba(0,0,0,0.65);
+    text-align: center;
+}
+.listPage .content {
+    padding-top: 3.5em;
+}
+.listPage .content .target {
+    font-size: 1.1em;
+    margin-left: 2.01em; /* 30px */
+    margin-right: 2.01em;
+    color: rgba(0,0,0,0.36);
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+
+.listPage .subNavbar {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    position: fixed;
+    bottom: 0;
+    width: inherit;
+    height: 50px;
+    background-color: white;
+
+    font-size: 1.4em;
+    color: rgba(0,0,0,0.36);
+    border-top: 1px solid #D1D1D1;
+}
+.listPage .subNavbar .buttons{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: relative;
+    width: 60%;
+    height: inherit;
+    user-select: none;
+}
+.listPage .subNavbar .buttons .likeButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: absolute;
+    left: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+.listPage .subNavbar .buttons .shareButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    
+    position: absolute;
+    right: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+    margin-bottom: 2px;
+}

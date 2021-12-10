@@ -24,18 +24,13 @@ function ShopModal(props) {
         });
     }
 
-    function closePage () {
-        props.setShopPageContents(shopPageContent);
-        props.closePage();
-    }
-
     const reviewContent = useRef(null);
     const eachReview = useRef(null);
-    const [reviewHeight, setReviewHeight] = useState(340);
+    const [reviewHeight, setReviewHeight] = useState(0);
     const [closeExpandButton, setCloseExpandButton] = useState(false);
     function expandReviewHeight () {
-        if (reviewContent.current.scrollHeight >= (reviewHeight + 359)) {
-            setReviewHeight(reviewHeight + 359);
+        if (reviewContent.current.scrollHeight >= (reviewHeight + eachReview.current.scrollHeight*1.0125*3)) {
+            setReviewHeight(reviewHeight + eachReview.current.scrollHeight*1.0125*3);
         }
         else {
             setReviewHeight(reviewContent.current.scrollHeight);
@@ -48,6 +43,7 @@ function ShopModal(props) {
         props.closePage();
     }
     useEffect (() => {
+        setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4)
         window.history.pushState({page: "shop_modal"}, "shop_modal");
         window.addEventListener("popstate",props.closePage);
         return () => {
@@ -56,7 +52,7 @@ function ShopModal(props) {
     }, []);
 
     return (
-        <div className="shopPage">
+        <div className="shopPage" id="shopPage">
             <div className="subHeader">
                 <div onClick={() => {goBack()}} className="backButton">
                     <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
@@ -81,14 +77,14 @@ function ShopModal(props) {
             </div>
             <div className="information">
                 <div className="eachInformation">
-                    <div className="icon"><MapIcon height={30} color={"rgba(0,0,0,0.36)"} /></div>
+                    <div className="icon"><MapIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
                     <div className="contents">
                         <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.roadAddress}</div>
                         <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.lotAddress}`}</div>
                     </div>
                 </div>
                 <div className="eachInformation">
-                    <div className="icon"><ClockIcon height={32} color={"rgba(0,0,0,0.36)"} /></div>
+                    <div className="icon"><ClockIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
                     <div className="contents">
                         <div style={{color: "rgba(0,0,0,0.9)"}}>{`(영업 시간) ${shopPageContent.businessHours}`}</div>
                         <div style={{color: "rgba(0,0,0,0.9)"}}>{`(쉬는 시간) ${shopPageContent.breakTime}`}</div>
@@ -96,7 +92,7 @@ function ShopModal(props) {
                     </div>
                 </div>
                 <div className="eachInformation">
-                    <div className="icon"><MenuIcon height={27} color={"rgba(0,0,0,0.36)"}/></div>
+                    <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
                     <div className="contents">
                         {shopPageContent.menuList.map((menu, index) => {
                             return (
@@ -110,16 +106,16 @@ function ShopModal(props) {
                     </div>
                 </div>
                 <div className="eachInformation">
-                    <div className="icon naver"><NaverIcon height={25} color={"#a3a3a3"} /></div>
+                    <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
                     <a className="contents" href={shopPageContent.naverLink} target="_blank">{shopPageContent.naverLink}</a>
                 </div>
                 <div className="eachInformation">
-                    <div className="icon naver"><img src={naverBlogIcon} style={{width: "27px"}}/></div>
+                    <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
                     <div className="contents reviews" style={{height: `${reviewHeight}px`}} ref={reviewContent}>
                         리뷰
-                        {shopPageContent.reviews.map(review => {
+                        {shopPageContent.reviews.map((review,index) => {
                             return (
-                                <a className="eachReview" href={review.link} target="_blank">
+                                <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null}>
                                     <div className="title">{`[ ${review.title} ]`}</div>
                                     <div className="content">{review.content}</div>
                                 </a>

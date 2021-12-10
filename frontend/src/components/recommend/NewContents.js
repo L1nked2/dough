@@ -44,7 +44,8 @@ function NewContents(props) {
         <div>
             {contents.map((elem, index) => {
                 return (
-                    <RecommendContent elem={elem} key={index}/>
+                    <RecommendContent elem={elem} key={index} openShopPage={props.openShopPage} setShopPageContents={props.setShopPageContents}
+                                                              openListPage={props.openListPage} setListPageContents={props.setListPageContents}/>
                 );
             })}
         </div>

@@ -4,6 +4,7 @@ import { CSSTransition } from "react-transition-group";
 
 import Header from '../components/common/Header';
 import ShopModal from './Shop';
+import RecommendListModal from './RecommendList';
 import SlideImages from '../components/common/SlideImages';
 import MyTypeContents from '../components/recommend/MyTypeContents';
 import NewContents from '../components/recommend/NewContents';
@@ -40,23 +41,41 @@ function Recommend(props) {
   }
   
   const [openShopPage, setOpenShopPage] = useState(false);
-
   const [shopPageContents, setShopPageContents] = useState({name: "none", like: false});
-  const openPage = () => {
+  const openShopPageFunc = () => {
     setOpenShopPage(true);
     document.body.style.overflow = 'hidden';
   };
-  const closePage = () => {
+  const closeShopPageFunc = () => {
     setOpenShopPage(false);
     document.body.style.overflow = 'unset';
   };
+  
+  const [openListPage, setOpenListPage] = useState(false);
+  const [listPageContents, setListPageContents] = useState({name: "none", like: false});
+  const openListPageFunc = () => {
+    setOpenListPage(true);
+    document.body.style.overflow = 'hidden';
+  };
+  const closeListPageFunc = () => {
+    setOpenListPage(false);
+    document.body.style.overflow = 'unset';
+  };
+
 
   return (
     <div className="recommendPage">
       <Header className={headerFill?"":"recommend"} changeIsHome={props.changeState.changeToHome}/>
+      <CSSTransition in={openListPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <RecommendListModal closePage={closeListPageFunc} setPageContents={setListPageContents} pageContents={listPageContents} />
+      </CSSTransition>
       <SlideImages 
           info={recommendInfo} 
-          page="recommend"/>
+          page="recommend"
+          openModal={openListPageFunc} 
+          setPageContents={setListPageContents}/>
+
+
       <nav className="recommendCategory">
         <div className={slideCategory[0] ? "active" : ""} onClick={changeMyType}>MY TYPE</div>
         <div className={slideCategory[1] ? "active" : ""} onClick={changeNew}>NEW</div>
@@ -64,11 +83,14 @@ function Recommend(props) {
       </nav>
 
       <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <ShopModal closePage={closePage} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
+        <ShopModal closePage={closeShopPageFunc} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
       </CSSTransition>
-      {slideCategory[0] && <MyTypeContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
-      {slideCategory[1] && <NewContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
-      {slideCategory[2] && <OtherTypeContents openPage={openPage} setShopPageContents={setShopPageContents}/>}
+      {slideCategory[0] && <MyTypeContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents} 
+                                           openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
+      {slideCategory[1] && <NewContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents}
+                                        openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
+      {slideCategory[2] && <OtherTypeContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents}
+                                              openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
     </div>
   );
 }
