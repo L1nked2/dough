@@ -18,50 +18,25 @@ function Oauth() {
         let kakaoAuth = new URL(window.location.href);
         const code = kakaoAuth.searchParams.get('code');
 
-        const payload = qs.stringify({
-            grant_type: "authorization_code",
-            client_id: REST_API_KEY,
-            redirect_uri: REDIRECT_URI,
-            code: code,
-            client_secret: CLIENT_SECRET,
-        });
-        
-        const token = await axios({
+        const token = await axios ({
             method: 'POST',
-            url: "https://kauth.kakao.com/oauth/token",
+            url: 'https://dough-survey.web.app/api/login',
             headers: {
                 "Content-Type": `application/x-www-form-urlencoded;charset=utf-8`
             },
-            data: payload,
-        }).then(function(response) {
-            console.log(response);
-
-            if (!window.Kakao.isInitialized()) {
-                window.Kakao.init(KAKAO_JS_KEY);
-            }
-            window.Kakao.Auth.setAccessToken(response.data.access_token);
-            window.Kakao.API.request({
-                url: "/v2/user/me",
-                success: function ({kakao_account}) {
-                    console.log(kakao_account.gender);
-                },
-                fail: function (err) {
-                    console.log(err);
-                    window.alert("사용자 정보를 불러오는 데 실패하였습니다.");
-                }
-            });
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+            data: code,
+        }).then(function(res) {
+            console.log(res);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`;
             cookie.set (
                 'accessToken',
-                response.data.access_token,
+                res.data.access_token,
                 {
                     path: '/', 
-                    maxAge: response.data.expires_in,
+                    maxAge: res.data.expires_in,
                     // httpOnly: true
                 }
             )
-
             window.location.replace("/home");
         }).catch (function(err) {
             console.log(err);
