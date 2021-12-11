@@ -12,7 +12,7 @@ function Login() {
     const cookie = new Cookies();
     const currAccessToken = cookie.get("accessToken");
     if (currAccessToken) {
-        window.location.replace("/main");
+        setTimeout(window.location.replace("/main"), 1000);
     }
 
     function clickLogin(e) {
@@ -37,10 +37,11 @@ function Login() {
                 <div className="login">
                     <img className="logoWhite" src={logoWhite} alt="logoWhite"/>
                     <p className="loginText">밥약속잡을땐</p>
+                    {!currAccessToken && 
                     <a href="javascript:kakaoLogin();" className="kakaoLogin" onClick={clickLogin}>
                         <img className="logoKakao" src={logoKakao} alt="logoKakao"/>
                         카카오로 시작하기
-                    </a>
+                    </a>}
                 </div>
             </div>
             

@@ -34,4 +34,13 @@
     font-family: SpoqaRegular;
 }
   
-  
+@media (max-width: 528px){
+    .overlayExplain {
+        width: 100%;
+    }
+  }
+  @media (orientation: portrait) and (max-width: 768px){
+    .overlayExplain {
+        width: 100%;
+    }
+  }

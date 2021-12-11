@@ -41,7 +41,7 @@ function Home(props) {
         <LocationModal currLocation={currLocation} setCurrLocation={setCurrLocation} closePage={closeLocationPage} />
       </CSSTransition>
       
-      <Header changeIsHome={props.changeState.changeToHome}/>
+      <Header />
       <CollapseResult />
       <MyShop openPage={openPage} openLocationPage={openLocationPage} currLocation={currLocation} setShopPageContents={setShopPageContents}/>
     </div>

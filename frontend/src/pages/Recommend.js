@@ -65,7 +65,7 @@ function Recommend(props) {
 
   return (
     <div className="recommendPage">
-      <Header className={headerFill?"":"recommend"} changeIsHome={props.changeState.changeToHome}/>
+      <Header className={headerFill?"":"recommend"}/>
       <CSSTransition in={openListPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
         <RecommendListModal closePage={closeListPageFunc} setPageContents={setListPageContents} pageContents={listPageContents} />
       </CSSTransition>

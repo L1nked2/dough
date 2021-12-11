@@ -1,26 +1,37 @@
-import React from 'react'
-import { Route, Switch, BrowserRouter as Router , Redirect, useHistory } from 'react-router-dom'
-// import { Redirect } from 'react-router';
-import { useState, useEffect } from 'react'
+import React from 'react';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-import Main from './pages/Main'
-import Login from './pages/Login' 
-import Oauth from './pages/Oauth' 
+import Home from './pages/Home';
+import Recommend from './pages/Recommend';
+import Favorite from './pages/Favorite';
+import Profile from './pages/Profile';
+import Navbar from './components/common/Navbar';
+import Login from './pages/Login' ;
+import Oauth from './pages/Oauth' ;
 
-import './App.css'
+import './App.css';
 
 function App() {  
-  let history = useHistory();
+  const [page, setPage] = useState('home');
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page])
   return(
     <div className="viewPage" >
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Login} />
-          <Route exact path="/main" component={Main} />
-          <Route path="/login/callback/kakao" component={Oauth} />
-          <Redirect from="/login/auth" to="/main" />
-        </Switch>
-      </Router>
+      <div className="layout" >
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Login} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/recommend" component={Recommend} />
+            <Route exact path="/favorite" component={Favorite} />
+            <Route exact path="/profile" component={Profile} />
+            <Route path="/login/callback/kakao" component={Oauth} />
+          </Switch>
+          <Navbar page={page} setPage={setPage} />
+        </Router>
+      </div>
     </div>
   );
 }

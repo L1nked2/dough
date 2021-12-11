@@ -62,7 +62,7 @@ function Oauth() {
                 }
             )
 
-            window.location.replace("/main");
+            window.location.replace("/home");
         }).catch (function(err) {
             console.log(err);
             window.alert("로그인에 실패하였습니다.");

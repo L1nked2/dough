@@ -66,7 +66,7 @@ function ShopInList (props) {
                 <SlideImages 
                     page="recListPage" 
                     info={[{imgSrc: elem.spaceImg1}, {imgSrc: elem.menuImg1}, {imgSrc: elem.spaceImg2}, 
-                        {imgSrc: elem.menuImg2}, {imgSrc: elem.menuImg3}, {imgSrc: ""}]}/>
+                        {imgSrc: elem.menuImg2}, {imgSrc: elem.menuImg3}]}/>
             </div>
 
             <div className="description">

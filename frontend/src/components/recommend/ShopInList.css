@@ -80,6 +80,7 @@
 
 .shopInList .images {
     padding: 1em 0;
+    z-index: 100;
 }
 
 .shopInList .description {    

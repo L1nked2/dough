@@ -91,6 +91,7 @@ function ShopModal(props) {
                         <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : ${shopPageContent.holiday}`}</div>
                     </div>
                 </div>
+                <a href='tel:010-5250-0316'>전화하기</a>
                 <div className="eachInformation">
                     <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
                     <div className="contents">
