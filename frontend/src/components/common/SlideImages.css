@@ -1,6 +1,3 @@
-.mySwiper {
-  width: 100%;
-}
 .mySwiper.main {
   padding-top: 1.1055em;
   padding-bottom: calc(1.1055em + 4.2746em);
@@ -14,6 +11,7 @@
 }
 .mySwiper.recListPage {
   padding-left: 2.211em;
+  padding-right: 2.211em;
 }
 
 

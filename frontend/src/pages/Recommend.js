@@ -9,6 +9,7 @@ import SlideImages from '../components/common/SlideImages';
 import MyTypeContents from '../components/recommend/MyTypeContents';
 import NewContents from '../components/recommend/NewContents';
 import OtherTypeContents from '../components/recommend/OtherTypeContent';
+import Navbar from '../components/common/Navbar';
 
 import sampleImage from "../img/login_background.png";
 
@@ -91,6 +92,7 @@ function Recommend(props) {
                                         openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
       {slideCategory[2] && <OtherTypeContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents}
                                               openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
+      <Navbar page={"recommend"}/>
     </div>
   );
 }

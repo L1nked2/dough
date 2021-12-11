@@ -29,7 +29,6 @@ function App() {
             <Route exact path="/profile" component={Profile} />
             <Route path="/login/callback/kakao" component={Oauth} />
           </Switch>
-          <Navbar page={page} setPage={setPage} />
         </Router>
       </div>
     </div>

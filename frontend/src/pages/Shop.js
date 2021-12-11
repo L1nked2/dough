@@ -6,6 +6,7 @@ import WonIcon from '../components/icon/Won';
 import LocationIcon from '../components/icon/Location';
 import MapIcon from '../components/icon/MapBold';
 import ClockIcon from '../components/icon/Clock';
+import CallIcon from '../components/icon/Call';
 import MenuIcon from '../components/icon/Menu';
 import NaverIcon from '../components/icon/Naver';
 import ExpandIcon from '../components/icon/Expand';
@@ -38,12 +39,27 @@ function ShopModal(props) {
         }
     }
     
+    const menuContent = useRef(null);
+    const eachMenu = useRef(null);
+    const [menuHeight, setMenuHeight] = useState(0)
+    const [menuFold, setMenuFold] = useState(true);
+    function changeMenuHeight () {
+        if (menuFold) {
+            setMenuHeight(menuContent.current.scrollHeight);
+            setMenuFold(false);
+        }
+        else {
+            setMenuHeight(eachMenu.current.scrollHeight * 3);
+            setMenuFold(true);
+        }
+    }
     const goBack = () => {
         window.history.back();
         props.closePage();
     }
     useEffect (() => {
-        setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4)
+        setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
+        setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");
         window.addEventListener("popstate",props.closePage);
         return () => {
@@ -51,6 +67,7 @@ function ShopModal(props) {
         }
     }, []);
 
+    
     return (
         <div className="shopPage" id="shopPage">
             <div className="subHeader">
@@ -91,19 +108,29 @@ function ShopModal(props) {
                         <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : ${shopPageContent.holiday}`}</div>
                     </div>
                 </div>
-                <a href='tel:010-5250-0316'>전화하기</a>
+            </div>
+            <a href='tel:010-5250-0316' className='callButton'>
+                <div className='button'><CallIcon width={"1.2em"} /></div>
+                <div className='call'>전화하기</div>
+            </a>
+            <div className="information">
                 <div className="eachInformation">
                     <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
                     <div className="contents">
-                        {shopPageContent.menuList.map((menu, index) => {
-                            return (
-                                <div className="eachMenu" key={index}>
-                                    <div className="name">{menu[0]}</div>
-                                    <div className="line"/>
-                                    <div className="price">{menu[1]}</div>
-                                </div>
-                            );
-                        })}
+                        <div className='menuList' style={{maxHeight: `${menuHeight}px`}} ref={menuContent}>
+                            {shopPageContent.menuList.map((menu, index) => {
+                                return (
+                                    <div className="eachMenu" key={index} ref={index===0?eachMenu:null}>
+                                        <div className="name">{menu[0]}</div>
+                                        <div className="line"/>
+                                        <div className="price">{menu[1]}</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div onClick={()=>{changeMenuHeight()}} className='expandButton' style={{transform:`rotate(${menuFold?"0":"180"}deg)`}}>
+                            <ExpandIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"} />
+                        </div>
                     </div>
                 </div>
                 <div className="eachInformation">
@@ -127,7 +154,7 @@ function ShopModal(props) {
             </div>
             {!closeExpandButton ? 
             <div onClick={()=>{expandReviewHeight()}} className="expandButton">
-                <ExpandIcon width={20} color={"rgba(0,0,0,0.36)"} />
+                <ExpandIcon width={25} color={"rgba(0,0,0,0.36)"} />
             </div> 
             : null}
 

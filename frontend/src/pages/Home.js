@@ -5,6 +5,7 @@ import MyShop from '../components/main/MyShop'
 import CollapseResult from '../components/main/CollapseResult'
 import ShopModal from './Shop'
 import LocationModal from './Location'
+import Navbar from '../components/common/Navbar';
 
 import { CSSTransition } from "react-transition-group";
 function Home(props) {
@@ -31,7 +32,7 @@ function Home(props) {
     setLocationModalIsOpen(false);
     document.body.style.overflow = 'unset';
   };
-
+  
   return (
     <div className="Home-page">
       <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
@@ -44,6 +45,7 @@ function Home(props) {
       <Header />
       <CollapseResult />
       <MyShop openPage={openPage} openLocationPage={openLocationPage} currLocation={currLocation} setShopPageContents={setShopPageContents}/>
+      <Navbar page={"home"}/>
     </div>
   );
 }

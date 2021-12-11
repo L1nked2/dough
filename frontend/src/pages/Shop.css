@@ -2,13 +2,14 @@
     position: fixed;
     width: inherit;
     top: 0;
-    min-height: calc(100vh);
-    max-height: calc(100vh);
+    /* min-height: calc(100vh);
+    max-height: calc(100vh); */
+    height: 100%;
     background-color: white;
     overflow-y: scroll;
     z-index: 40;
     font-family: "SpoqaRegular";
-
+    
 }
 
 .shopPage .subHeader {
@@ -23,6 +24,7 @@
     width: 100%;
     height: 60px;
     background-color: white;
+    z-index: 60;
 }
 .shopPage .subHeader .backButton {
     display: flex;
@@ -93,7 +95,7 @@
     -webkit-box-orient: vertical;
     
     padding: 2.211em; /* 30px */
-    padding-bottom: 2.948em;
+    padding-bottom: 2.211em;
     gap: 0.737em;
 }
 .shopPage .fourPictures .twoPictures {
@@ -120,6 +122,34 @@
     padding-left: 1.8425em; /* 30px */
     padding-right: 1.8425em;
     font-size: 1.2em;
+}
+.shopPage .callButton{
+    position: sticky;
+    position: -webkit-sticky;
+    bottom: 60px;
+
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    gap: 0.8em;
+
+    background-color: white;
+    padding: 1em 0;
+    margin: 1em 1.8425em 2.457em 1.8425em;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 0.7em;
+    text-decoration: none;
+}
+.shopPage .callButton .button{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+}
+.shopPage .callButton .call{
+    font-size: 1.4em;
+    color: rgba(0,0,0,0.9);
 }
 .shopPage .information .eachInformation {
     display: flex;
@@ -148,6 +178,23 @@
     -webkit-box-orient: vertical;
 
     width: 90%;
+}
+.shopPage .information .eachInformation .contents .menuList{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+.shopPage .information .eachInformation .contents .expandButton{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    padding: 0.5em 0;
+    cursor: pointer;
 }
 
 .shopPage .information .eachInformation .contents .eachMenu{
@@ -204,7 +251,7 @@
     color: rgba(0,0,0,0.65);
 }
 
-.shopPage .expandButton{
+.shopPage > .expandButton{
     display: flex;
     display: -webkit-flex;
 
