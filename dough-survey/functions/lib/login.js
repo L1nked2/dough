@@ -120,7 +120,7 @@ exports.updateOrCreateUser = updateOrCreateUser;
 function createFirebaseToken(kakaoAccessToken) {
     return requestMe(kakaoAccessToken).then((response) => {
         const kakaoID = `kakao:${response.data.id}`;
-        const kakaoPr = response.data.properties;
+        // const kakaoPr = response.data.properties;
         const kakaoAc = response.data.kakao_account;
         if (!kakaoID) {
             return response.send({ message: "There was no user with the given access token." });
@@ -128,11 +128,11 @@ function createFirebaseToken(kakaoAccessToken) {
         let nickname = null;
         let profileImage = null;
         let email = null;
-        if (kakaoPr) {
-            nickname = kakaoPr.nickname;
-            profileImage = kakaoPr.profile_image;
-        }
+        console.log(`kakao_response:${response}`);
+        console.log(`kakao_id:${kakaoID}`);
         if (kakaoAc) {
+            nickname = kakaoAc.profile.nickname;
+            profileImage = kakaoAc.profile.profile_image_url;
             email = kakaoAc.email;
         }
         return updateOrCreateUser(kakaoID, email, nickname, profileImage);
