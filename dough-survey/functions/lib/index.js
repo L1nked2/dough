@@ -18,16 +18,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
-const express_1 = __importDefault(require("express"));
-// import * as login from "./login";
-const app = (0, express_1.default)();
+// import firebaseAdmin from "firebase-admin";
+const express = require("express");
+const login_1 = require("./login");
+// import bodyParser = require("body-parser");
+const app = express();
 // app.use("/", routes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.get("/api/place", (req, res) => {
     res.send("Forbidden");
 });
@@ -35,8 +36,23 @@ app.get("/api/login", (req, res) => {
     res.send("Hello from Express on Firebase!");
 });
 app.post("/api/login", (req, res) => {
-    console.log(req.body);
-    res.send("api");
+    const { code } = req.body;
+    console.log(`req.body: ${req.body.code}`);
+    console.log(`req.query: ${req.query.code}`);
+    console.log(`code: ${code}`);
+    (0, login_1.getKakaoToken)(code).then((token) => {
+        if (!token) {
+            return res.status(400).send({ error: "There is no token." })
+                .send({ message: "Access token is a required parameter." });
+        }
+        console.log(`Verifying Kakao token: ${token}`);
+        (0, login_1.createFirebaseToken)(token)
+            .then((firebaseToken) => {
+            console.log(`Returning firebase token to user: ${firebaseToken}`);
+            return res.send({ firebase_token: firebaseToken });
+        });
+        return;
+    });
 });
 exports.api = functions.https.onRequest(app);
 //# sourceMappingURL=index.js.map

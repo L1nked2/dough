@@ -22,9 +22,9 @@ function Oauth() {
             method: 'POST',
             url: 'https://dough-survey.web.app/api/login',
             headers: {
-                "Content-Type": `application/x-www-form-urlencoded;charset=utf-8`
+                "Content-Type": `application/json`
             },
-            data: code,
+            data: {code: code},
         }).then(function(res) {
             console.log(res);
             axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`;

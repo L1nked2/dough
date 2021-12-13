@@ -4,7 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8676586a-691f-4772-8a55-6a18a5f4a383" name="Changes" comment="" />
+    <list default="true" id="8676586a-691f-4772-8a55-6a18a5f4a383" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/.firebase/hosting.cHVibGlj.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/.firebase/hosting.cHVibGlj.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/login.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/login.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/src/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/src/login.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/public/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.3ce17036.chunk.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.3ce17036.chunk.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.1db39003.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.1db39003.chunk.js.LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.1db39003.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.357d40fd.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.357d40fd.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/routes/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/routes/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/pages/Oauth.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/pages/Oauth.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

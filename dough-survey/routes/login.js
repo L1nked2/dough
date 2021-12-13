@@ -205,6 +205,8 @@ router.get('/callback/kakao', async(req, res) => {
 
 // actual endpoint that creates a firebase token with Kakao access token
 router.post('/', (req, res) => {
+
+    
     const token = req.body.token;
     if (!token) return res.status(400).send({error: 'There is no token.'})
     .send({message: 'Access token is a required parameter.'});
@@ -214,6 +216,7 @@ router.post('/', (req, res) => {
         console.log(`Returning firebase token to user: ${firebaseToken}`);
         res.send({firebase_token: firebaseToken});
     });
+    signInWithCustomToken()
 });
 
 export default router;

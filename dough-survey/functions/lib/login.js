@@ -22,10 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFirebaseToken = exports.updateOrCreateUser = exports.requestMe = void 0;
+exports.getKakaoToken = exports.createFirebaseToken = exports.updateOrCreateUser = exports.requestMe = void 0;
 // import {initializeApp} from "firebase-admin/app";
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const axios_1 = __importDefault(require("axios"));
+const qs = require("qs");
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -47,6 +48,11 @@ const axios_1 = __importDefault(require("axios"));
 firebaseAdmin.initializeApp();
 // Initialize kakao api server uri
 const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
+const kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
+const REST_API_KEY = "c6d8dd20d5ff2084f591d8b34cbe2608";
+const REDIRECT_URI = "https://dough-survey.web.app/login/callback/kakao";
+// const REDIRECT_URI = "http://localhost:3000/login/callback/kakao";
+const CLIENT_SECRET = "KjRkQKwcrPVGDx82f3craYzhDzdH4S8H";
 /**
  * requestMe - Returns user profile from Kakao API
  *
@@ -137,4 +143,31 @@ function createFirebaseToken(kakaoAccessToken) {
     });
 }
 exports.createFirebaseToken = createFirebaseToken;
+/**
+ * getKakaoToken - returns kakao token using given kakao code
+ *
+ * @param  {string} kakaoCode authorization code from Kakao Login API
+ * @return {Promise<String>}          kakao token in a promise
+ */
+async function getKakaoToken(kakaoCode) {
+    console.log(`Requesting token from Kakao API server, code: ${kakaoCode}`);
+    const payload = qs.stringify({
+        grant_type: "authorization_code",
+        client_id: REST_API_KEY,
+        redirect_uri: REDIRECT_URI,
+        code: kakaoCode,
+        client_secret: CLIENT_SECRET,
+    });
+    const res = await (0, axios_1.default)({
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+        url: kakaoTokenUrl,
+        data: payload,
+    });
+    const token = res.data.access_token;
+    return token;
+}
+exports.getKakaoToken = getKakaoToken;
 //# sourceMappingURL=login.js.map
