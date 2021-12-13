@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './Shop.css';
+import { closeShopPage, tempLikeChange } from '../actions/homePageInfo';
+import { likeChange } from '../actions/myPlaceList';
 
 import BackButton from '../components/icon/Back';
 import WonIcon from '../components/icon/Won';
@@ -17,12 +20,14 @@ import naverBlogIcon from "../img/naverblog.svg";
 
 function ShopModal(props) {
     // const [shopPageContent, setShopPageContent] = useState(props.shopPageContents);
-    const [shopPageContent, setShopPageContent] = useState(sampleShop);
+    const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
+    const dispatch = useDispatch();
 
-    function clickLike () {
-        setShopPageContent({
-            ...shopPageContent, like: !shopPageContent.like
-        });
+    function clickLike (rank) {
+        if (shopPageContent.tag === 'myPlaceList') {
+            dispatch(likeChange(rank));
+            dispatch(tempLikeChange());
+        }
     }
 
     const reviewContent = useRef(null);
@@ -53,17 +58,21 @@ function ShopModal(props) {
             setMenuFold(true);
         }
     }
+    const closePage = () => {
+        dispatch(closeShopPage())
+        document.body.style.overflow = 'unset';
+    };
     const goBack = () => {
         window.history.back();
-        props.closePage();
+        closePage();
     }
     useEffect (() => {
         setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");
-        window.addEventListener("popstate",props.closePage);
+        window.addEventListener("popstate",closePage);
         return () => {
-            window.removeEventListener("popstate",props.closePage);
+            window.removeEventListener("popstate",closePage);
         }
     }, []);
 
@@ -161,7 +170,7 @@ function ShopModal(props) {
 
             <div className="subNavbar">
                 <div className="buttons">
-                    <div className="likeButton" onClick={()=>{clickLike()}}>
+                    <div className="likeButton" onClick={()=>{clickLike(shopPageContent.rank)}}>
                         {shopPageContent.like
                         ? <HeartFilledIcon width={25} color={"#f17474"}/>
                         : <HeartIcon width={25} color={"#a3a3a3"}/>}

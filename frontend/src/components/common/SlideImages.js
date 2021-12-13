@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -15,21 +17,25 @@ import SwiperCore, {
 
 
 function SlideImages(props) {
-  // import Swiper core and required modules
-  // install Swiper modules
+    const dispatch = useDispatch();
+    const slideContentList = useSelector(state => state.myPlaceList).slice(0,3);
+
     if (props.page === 'recommend'){
       SwiperCore.use([Pagination]);
     }
-    const openShopPage = (shop) => {
-      props.openModal();
+    const openPage = (shop) => {
+      dispatch(openShopPage());
+      document.body.style.overflow = 'hidden';
       if (props.page === 'main' || props.page === 'recContent') {
-        props.setPageContents({name: shop.name});
+        dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
       }
       else {
         return null
       }
     }
-
+    if (props.page === 'main') {
+      return (<MainPageSlide name={props.name} />);
+    }
     function choiceSlideElem (page, elem) {
       if (page === 'main') {
         return (<MainPageSlide elem={elem} />);
@@ -50,9 +56,9 @@ function SlideImages(props) {
               slidesPerView={3} slidesPerView={'auto'} 
               centeredSlides={props.page !== 'recListPage'} spaceBetween={15} // viewpoint에 따라 변경 예정
               className={`mySwiper ${props.page} ${props.name}`}>
-          {props.info.map(elem => {
+          {slideContentList.map(elem => {
             return (
-              <SwiperSlide onClick={()=>{openShopPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide ${props.page}`}>
+              <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide ${props.page}`}>
                 { choiceSlideElem(props.page, elem) }
               </SwiperSlide>
             );
@@ -63,12 +69,31 @@ function SlideImages(props) {
 
 export default SlideImages;
 
-function MainPageSlide ({elem}) {
+function MainPageSlide (props) {
+  const dispatch = useDispatch();
+  const slideContentList = useSelector(state => state.myPlaceList).slice(0,3);
+  const openPage = (shop) => {
+    dispatch(openShopPage());
+    document.body.style.overflow = 'hidden';
+    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+  }
+
   return (
-    <div>
-      <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
-      <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
-    </div>
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+            className={`mySwiper main ${props.name}`}>
+      {slideContentList.map(elem => {
+        return (
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide main`}>
+            <div>
+              <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
+              <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
+            </div>
+          </SwiperSlide>
+        );
+      })}
+    </Swiper>
   );
 }
 

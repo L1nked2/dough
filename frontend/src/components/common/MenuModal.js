@@ -1,13 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './MenuModal.css';
 import ResetIcon from '../icon/Reset';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeMenuModal, applyFoodList, applyDrinkList } from '../../actions/homePageInfo';
 
-function MenuModal(props) {      
-    const [stateList, setStateList] = useState(props.list);
-
+function MenuModal(props) {
+    const dispatch = useDispatch();
+    const stateList = useSelector(state => props.name==='음식'?state.homePageInfo.tempFoodStateList:state.homePageInfo.tempDrinkStateList);
+    
+    const [tempStateList, setTempStateList] = useState(stateList);
+    const closePage = () => {
+        dispatch(closeMenuModal())
+        document.body.style.overflow = 'unset';
+    };
     function activeChange (index) {
-        setStateList(
-            stateList.map((elem)=>
+        setTempStateList(
+            tempStateList.map((elem)=>
                 elem.id === index
                 ? { ...elem, active: !elem.active}
                 : elem
@@ -15,13 +23,18 @@ function MenuModal(props) {
         );
     };
     function resetStates () {
-        setStateList(
-            stateList.map((elem)=>{ return {...elem, active: false}})
+        setTempStateList(
+            tempStateList.map((elem)=>{ return {...elem, active: false}})
         );
     };
     function applyStates () {
-        props.setList(stateList);
-        props.closeMenuModal();
+        if (props.name === '음식') {
+            dispatch(applyFoodList(tempStateList));
+        }
+        else {
+            dispatch(applyDrinkList(tempStateList));
+        }
+        closePage();
     };
 
     useEffect (() => {
@@ -29,10 +42,15 @@ function MenuModal(props) {
         const button = document.getElementById('menuChangeButton');
         window.addEventListener("click", (e) => {
             if (e.target === modal && e.target !== button) {
-                props.closeMenuModal();
+                closePage();
             }
         });
-        return () => {window.removeEventListener("click", props.closeMenuModal())};
+        window.history.pushState({page: "location_modal"}, "location_modal");
+        window.addEventListener("popstate", closePage);
+        return () => {
+            window.removeEventListener("click", closePage);
+            window.removeEventListener("popstate",closePage);
+        };
     },[])
 
     return (
@@ -45,12 +63,12 @@ function MenuModal(props) {
                     </span>
                 </div>
                 <div className="menuList">
-                    {stateList.map((elem) => {
+                    {tempStateList.map((elem) => {
                         return <div onClick={()=>activeChange(elem.id)} className={`menuComponent ${elem.active?"active":""}`}>{elem.menu}</div>
                     })}
                 </div>
                 <div className="buttonSection">
-                    <div className="close" onClick={() => props.closeMenuModal()}>닫기</div>
+                    <div className="close" onClick={closePage}>닫기</div>
                     <div className="apply" onClick={applyStates}>적용하기</div>
                 </div>
             </div>

@@ -4,16 +4,15 @@ import LocationIcon from '../icon/Location';
 import MoreIcon from '../icon/More';
 import sampleImage from "../../img/login_background.png";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
+
 function MoreShop(props) {  
-  const shopList = [ 
-    { rank: 4, name: '임실치돈', distance: 10, menu: '돈가스' },
-    { rank: 5, name: '바른돈가', distance: 10, menu: '분식'},
-    { rank: 6, name: '정돈', distance: 10, menu: '마라탕,양꼬치' }
-  ]; /* example lists */
+  const shopList = useSelector(state => state.myPlaceList).slice(3);
 
   const renderShopList = shopList.map(shop => {
     return (
-      <EachMoreShop openModal={props.openModal} setShopPageContents={props.setShopPageContents} key={shop.rank} shop={shop} />
+      <EachMoreShop shop={shop} key={shop.rank} />
     );
   });
   return (
@@ -25,13 +24,15 @@ function MoreShop(props) {
 }
 
 function EachMoreShop(props) {
-  const openShopPage = () => {
-    props.openModal();
-    props.setShopPageContents({name: props.shop.name});
+  const dispatch = useDispatch();
+  const shop = props.shop;
+  const openPage = () => {
+    dispatch(openShopPage());
+    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
   }
 
   return (
-    <div onClick={openShopPage} className="eachShop">
+    <div onClick={openPage} className="eachShop" key={props.key}>
       <div className="image">
         <div id="image" style={{backgroundImage: `url(${sampleImage})`}}/>
       </div>

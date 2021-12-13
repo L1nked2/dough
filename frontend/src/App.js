@@ -13,10 +13,6 @@ import Oauth from './pages/Oauth' ;
 import './App.css';
 
 function App() {  
-  const [page, setPage] = useState('home');
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [page])
   return(
     <div className="viewPage" >
       <div className="layout" >
