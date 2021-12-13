@@ -49,7 +49,7 @@ app.post("/api/login", (req, res) => {
         (0, login_1.createFirebaseToken)(token)
             .then((firebaseToken) => {
             console.log(`Returning firebase token to user: ${firebaseToken}`);
-            return res.send({ firebase_token: firebaseToken });
+            return res.send({ access_token: firebaseToken });
         });
         return;
     });
