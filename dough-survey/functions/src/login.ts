@@ -5,24 +5,23 @@ import qs = require("qs");
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
-// const app = initializeApp();
 
 // // Your web app's Firebase configuration
 // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//     apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",
-//     authDomain: "dough-survey.firebaseapp.com",
-//     projectId: "dough-survey",
-//     storageBucket: "dough-survey.appspot.com",
-//     messagingSenderId: "111678578513",
-//     appId: "1:111678578513:web:32f35f3eb65cfb2f19bd70",
-//     databaseURL: "https://dough-survey-default-rtdb.asia-southeast1.firebasedatabase.app/",
-//     measurementId: "G-VS98EGYRJL"
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",
+  authDomain: "dough-survey.web.app",
+  databaseURL: "https://dough-survey-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dough-survey",
+  storageBucket: "dough-survey.appspot.com",
+  messagingSenderId: "111678578513",
+  appId: "1:111678578513:web:32f35f3eb65cfb2f19bd70",
+  measurementId: "G-VS98EGYRJL",
+};
 
 // // Initialize Firebase
 // const fireBaseApp = initializeApp(firebaseConfig);
-firebaseAdmin.initializeApp();
+firebaseAdmin.initializeApp(firebaseConfig);
 
 // Initialize kakao api server uri
 const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
