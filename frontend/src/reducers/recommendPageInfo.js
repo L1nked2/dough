@@ -1,12 +1,10 @@
 const initialState = {
-    shopPageIsOpen: false,
-    shopPageContent: {},
     listPageIsOpen: false,
     listPageContent: {},
-    headerList = [],
-    myTypeList = [],
-    newList = [],
-    otherTypeList = [],
+    headerList: [],
+    myTypeList: [],
+    newList: [],
+    otherTypeList: [],
 }
 
 function homePageReducer (state = initialState, action) {
@@ -18,6 +16,12 @@ function homePageReducer (state = initialState, action) {
                     newList: action.payload.newList,
                     otherTypeList: action.payload.otherTypeList
                 }
+        case "OPEN_LIST_PAGE":
+            return {...state, listPageIsOpen: true}
+        case "CLOSE_LIST_PAGE":
+            return {...state, listPageIsOpen: false}
+        case "SET_LIST_PAGE_CONTENTS":
+            return {...state, listPageContent: action.payload}
         default:
             return state
     }

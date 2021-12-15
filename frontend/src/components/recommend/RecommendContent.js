@@ -5,16 +5,20 @@ import SlideImages from '../common/SlideImages';
 
 import ShareIcon from '../icon/Share';
 import Chevron from '../icon/Chevron';
+import { useDispatch } from 'react-redux';
+import { openListPage, setListPageContents } from '../../actions/recommendPageInfo';
 
 
 function RecommendContent(props) {
+    const dispatch = useDispatch();
     const elem = props.elem;
     const index = props.index;
     const target = props.elem.target;
+    const isSpecificType = props.isSpecificType;
     
-    function openListPage () {
-        props.openListPage();
-        props.setListPageContents({name: elem.mainTitle});
+    function openPage () {
+        dispatch(openListPage());
+        dispatch(setListPageContents(elem));
     }
     
     useEffect (() => {
@@ -36,23 +40,19 @@ function RecommendContent(props) {
     },[])
 
     return (
-        <div className={`recommendContent ${target?"specific":""}`} key={index}>
-            {target && 
+        <div className={`recommendContent ${isSpecificType?"specific":""}`} key={index}>
+            {isSpecificType && 
                 <div className="target">{`for ${target}`}</div>
             }
             <div className="header">
-                <div className="mainTitle">
-                    {elem.mainTitle}
-                    <div className="icon" onClick={openListPage}><Chevron width={"0.4em"} color={"rgba(0,0,0,0.9)"}/></div>
+                <div className="mainTitle" onClick={openPage}>
+                    {elem.mainText}
+                    <div className="icon" ><Chevron width={"0.4em"} color={"rgba(0,0,0,0.9)"}/></div>
                 </div>
-                <div className="subTitle">{elem.subTitle}</div>
+                <div className="subTitle">{elem.subText}</div>
                 <div className="icon" id="shareButton"><ShareIcon width={20} color={"rgba(0,0,0,0.9)"} /></div>
             </div>
-            <SlideImages 
-                openModal={props.openShopPage} 
-                setPageContents={props.setShopPageContents}
-                info={elem.recommendInfo} 
-                page="recContent"/>
+            <SlideImages page="recContent" contents={elem.contents} />
         </div>
     );
 }

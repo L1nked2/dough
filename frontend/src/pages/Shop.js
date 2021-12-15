@@ -89,7 +89,7 @@ function ShopModal(props) {
                 <span className="price">
                     <span className="temp"><WonIcon width={15} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.price}</span>
                 </span>
-                <span className="location"><LocationIcon width={15} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.distance}</span>
+                <span className="location"><LocationIcon width={15} color={"rgba(0,0,0,0.65)"}/>{`역에서 ${shopPageContent.distance}`}</span>
             </div>
             <div className="fourPictures">
                 <div className="twoPictures">

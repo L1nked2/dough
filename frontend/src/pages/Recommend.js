@@ -12,89 +12,58 @@ import OtherTypeContents from '../components/recommend/OtherTypeContent';
 import Navbar from '../components/common/Navbar';
 
 import sampleImage from "../img/login_background.png";
+import { sampleShop } from '../data/samplePlaceDB';
+import { useDispatch, useSelector } from 'react-redux';
+import { setOpenShopPage, setShopPageContents } from '../actions/homePageInfo';
+import { setOpenListPage, initializeRecommendList } from '../actions/recommendPageInfo';
 
 function Recommend(props) {
-  const [headerFill, setHeaderFill] = useState(false);
+  const recommendInfo = sampleRecommendInfo;
+  const dispatch = useDispatch();
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
+  const listPageIsOpen = useSelector((state) => state.recommendPageInfo.listPageIsOpen);
 
-  const recommendInfo = [
-    { mainText: `강남역 일대\n분위기 맛집 3곳`, subText: 'for 정원 찻집 유형', imgSrc: sampleImage},
-    { mainText: '강남역 일대\n분위기 맛집 3곳', subText: 'for 정원 찻집 유형', imgSrc: sampleImage},
-    { mainText: '강남역 일대\n분위기 맛집 3곳', subText: 'for 정원 찻집 유형', imgSrc: sampleImage},
-    { mainText: '강남역 일대\n분위기 맛집 3곳', subText: 'for 정원 찻집 유형', imgSrc: sampleImage},
-  ]
+  dispatch(initializeRecommendList( recommendInfo, recommendInfo, recommendInfo, recommendInfo ));
+  // useEffect(() => {
+  // }, [])
 
-  const [slideCategory, setSlideCategory] = useState([true, false, false]);
-  const changeMyType = () => {setSlideCategory([true, false, false]);}
-  const changeNew = () => {setSlideCategory([false, true, false]);}
-  const changeOtherType = () => {setSlideCategory([false, false, true]);}
-
-  useEffect (() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }
-  }, [])
-
-  function handleScroll () {
-    if (window.scrollY >= window.innerHeight * 0.65 - 60){setHeaderFill(true);}
-    else {setHeaderFill(false);}
-    return;
-  }
+  const [slideCategory, setSlideCategory] = useState('myType');
   
-  const [openShopPage, setOpenShopPage] = useState(false);
-  const [shopPageContents, setShopPageContents] = useState({name: "none", like: false});
-  const openShopPageFunc = () => {
-    setOpenShopPage(true);
-    document.body.style.overflow = 'hidden';
-  };
-  const closeShopPageFunc = () => {
-    setOpenShopPage(false);
-    document.body.style.overflow = 'unset';
-  };
-  
-  const [openListPage, setOpenListPage] = useState(false);
-  const [listPageContents, setListPageContents] = useState({name: "none", like: false});
-  const openListPageFunc = () => {
-    setOpenListPage(true);
-    document.body.style.overflow = 'hidden';
-  };
-  const closeListPageFunc = () => {
-    setOpenListPage(false);
-    document.body.style.overflow = 'unset';
-  };
-
-
   return (
     <div className="recommendPage">
-      <Header className={headerFill?"":"recommend"}/>
-      <CSSTransition in={openListPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <RecommendListModal closePage={closeListPageFunc} setPageContents={setListPageContents} pageContents={listPageContents} />
+      <Header className="recommend"/>
+      <CSSTransition in={listPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <RecommendListModal  />
       </CSSTransition>
-      <SlideImages 
-          info={recommendInfo} 
-          page="recommend"
-          openModal={openListPageFunc} 
-          setPageContents={setListPageContents}/>
+      <SlideImages page="recommend"/>
 
 
       <nav className="recommendCategory">
-        <div className={slideCategory[0] ? "active" : ""} onClick={changeMyType}>MY TYPE</div>
-        <div className={slideCategory[1] ? "active" : ""} onClick={changeNew}>NEW</div>
-        <div className={slideCategory[2] ? "active" : ""} onClick={changeOtherType}>OTHER TYPE</div>
+        <div className={slideCategory==='myType' ? "active" : ""} onClick={()=>{setSlideCategory('myType')}}>MY TYPE</div>
+        <div className={slideCategory==='new' ? "active" : ""} onClick={()=>{setSlideCategory('new')}}>NEW</div>
+        <div className={slideCategory==='otherType' ? "active" : ""} onClick={()=>{setSlideCategory('otherType')}}>OTHER TYPE</div>
       </nav>
 
-      <CSSTransition in={openShopPage} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <ShopModal closePage={closeShopPageFunc} setShopPageContents={setShopPageContents} shopPageContents={shopPageContents} />
+      <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <ShopModal />
       </CSSTransition>
-      {slideCategory[0] && <MyTypeContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents} 
-                                           openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
-      {slideCategory[1] && <NewContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents}
-                                        openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
-      {slideCategory[2] && <OtherTypeContents openShopPage={openShopPageFunc} setShopPageContents={setShopPageContents}
-                                              openListPage={openListPageFunc} setListPageContents={setListPageContents}/>}
+      {slideCategory==='myType' && <MyTypeContents />}
+      {slideCategory==='new' && <NewContents />}
+      {slideCategory==='otherType' && <OtherTypeContents />}
       <Navbar page={"recommend"}/>
     </div>
   );
 }
 
 export default Recommend;
+
+const sampleRecommendInfo = [
+  { mainText: `강남역 일대\n분위기 맛집 3곳`, subText: '따뜻한 감성을 지닌 강남역 주변 카페', target: '주택가 레스토랑', imgSrc: sampleImage, 
+    contents: [sampleShop, {...sampleShop, name: '치돈치돈'}, {...sampleShop, rank: 3, name: '바른돈가'}, {...sampleShop, rank: 4, name: '정돈'},]},
+  { mainText: '강남역 일대\n분위기 맛집 3곳', subText: '따뜻한 감성을 지닌 강남역 주변 카페', target: '주택가 레스토랑', imgSrc: sampleImage, 
+  contents: [sampleShop, {...sampleShop, name: '치돈치돈'}, {...sampleShop, rank: 3, name: '바른돈가'}, {...sampleShop, rank: 4, name: '정돈'},]},
+  { mainText: '강남역 일대\n분위기 맛집 3곳', subText: '따뜻한 감성을 지닌 강남역 주변 카페', target: '주택가 레스토랑', imgSrc: sampleImage, 
+  contents: [sampleShop, {...sampleShop, name: '치돈치돈'}, {...sampleShop, rank: 3, name: '바른돈가'}, {...sampleShop, rank: 4, name: '정돈'},]},
+  { mainText: '강남역 일대\n분위기 맛집 3곳', subText: '따뜻한 감성을 지닌 강남역 주변 카페', target: '주택가 레스토랑', imgSrc: sampleImage, 
+  contents: [sampleShop, {...sampleShop, name: '치돈치돈'}, {...sampleShop, rank: 3, name: '바른돈가'}, {...sampleShop, rank: 4, name: '정돈'},]},
+]

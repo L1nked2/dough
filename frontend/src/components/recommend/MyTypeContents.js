@@ -7,33 +7,11 @@ import RecommendContent from './RecommendContent';
 
 import QuestionMarkIcon from '../icon/QuestionMark';
 
-import sampleImage from "../../img/login_background.png";
+import { useSelector } from 'react-redux';
 
 function MyTypeContents(props) {
-
-    const myType = "주택가 레스토랑";
-    const mainTitle = "따뜻한 감성의\n강남역 주변 카페 4곳";
-    const subTitle = "따뜻한 감성을 지닌 강남역 주변 카페";
-
-    const recommendInfo = [
-        { name: `에이비카페`, subText: '강남역 10분 | 따뜻하고 편안한 느낌의 힐링 카페', imgSrc: sampleImage},
-        { name: `에이비카페`, subText: '강남역 10분 | 따뜻하고 편안한 느낌의 힐링 카페', imgSrc: sampleImage},
-        { name: `에이비카페`, subText: '강남역 10분 | 따뜻하고 편안한 느낌의 힐링 카페', imgSrc: sampleImage},
-        { name: `에이비카페`, subText: '강남역 10분 | 따뜻하고 편안한 느낌의 힐링 카페', imgSrc: sampleImage},
-    ]
-
-    const contents = [
-        {
-            mainTitle: mainTitle,
-            subTitle: subTitle,
-            recommendInfo: recommendInfo
-        },
-        {
-            mainTitle: mainTitle,
-            subTitle: subTitle,
-            recommendInfo: recommendInfo
-        }
-    ];
+    const contents = useSelector(state => state.recommendPageInfo.myTypeList);
+    const myType = contents[0].target;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const question = useRef(null);
@@ -61,8 +39,7 @@ function MyTypeContents(props) {
             </CSSTransition>
             {contents.map((elem, index) => {
                 return (
-                    <RecommendContent elem={elem} key={index} openShopPage={props.openShopPage} setShopPageContents={props.setShopPageContents}
-                                                              openListPage={props.openListPage} setListPageContents={props.setListPageContents}/>
+                    <RecommendContent elem={elem} key={index} isSpecificType={false}/>
                 );
             })}
         </div>

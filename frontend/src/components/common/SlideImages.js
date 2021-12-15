@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
+import { openListPage, setListPageContents } from "../../actions/recommendPageInfo"
+
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -17,57 +19,23 @@ import SwiperCore, {
 
 
 function SlideImages(props) {
-    const dispatch = useDispatch();
-    const slideContentList = useSelector(state => state.myPlaceList).slice(0,3);
-
-    if (props.page === 'recommend'){
-      SwiperCore.use([Pagination]);
-    }
-    const openPage = (shop) => {
-      dispatch(openShopPage());
-      document.body.style.overflow = 'hidden';
-      if (props.page === 'main' || props.page === 'recContent') {
-        dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
-      }
-      else {
-        return null
-      }
-    }
     if (props.page === 'main') {
       return (<MainPageSlide name={props.name} />);
     }
-    function choiceSlideElem (page, elem) {
-      if (page === 'main') {
-        return (<MainPageSlide elem={elem} />);
-      }
-      else if (page === 'recommend') {
-        return (<RecommendPageMainSlide elem={elem} />);
-      }
-      else if (page === 'recContent') {
-        return (<RecommendPageContentSlide elem={elem} />);
-      }
-      else if (page === 'recListPage') {
-        return (null);
-      }
+    else if (props.page === 'recommend') {
+      return (<RecommendPageMainSlide />);
     }
-
-    return (
-      <Swiper pagination={props.page === 'recommend' ? {clickable: true} : false} loop={props.page === 'recommend'}
-              slidesPerView={3} slidesPerView={'auto'} 
-              centeredSlides={props.page !== 'recListPage'} spaceBetween={15} // viewpoint에 따라 변경 예정
-              className={`mySwiper ${props.page} ${props.name}`}>
-          {slideContentList.map(elem => {
-            return (
-              <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide ${props.page}`}>
-                { choiceSlideElem(props.page, elem) }
-              </SwiperSlide>
-            );
-          })}
-      </Swiper>
-    );
+    else if (props.page === 'recContent') {
+      return (<RecommendPageContentSlide contents={props.contents} />);
+    }
+    else if (props.page === 'recListPage') {
+      return (<RecommendListPageImageSlide contents={props.contents} />);
+    }
+    return null;
   }
 
 export default SlideImages;
+
 
 function MainPageSlide (props) {
   const dispatch = useDispatch();
@@ -97,28 +65,82 @@ function MainPageSlide (props) {
   );
 }
 
-function RecommendPageMainSlide ({elem}) {
+function RecommendPageMainSlide () {
+  SwiperCore.use([Pagination]);
+  const dispatch = useDispatch();
+  const slideContentList = useSelector(state => state.recommendPageInfo.headerList);
+  const openPage = (list) => {
+    dispatch(openListPage());
+    document.body.style.overflow = 'hidden';
+    dispatch(setListPageContents(list));
+  }
   return (
-    <div>
-      <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
-        {elem.subText}
-      </div>
-      <div style={{fontSize:"2.6em", whiteSpace: "pre-wrap", lineHeight: "1.35em"}}>
-        {elem.mainText}
-      </div>
-    </div> 
+    <Swiper pagination={{clickable: true}} loop={true}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={true} spaceBetween={0} 
+            className={`mySwiper recommend`}>
+      {slideContentList.map(elem => {
+        return (
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recommend`}>
+            <div>
+              <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
+                {elem.subText}
+              </div>
+              <div style={{fontSize:"2.6em", whiteSpace: "pre-wrap", lineHeight: "1.35em"}}>
+                {elem.mainText}
+              </div>
+            </div>
+          </SwiperSlide>
+        );
+      })}
+    </Swiper>
   );
 }
 
-function RecommendPageContentSlide ({elem}) {
+function RecommendPageContentSlide (props) {
+  const dispatch = useDispatch();
+  const slideContentList = props.contents;
+  const openPage = (shop) => {
+    dispatch(openShopPage());
+    document.body.style.overflow = 'hidden';
+    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+  }
   return (
-    <div>
-      <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
-        {elem.name}
-      </div>
-      <div style={{fontSize:"1.1em", fontFamily: "SpoqaRegular"}}>
-        {elem.subText}
-      </div>
-    </div> 
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+            className={`mySwiper recContent`}>
+      {slideContentList.map(elem => {
+        return (
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide recContent`}>
+            <div>
+              <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
+                {elem.name}
+              </div>
+              <div style={{fontSize:"1.1em", fontFamily: "SpoqaRegular"}}>
+                {elem.subTitle}
+              </div>
+            </div> 
+          </SwiperSlide>
+        );
+      })}
+    </Swiper>
+  );
+}
+
+
+function RecommendListPageImageSlide (props) {
+  const slideContentList = props.contents;
+  return (
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={false} spaceBetween={15} // viewpoint에 따라 변경 예정
+            className={`mySwiper recListPage`}>
+      {slideContentList.map(elem => {
+        return (
+          <SwiperSlide style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recListPage`} />
+        );
+      })}
+    </Swiper>
   );
 }

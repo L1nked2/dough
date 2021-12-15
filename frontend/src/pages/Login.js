@@ -12,7 +12,7 @@ function Login() {
     const cookie = new Cookies();
     const currAccessToken = cookie.get("accessToken");
     if (currAccessToken) {
-        setTimeout(window.location.replace("/home"), 1000);
+        setTimeout(window.location.replace("/home"), 3000);
     }
 
     function clickLogin(e) {

@@ -57,23 +57,6 @@ function MyShop(props) {
     }
   }
 
-  /* Slide image information */
-  const restaurantInfo = [
-    { rank: 1, name: '치돈치돈', imgSrc: sampleImage},
-    { rank: 2, name: '치돈치돈', imgSrc: sampleImage},
-    { rank: 3, name: '치돈치돈', imgSrc: sampleImage},
-  ]
-  const cafeInfo = [
-    { rank: 1, name: 'cafe1', imgSrc: sampleImage},
-    { rank: 2, name: 'cafe2', imgSrc: sampleImage},
-    { rank: 3, name: 'cafe3', imgSrc: sampleImage},
-  ]
-  const barInfo = [
-    { rank: 1, name: 'bar1', imgSrc: sampleImage},
-    { rank: 2, name: 'bar2', imgSrc: sampleImage},
-    { rank: 3, name: 'bar3', imgSrc: sampleImage},
-  ]
-
   return (
     <div className="myShop">
       <div className="myShopHeader">
@@ -104,13 +87,13 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="음식"/>
         </CSSTransition>
-        <SlideImages info={restaurantInfo} page="main" name="restaurant"/>
+        <SlideImages page="main" name="restaurant"/>
         <MoreShop name="음식점"/>
       </>}
 
       {/* cafe */}
       {slideCategory[1] && <>
-        <SlideImages info={cafeInfo} page="main" name="cafe"/>
+        <SlideImages page="main" name="cafe"/>
         <MoreShop name="카페"/>
       </>}
 
@@ -129,7 +112,7 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="술" />
         </CSSTransition>
-        <SlideImages info={barInfo} page="main"name="bar"/>
+        <SlideImages page="main"name="bar"/>
         <MoreShop name="술집"/>
       </>}
     </div>

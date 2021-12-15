@@ -36,7 +36,7 @@ function ShopInList (props) {
                     <div className="severalInfoSet" >
                         <div className="severalInfo">
                             <div className="button"><MapIcon height={"1.2em"} color={"rgba(0,0,0,0.9)"}/></div>
-                            <div>{elem.location}</div>
+                            <div>{elem.station}</div>
                         </div>
                         <div className="severalInfo">
                             <div className="button"><LocationIcon height={"1em"} color={"rgba(0,0,0,0.9)"}/></div>
@@ -65,7 +65,7 @@ function ShopInList (props) {
             <div className="images">
                 <SlideImages 
                     page="recListPage" 
-                    info={[{imgSrc: elem.spaceImg1}, {imgSrc: elem.menuImg1}, {imgSrc: elem.spaceImg2}, 
+                    contents={[{imgSrc: elem.spaceImg1}, {imgSrc: elem.menuImg1}, {imgSrc: elem.spaceImg2}, 
                         {imgSrc: elem.menuImg2}, {imgSrc: elem.menuImg3}]}/>
             </div>
 
