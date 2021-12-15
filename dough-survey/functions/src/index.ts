@@ -12,8 +12,12 @@ app.get("/api/place", (req, res) => {
   res.send("Forbidden");
 });
 
+app.post("/api/place", (req, res) => {
+  res.send("Forbidden");
+});
+
 app.get("/api/login", (req, res) => {
-  res.send("Hello from Express on Firebase!");
+  res.send("Forbidden GET /login");
 });
 
 app.post("/api/login", (req, res) => {
