@@ -8,9 +8,8 @@ function ExplainModal(props) {
     }
     useEffect (() => {
         const overlay = document.getElementById('overlayExplain');
-        const button = document.getElementById('myTypeExplain');
         window.addEventListener("click", (e) => {
-            if (e.target === overlay && e.target !== button) {
+            if (e.target === overlay) {
                 closeModal();
             }
         });

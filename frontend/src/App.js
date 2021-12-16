@@ -15,7 +15,7 @@ import './App.css';
 function App() {  
   return(
     <div className="viewPage" >
-      <div className="layout" >
+      <div className="layout" id="layout">
         <Router>
           <Switch>
             <Route exact path="/" component={Login} />

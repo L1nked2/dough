@@ -1,0 +1,81 @@
+.overlayCall {
+    position: fixed;
+    top: 0;
+    width: 528px;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0.32);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+  
+.overlayCall .modal {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    gap: 0.6em;
+
+    width: calc(100% - 1.8425em*2);
+    position: absolute;
+    bottom: 10px;
+}
+.overlayCall .modal .number {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: relative;
+    background-color: white;
+    width: 100%;
+    padding: 1em 0;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 0.7em;
+    text-decoration: none;
+}
+.overlayCall .modal .number .call{
+    font-size: 1.4em;
+    color: rgba(0,0,0,0.9);
+}
+.overlayCall .modal .number .callIcon{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: absolute;
+    left: 1.2em;
+    height: auto;
+}
+.overlayCall .modal .cancel {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    background-color: white;
+    width: 100%;
+    padding: 0.7143em 0;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 0.5em;
+    font-size: 1.4em;
+}
+  
+@media (max-width: 528px){
+    .overlayCall {
+        width: 100%;
+    }
+  }
+  @media (orientation: portrait) and (max-width: 768px){
+    .overlayCall {
+        width: 100%;
+    }
+  }

@@ -7,7 +7,7 @@ import ShopModal from './Shop'
 import LocationModal from './Location'
 import Navbar from '../components/common/Navbar';
 import { initialMenuState } from '../actions/homePageInfo'
-
+import html2canvas from 'html2canvas';
 import { CSSTransition } from "react-transition-group";
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeList } from '../actions/myPlaceList';
@@ -30,6 +30,19 @@ function Home() {
     return null;
   },[])
   
+  const onCapture = () => {
+    html2canvas(document.getElementById('layout')).then(canvas => {
+      onSaveAs(canvas.toDataURL('image/png'), 'image-download.png')
+    });
+  };
+  const onSaveAs = (uri, fileName) => {
+    var link = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
+    link.download = fileName;
+    link.click();
+    document.body.removeChild(link);
+  }
   return (
     <div className="Home-page">
       <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
@@ -41,6 +54,7 @@ function Home() {
       
       <Header />
       <CollapseResult />
+      {/* <button onClick={onCapture}>share!</button> */}
       <MyShop />
       <Navbar page={"home"}/>
     </div>

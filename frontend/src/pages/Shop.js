@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import './Shop.css';
 import { closeShopPage, tempLikeChange } from '../actions/homePageInfo';
 import { likeChange } from '../actions/myPlaceList';
+import CallModal from '../components/main/CallModal';
+import { CSSTransition } from 'react-transition-group';
 
 import BackButton from '../components/icon/Back';
 import WonIcon from '../components/icon/Won';
@@ -76,7 +78,12 @@ function ShopModal(props) {
         }
     }, []);
 
-    
+    const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+    function openCallModal () {
+        setIsCallModalOpen(true);
+        document.body.style.overflow = 'hidden';
+    }
+
     return (
         <div className="shopPage" id="shopPage">
             <div className="subHeader">
@@ -118,10 +125,13 @@ function ShopModal(props) {
                     </div>
                 </div>
             </div>
-            <a href='tel:010-5250-0316' className='callButton'>
-                <div className='button'><CallIcon width={"1.2em"} /></div>
+            <CSSTransition in={isCallModalOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+                <CallModal setIsCallModalOpen={setIsCallModalOpen} callNum={"010-5250-0316"}/>
+            </CSSTransition>
+            <div className='callButton' onClick={openCallModal}>
+                <div className='button'><CallIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"}/></div>
                 <div className='call'>전화하기</div>
-            </a>
+            </div>
             <div className="information">
                 <div className="eachInformation">
                     <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
