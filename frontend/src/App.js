@@ -1,12 +1,10 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 import Home from './pages/Home';
 import Recommend from './pages/Recommend';
 import Favorite from './pages/Favorite';
 import Profile from './pages/Profile';
-import Navbar from './components/common/Navbar';
 import Login from './pages/Login' ;
 import Oauth from './pages/Oauth' ;
 

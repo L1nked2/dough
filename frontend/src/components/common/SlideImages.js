@@ -16,6 +16,7 @@ import SwiperCore, {
     Pagination
 } from 'swiper';
 
+import ShopModal from "../../pages/Shop";
 
 
 function SlideImages(props) {
@@ -30,6 +31,9 @@ function SlideImages(props) {
     }
     else if (props.page === 'recListPage') {
       return (<RecommendListPageImageSlide contents={props.contents} />);
+    }
+    else if (props.page === 'shopPage') {
+      return (<ShopPageSlide />);
     }
     return null;
   }
@@ -53,7 +57,7 @@ function MainPageSlide (props) {
             className={`mySwiper main ${props.name}`}>
       {slideContentList.map(elem => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide main`}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide main`}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
               <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
@@ -141,6 +145,22 @@ function RecommendListPageImageSlide (props) {
           <SwiperSlide style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recListPage`} />
         );
       })}
+    </Swiper>
+  );
+}
+
+function ShopPageSlide () {
+  return (
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={false} spaceBetween={15} // viewpoint에 따라 변경 예정
+            className={`mySwiper shopPage`}>
+          <SwiperSlide className={`swiperSlide shopPage`} >
+            <ShopModal />
+          </SwiperSlide>
+          <SwiperSlide className={`swiperSlide shopPage`} >
+            <ShopModal />
+          </SwiperSlide>
     </Swiper>
   );
 }

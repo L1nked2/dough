@@ -4,6 +4,7 @@ import Header from '../components/common/Header'
 import MyShop from '../components/main/MyShop'
 import CollapseResult from '../components/main/CollapseResult'
 import ShopModal from './Shop'
+import SlideImages from '../components/common/SlideImages';
 import LocationModal from './Location'
 import Navbar from '../components/common/Navbar';
 import { initialMenuState } from '../actions/homePageInfo'

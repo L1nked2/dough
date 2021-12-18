@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import './Shop.css';
 import { closeShopPage, tempLikeChange } from '../actions/homePageInfo';
 import { likeChange } from '../actions/myPlaceList';
@@ -20,8 +21,35 @@ import HeartFilledIcon from '../components/icon/HeartFilled';
 import ShareIcon from '../components/icon/Share';
 import naverBlogIcon from "../img/naverblog.svg";
 
-function ShopModal(props) {
-    // const [shopPageContent, setShopPageContent] = useState(props.shopPageContents);
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/swiper.min.css";
+import "swiper/components/pagination/pagination.min.css";
+
+import SwiperCore, {
+    Navigation
+} from 'swiper';
+
+function ShopModal() {
+    const getPlaceDB = async () => {
+        const res = await axios({
+            method: 'POST',
+            url: '/api/place',
+            headers: {
+                "Content-Type": `application/json`
+            },
+            data: {stationId: "00000001", placeId: "00000001"},
+        }).then(response => {
+            console.log(response);
+        }).catch(err => {
+            console.log(err);
+        });
+    };
+    
+    useEffect(() => {
+        getPlaceDB();
+    }, []);
+
     const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
     const dispatch = useDispatch();
 
@@ -84,100 +112,138 @@ function ShopModal(props) {
         document.body.style.overflow = 'hidden';
     }
 
+    SwiperCore.use([Navigation]);
+
+    const [galleryType, setGalleryType] = useState("store");
+    const [gallery, setGallery] = useState(shopPageContent.imgSrc.slice(5));
+    useEffect(() => {
+        // axios 
+        if (galleryType === "store"){setGallery(shopPageContent.imgSrc.slice(0,5));}
+        else if (galleryType === "inside"){setGallery(shopPageContent.imgSrc.slice(0,3));}
+        else if (galleryType === "food"){setGallery(shopPageContent.imgSrc.slice(0,8));}
+    }, [galleryType]);
     return (
         <div className="shopPage" id="shopPage">
-            <div className="subHeader">
-                <div onClick={() => {goBack()}} className="backButton">
-                    <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
-                </div>
-            </div>
-            <div className="name">{shopPageContent.name}</div>
-            <div className="simpleInfo">
-                <span className="price">
-                    <span className="temp"><WonIcon width={15} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.price}</span>
-                </span>
-                <span className="location"><LocationIcon width={15} color={"rgba(0,0,0,0.65)"}/>{`역에서 ${shopPageContent.distance}`}</span>
-            </div>
-            <div className="fourPictures">
-                <div className="twoPictures">
-                    <img src={shopPageContent.firstImgSrc} alt="first" />
-                    <img src={shopPageContent.secondImgSrc} alt="second" />
-                </div>
-                <div className="twoPictures">
-                    <img src={shopPageContent.thirdImgSrc} alt="third" />
-                    <img src={shopPageContent.fourthImgSrc} alt="fourth" />
-                </div>
-            </div>
-            <div className="information">
-                <div className="eachInformation">
-                    <div className="icon"><MapIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
-                    <div className="contents">
-                        <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.roadAddress}</div>
-                        <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.lotAddress}`}</div>
-                    </div>
-                </div>
-                <div className="eachInformation">
-                    <div className="icon"><ClockIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
-                    <div className="contents">
-                        <div style={{color: "rgba(0,0,0,0.9)"}}>{`(영업 시간) ${shopPageContent.businessHours}`}</div>
-                        <div style={{color: "rgba(0,0,0,0.9)"}}>{`(쉬는 시간) ${shopPageContent.breakTime}`}</div>
-                        <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : ${shopPageContent.holiday}`}</div>
-                    </div>
-                </div>
-            </div>
             <CSSTransition in={isCallModalOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
-                <CallModal setIsCallModalOpen={setIsCallModalOpen} callNum={"010-5250-0316"}/>
+                        <CallModal setIsCallModalOpen={setIsCallModalOpen} callNum={"010-5250-0316"}/>
             </CSSTransition>
-            <div className='callButton' onClick={openCallModal}>
-                <div className='button'><CallIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"}/></div>
-                <div className='call'>전화하기</div>
-            </div>
-            <div className="information">
-                <div className="eachInformation">
-                    <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
-                    <div className="contents">
-                        <div className='menuList' style={{maxHeight: `${menuHeight}px`}} ref={menuContent}>
-                            {shopPageContent.menuList.map((menu, index) => {
-                                return (
-                                    <div className="eachMenu" key={index} ref={index===0?eachMenu:null}>
-                                        <div className="name">{menu[0]}</div>
-                                        <div className="line"/>
-                                        <div className="price">{menu[1]}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div onClick={()=>{changeMenuHeight()}} className='expandButton' style={{transform:`rotate(${menuFold?"0":"180"}deg)`}}>
-                            <ExpandIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"} />
+            <Swiper navigation={{nextEl:'.fourPictures', prevEl:'.slideBackButton'}} loop={false}
+                slidesPerView={3} slidesPerView={'auto'} slideActiveClass={"myswiper-slide-active"}
+                centeredSlides={true} spaceBetween={10} calculatedSlides={true} className='shopSwiper'>
+                <SwiperSlide className={`mainContent`}>
+                    <div className="subHeader">
+                        <div onClick={() => {goBack()}} className="backButton">
+                            <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
                         </div>
                     </div>
-                </div>
-                <div className="eachInformation">
-                    <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
-                    <a className="contents" href={shopPageContent.naverLink} target="_blank">{shopPageContent.naverLink}</a>
-                </div>
-                <div className="eachInformation">
-                    <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
-                    <div className="contents reviews" style={{height: `${reviewHeight}px`}} ref={reviewContent}>
-                        리뷰
-                        {shopPageContent.reviews.map((review,index) => {
-                            return (
-                                <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null}>
-                                    <div className="title">{`[ ${review.title} ]`}</div>
-                                    <div className="content">{review.content}</div>
-                                </a>
-                            );
+                    <div className="name">{shopPageContent.name}</div>
+                    <div className="simpleInfo">
+                        <span className="price">
+                            <span className="temp"><WonIcon width={15} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.price}</span>
+                        </span>
+                        <span className="location"><LocationIcon width={15} color={"rgba(0,0,0,0.65)"}/>{`역에서 ${shopPageContent.distance}`}</span>
+                    </div>
+                    <div className="fourPictures" >
+                        <div className="twoPictures">
+                            <img src={shopPageContent.imgSrc[0]} alt="first" />
+                            <img src={shopPageContent.imgSrc[1]} alt="second" />
+                        </div>
+                        <div className="twoPictures">
+                            <img src={shopPageContent.imgSrc[2]} alt="third" />
+                            <img src={shopPageContent.imgSrc[3]} alt="fourth" />
+                        </div>
+                    </div>
+                    <div className="information">
+                        <div className="eachInformation">
+                            <div className="icon"><MapIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
+                            <div className="contents">
+                                <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.roadAddress}</div>
+                                <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.lotAddress}`}</div>
+                            </div>
+                        </div>
+                        <div className="eachInformation">
+                            <div className="icon"><ClockIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
+                            <div className="contents">
+                                <div style={{color: "rgba(0,0,0,0.9)"}}>{`(영업 시간) ${shopPageContent.businessHours}`}</div>
+                                <div style={{color: "rgba(0,0,0,0.9)"}}>{`(쉬는 시간) ${shopPageContent.breakTime}`}</div>
+                                <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : ${shopPageContent.holiday}`}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className='callButton' onClick={openCallModal}>
+                        <div className='button'><CallIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"}/></div>
+                        <div className='call'>전화하기</div>
+                    </div>
+                    <div className="information">
+                        <div className="eachInformation">
+                            <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
+                            <div className="contents">
+                                <div className='menuList' style={{maxHeight: `${menuHeight}px`}} ref={menuContent}>
+                                    {shopPageContent.menuList.map((menu, index) => {
+                                        return (
+                                            <div className="eachMenu" key={index} ref={index===0?eachMenu:null}>
+                                                <div className="name">{menu[0]}</div>
+                                                <div className="line"/>
+                                                <div className="price">{menu[1]}</div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div onClick={()=>{changeMenuHeight()}} className='expandButton' style={{transform:`rotate(${menuFold?"0":"180"}deg)`}}>
+                                    <ExpandIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="eachInformation">
+                            <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
+                            <a className="contents" href={shopPageContent.naverLink} target="_blank">{shopPageContent.naverLink}</a>
+                        </div>
+                        <div className="eachInformation">
+                            <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
+                            <div className="contents reviews" style={{height: `${reviewHeight}px`}} ref={reviewContent}>
+                                리뷰
+                                {shopPageContent.reviews.map((review,index) => {
+                                    return (
+                                        <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null}>
+                                            <div className="title">{`[ ${review.title} ]`}</div>
+                                            <div className="content">{review.content}</div>
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    {!closeExpandButton ? 
+                    <div onClick={()=>{expandReviewHeight()}} className="expandButton">
+                        <ExpandIcon width={25} color={"rgba(0,0,0,0.36)"} />
+                    </div> 
+                    : null}
+                </SwiperSlide>
+                <SwiperSlide className={`gallery`}>
+                    <div className="subHeader">
+                        <div className="backButton slideBackButton">
+                            <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
+                        </div>
+                        {`${shopPageContent.name} 사진(${gallery.length})`}
+                    </div>
+                    <nav className="galleryType">
+                        <div onClick={()=>{setGalleryType('store')}} className={galleryType==='store'?'active':''}>{`가게()`}</div>
+                        <div onClick={()=>{setGalleryType('inside')}} className={galleryType==='inside'?'active':''}>{`내부()`}</div>
+                        <div onClick={()=>{setGalleryType('food')}} className={galleryType==='food'?'active':''}>{`음식()`}</div>
+                    </nav>
+                    <div className="pictures">
+                        {gallery.map((imgSrc, index) => {
+                            if (index % 2 === 0) {
+                                return (<div className="twoPictures" key={index}>
+                                    <img src={gallery[index]} alt={index} />
+                                    {gallery.length!==index+1?<img src={gallery[index+1]} alt={index+1} />:null}
+                                </div>);
+                            }
                         })}
                     </div>
-                </div>
-            </div>
-            {!closeExpandButton ? 
-            <div onClick={()=>{expandReviewHeight()}} className="expandButton">
-                <ExpandIcon width={25} color={"rgba(0,0,0,0.36)"} />
-            </div> 
-            : null}
-
-
+                </SwiperSlide>
+            </Swiper>
             <div className="subNavbar">
                 <div className="buttons">
                     <div className="likeButton" onClick={()=>{clickLike(shopPageContent.rank)}}>

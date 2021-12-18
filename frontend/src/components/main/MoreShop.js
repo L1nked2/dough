@@ -29,6 +29,7 @@ function EachMoreShop(props) {
   const openPage = () => {
     dispatch(openShopPage());
     dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    document.body.style.overflow = 'hidden';
   }
 
   return (
