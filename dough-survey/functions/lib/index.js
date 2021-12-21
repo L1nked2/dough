@@ -24,24 +24,51 @@ const functions = __importStar(require("firebase-functions"));
 // import firebaseAdmin from "firebase-admin";
 const express = require("express");
 const login_1 = require("./login");
+const loader_1 = require("./loader");
 // import bodyParser = require("body-parser");
 const app = express();
 // app.use("/", routes);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// place info routes
 app.get("/api/place", (req, res) => {
-    res.send("Forbidden");
+    (0, loader_1.getPlaceInfo)("00000001_0", "00000001").then((placeInfo) => {
+        res.json(placeInfo);
+    });
 });
 app.post("/api/place", (req, res) => {
-    res.send("Forbidden");
+    (0, loader_1.getPlaceInfo)(req.body.stationId, req.body.placeId).then((placeInfo) => {
+        res.json(placeInfo);
+    });
 });
+// station info routes
+app.get("/api/station", (req, res) => {
+    (0, loader_1.getStationInfo)("00000001", "0").then((stationInfo) => {
+        res.json(stationInfo);
+    });
+});
+app.post("/api/station", (req, res) => {
+    (0, loader_1.getStationInfo)(req.body.stationId, req.body.category).then((stationInfo) => {
+        res.json(stationInfo);
+    });
+});
+// user info routes
+app.get("/api/user", (req, res) => {
+    (0, loader_1.getUserInfo)("00000001").then((userInfo) => {
+        res.json(userInfo);
+    });
+});
+app.post("/api/user", (req, res) => {
+    (0, loader_1.getUserInfo)(req.body.userId).then((userInfo) => {
+        res.json(userInfo);
+    });
+});
+// login using kakao code
 app.get("/api/login", (req, res) => {
     res.send("Forbidden GET /login");
 });
 app.post("/api/login", (req, res) => {
     const { code } = req.body;
-    console.log(`req.body: ${req.body.code}`);
-    console.log(`req.query: ${req.query.code}`);
     console.log(`code: ${code}`);
     (0, login_1.getKakaoToken)(code).then((token) => {
         if (!token) {
