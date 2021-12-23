@@ -33,7 +33,7 @@ function EachMoreShop(props) {
   }
 
   return (
-    <div onClick={openPage} className="eachShop" key={props.key}>
+    <div onClick={openPage} className="eachShop" key={shop.rank}>
       <div className="image">
         <div id="image" style={{backgroundImage: `url(${sampleImage})`}}/>
       </div>

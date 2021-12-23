@@ -129,7 +129,7 @@ function ShopModal() {
             </CSSTransition>
             <Swiper navigation={{nextEl:'.fourPictures', prevEl:'.slideBackButton'}} loop={false}
                 slidesPerView={3} slidesPerView={'auto'} slideActiveClass={"myswiper-slide-active"}
-                centeredSlides={true} spaceBetween={10} calculatedSlides={true} className='shopSwiper'>
+                centeredSlides={true} spaceBetween={10} className='shopSwiper'>
                 <SwiperSlide className={`mainContent`}>
                     <div className="subHeader">
                         <div onClick={() => {goBack()}} className="backButton">
@@ -205,7 +205,7 @@ function ShopModal() {
                                 리뷰
                                 {shopPageContent.reviews.map((review,index) => {
                                     return (
-                                        <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null}>
+                                        <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null} key={index}>
                                             <div className="title">{`[ ${review.title} ]`}</div>
                                             <div className="content">{review.content}</div>
                                         </a>

@@ -24,9 +24,7 @@ function Recommend(props) {
   const listPageIsOpen = useSelector((state) => state.recommendPageInfo.listPageIsOpen);
 
   dispatch(initializeRecommendList( recommendInfo, recommendInfo, recommendInfo, recommendInfo ));
-  // useEffect(() => {
-  // }, [])
-
+  
   const [slideCategory, setSlideCategory] = useState('myType');
   
   return (

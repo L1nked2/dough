@@ -55,9 +55,9 @@ function MainPageSlide (props) {
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
             className={`mySwiper main ${props.name}`}>
-      {slideContentList.map(elem => {
+      {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide main`}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide main`} key={index}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
               <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
@@ -83,9 +83,9 @@ function RecommendPageMainSlide () {
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={true} spaceBetween={0} 
             className={`mySwiper recommend`}>
-      {slideContentList.map(elem => {
+      {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recommend`}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recommend`} key={index}>
             <div>
               <div style={{fontSize:"1.1em", marginBottom:"0.2em", fontFamily: "SpoqaRegular"}}>
                 {elem.subText}
@@ -114,9 +114,9 @@ function RecommendPageContentSlide (props) {
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
             className={`mySwiper recContent`}>
-      {slideContentList.map(elem => {
+      {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide recContent`}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide recContent`} key={index}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
                 {elem.name}
@@ -140,9 +140,9 @@ function RecommendListPageImageSlide (props) {
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={false} spaceBetween={15} // viewpoint에 따라 변경 예정
             className={`mySwiper recListPage`}>
-      {slideContentList.map(elem => {
+      {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recListPage`} />
+          <SwiperSlide style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recListPage`} key={index}/>
         );
       })}
     </Swiper>

@@ -29,20 +29,22 @@ function OtherTypeContents(props) {
 
     return (
         <div>
-            <div className="menuContainer">
-                <div className={`otherType ${isDefault?'default':''}`} onClick={dropdownClick} >
-                    {`${otherType} 유형`}
-                    <div className="icon"><ExpandIcon width={"0.6em"} color={"rgba(0, 0, 0, 0.36)"}/></div>
+            <div className="flexContainer">
+                <div className="menuContainer">
+                    <div className={`otherType ${isDefault?'default':''}`} onClick={dropdownClick} >
+                        {`${otherType} 유형`}
+                        <div className="icon"><ExpandIcon width={"0.6em"} color={"rgba(0, 0, 0, 0.36)"}/></div>
+                    </div>
+                    <nav id="menuType" className={`menu ${isDropdownOpen?'active':''}`}>
+                        <ul>
+                            {types.map((type, index) => {
+                                return (
+                                    <li key={index} onClick={()=>{changeType(type)}}><div className={selected(type)?"active":""}>{type}</div></li>
+                                );
+                            })}
+                        </ul>
+                    </nav>
                 </div>
-                <nav id="menuType" className={`menu ${isDropdownOpen?'active':''}`}>
-                    <ul>
-                        {types.map((type, index) => {
-                            return (
-                                <li key={index} onClick={()=>{changeType(type)}}><div className={selected(type)?"active":""}>{type}</div></li>
-                            );
-                        })}
-                    </ul>
-                </nav>
             </div>
             {contents.map((elem, index) => {
                 return (

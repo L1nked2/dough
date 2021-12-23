@@ -14,8 +14,8 @@ function ShareIcon(props) {
                 <path d="M2.5-1A3.5,3.5,0,1,1-1,2.5,3.5,3.5,0,0,1,2.5-1Z" stroke="none"/>
                 <path d="M 2.5 0.5 C 1.397200107574463 0.5 0.5 1.397200107574463 0.5 2.5 C 0.5 3.602799892425537 1.397200107574463 4.5 2.5 4.5 C 3.602799892425537 4.5 4.5 3.602799892425537 4.5 2.5 C 4.5 1.397200107574463 3.602799892425537 0.5 2.5 0.5 M 2.5 -1 C 4.429910182952881 -1 6 0.5700898170471191 6 2.5 C 6 4.429910182952881 4.429910182952881 6 2.5 6 C 0.5700898170471191 6 -1 4.429910182952881 -1 2.5 C -1 0.5700898170471191 0.5700898170471191 -1 2.5 -1 Z" stroke="none" fill={props.color}/>
                 </g>
-                <line id="선_146" data-name="선 146" x1="5.5" y2="3" transform="translate(190.5 753.5)" fill="none" stroke={props.color} stroke-width="1.5"/>
-                <line id="선_147" data-name="선 147" x2="5" y2="3" transform="translate(190.446 759)" fill="none" stroke={props.color} stroke-width="1.5"/>
+                <line id="선_146" data-name="선 146" x1="5.5" y2="3" transform="translate(190.5 753.5)" fill="none" stroke={props.color} strokeWidth="1.5"/>
+                <line id="선_147" data-name="선 147" x2="5" y2="3" transform="translate(190.446 759)" fill="none" stroke={props.color} strokeWidth="1.5"/>
             </g>
         </svg>
     );

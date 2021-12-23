@@ -37,9 +37,9 @@ function RecommendListModal(props) {
             <div className="subtitle">{listPageContent.subText}</div>
             <div className="content">
                 <div className="target">{`for ${listPageContent.target}`}</div>
-                {listPageContent.contents.map((elem) => {
+                {listPageContent.contents.map((elem, index) => {
                     return (
-                        <ShopInList elem={elem} />
+                        <ShopInList elem={elem} key={index}/>
                     );
                 })}
             </div>
