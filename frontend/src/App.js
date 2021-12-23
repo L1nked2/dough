@@ -9,6 +9,7 @@ import Login from './pages/Login' ;
 import Oauth from './pages/Oauth' ;
 
 import './App.css';
+import Survey from './components/survey/Survey';
 
 function App() {  
   return(
@@ -21,6 +22,9 @@ function App() {
             <Route exact path="/recommend" component={Recommend} />
             <Route exact path="/favorite" component={Favorite} />
             <Route exact path="/profile" component={Profile} />
+
+            <Route exact path="/survey" component={Survey} />
+
             <Route path="/login/callback/kakao" component={Oauth} />
           </Switch>
         </Router>

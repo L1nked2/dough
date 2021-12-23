@@ -1,0 +1,23 @@
+.progress {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+  width: inherit;
+}
+
+.progress .gauge {
+  width: 60%;
+  height: 0.35em;
+  background: #f7f7f7;
+  border-radius: 1em;
+}
+
+.progress .gauge span.fill {
+  background: #3FB8D5;
+  display: inline-block;
+  height: inherit;
+  position: relative;
+  top: -0.83em;;
+  border-radius: 1em;
+}

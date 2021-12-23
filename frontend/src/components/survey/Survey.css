@@ -1,0 +1,235 @@
+.surveyStart {
+    width: inherit;
+    user-select: none;
+}
+
+.surveyStart .subHeader {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    position: fixed;
+    top: 0;
+    width: inherit;
+    height: 59px;
+    font-size: 1.8em;
+    border-bottom: 1px solid #D1D1D1;
+}
+.surveyStart .contents {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: fixed;
+    top: 60px;
+    width: inherit;
+    height: calc(100vh - 60px);
+    background-color: white;
+    overflow-y: scroll;
+}
+.surveyStart .contents.mount {
+    opacity: 1;
+    transition: opacity 400ms;
+}
+.surveyStart .contents.unmount {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 400ms, visibility 400ms;
+    transition-delay: 500ms;
+}
+.surveyStart .contents .contents1 {
+    flex: 2.6;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+}
+.surveyStart .contents .contents1 .title{
+    font-size: 2.6em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+.surveyStart .contents .contents1 .subtitle{
+    font-size: 1.4em;
+    color: #5A5A5A;
+    font-family: SpoqaRegular;
+}
+.surveyStart .contents .contents2{
+    flex: 4;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+    width: 100%;
+}
+.surveyStart .contents .contents2 > img{
+    width: 60%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 70%;
+}
+.surveyStart .contents .contents3 {
+    flex: 2;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+}
+.surveyStart .contents .contents3 > div{
+    font-size: 1.2em;
+    color: #595959;
+    font-family: SpoqaRegular;
+}
+.surveyStart .contents .contents4 {
+    flex: 3.6;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: flex-start;
+    -webkit-box-pack: start;
+    
+    width: 100%;
+    gap: 1em;
+}
+.surveyStart .contents .contents4 .start {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 60%;
+    font-size: 1.8em;
+    color: white;
+    background-color: #3FB8D5;
+    border-radius: 0.75em;
+    padding: 1em 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.surveyStart .contents.quiz {
+    display: block;
+}
+.surveyStart .contents .contents4 .notYet {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 60%;
+    font-size: 1.4em;
+    color: #5A5A5A;
+    font-family: SpoqaRegular;
+    background-color: #E1E1E1;
+    border-radius: 0.964em;
+    padding: 1.286em 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
+.surveyStart .contents .contents5 {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+    
+    width: 100%;
+    height: 4em;
+}
+.surveyStart .contents .contents6 {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    height: 4em;
+    font-size: 1.8em;
+    font-family: SpoqaRegular;
+}
+.surveyStart .contents .contents7 {
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-start;
+    -webkit-box-align: start;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
+}
+.surveyStart .contents .contents7 > img{
+    width: 100%;
+    max-width: 468px;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+.surveyStart .contents .contents8 {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    height: 10em;
+}
+.surveyStart .contents .contents9 {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
+    margin-top: 7.2em;
+    margin-bottom: 2em;
+}
+.surveyStart .contents .contents9 > img{
+    width: 100%;
+    max-width: 468px;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+.surveyStart .contents .contents10 {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    font-size: 1.8em;
+    font-family: SpoqaRegular;
+    color: #595959;
+}

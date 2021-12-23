@@ -116,7 +116,7 @@ function RecommendPageContentSlide (props) {
             className={`mySwiper recContent`}>
       {slideContentList.map(elem => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.firstImgSrc})`}} className={`swiperSlide recContent`}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide recContent`}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
                 {elem.name}

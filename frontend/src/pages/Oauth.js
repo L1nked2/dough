@@ -56,7 +56,7 @@ function Oauth() {
                         // httpOnly: true
                     }
                 );
-                window.location.replace("/home");
+                window.location.replace("/survey");
             })
             .catch((error) => {
                 const errorCode = error.code;

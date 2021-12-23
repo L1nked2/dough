@@ -34,7 +34,7 @@ function ShopModal() {
     const getPlaceDB = async () => {
         const res = await axios({
             method: 'POST',
-            url: '/api/place',
+            url: 'https://dough-survey.web.app/api/place',
             headers: {
                 "Content-Type": `application/json`
             },
