@@ -27,7 +27,7 @@
       width: 100%;
   }
 }
-@media (orientation: portrait) and (max-width: 528px){
+@media (orientation: portrait) and (max-width: 768px){
   .layout {
       width: 100%;
   }

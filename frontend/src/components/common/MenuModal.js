@@ -64,7 +64,7 @@ function MenuModal(props) {
                 </div>
                 <div className="menuList">
                     {tempStateList.map((elem) => {
-                        return <div onClick={()=>activeChange(elem.id)} className={`menuComponent ${elem.active?"active":""}`}>{elem.menu}</div>
+                        return <div onClick={()=>activeChange(elem.id)} className={`menuComponent ${elem.active?"active":""}`} key={elem.id}>{elem.menu}</div>
                     })}
                 </div>
                 <div className="buttonSection">

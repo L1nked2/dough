@@ -76,7 +76,7 @@ function LocationModal(props) {
                 </nav>
                 <nav className="stationLine">
                     {stationRange[stationRangeNav].map((key)=>{
-                        return <div className={stationLineNav === key ? "active" : ""} onClick={()=>{setStationLineNav(key)}}>{key}</div>
+                        return <div className={stationLineNav === key ? "active" : ""} onClick={()=>{setStationLineNav(key)}} key={key}>{key}</div>
                     })}
                 </nav>
                 <div className="station" >
