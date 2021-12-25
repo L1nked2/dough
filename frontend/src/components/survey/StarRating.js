@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import './StarRating.css';
 
 function StarRating(props) {
   const stars = [1,2,3,4,5,6,7];
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  
-  function saveRating (index) {
-    setRating(index);
-    props.nextPage();
+
+  function saveRating (score) {
+    setRating(score);
+    props.next(score);
   }
+  useEffect(() => {
+    setRating(props.scores[props.number-1])
+  },[props.scores, props.number]);
+
   return (
     <div className="score">
       {stars.map((index) => {
         return (
-          <div onMouseOver={()=>{setHover(index)}} onMouseLeave={()=>{setHover(0)}} onClick={()=>{saveRating(index)}}>
+          <div onMouseOver={()=>{setHover(index)}} onMouseLeave={()=>{setHover(0)}} onClick={()=>{saveRating(index)}} key={index}>
             <Star width={"2em"} color={(index<=hover)||(index<=rating)?"#3FB8D5":"#D1D1D1"} className={`star`} />
           </div>
         );

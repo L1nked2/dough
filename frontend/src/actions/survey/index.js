@@ -4,13 +4,14 @@ export const sumScore = (score) => {
     payload: { score: score },
   };
 };
-export const addScore = (score) => {
+export const changeScore = (index, score) => {
   return {
-    type: "ADD_SCORE",
-    payload: { score: score },
+    type: "CHANGE_SCORE",
+    payload: { index: index, score: score },
   };
 };
-export const nextPage = () => {
+export const nextPage = (page) => {
+  window.history.pushState({page: `survey ${page}`}, `survey ${page}`);
   return {
     type: "NEXT_PAGE",
   };

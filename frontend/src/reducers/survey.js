@@ -1,5 +1,5 @@
 const initialState = {
-    scores: [],
+    scores: [0,0,0,0,0,0,0,0,0],
     score: 0,
     page: 0, // 0: 인트로 페이지, 1 ~ quizs.length: 퀴즈 페이지, quizs.length + 1: 마지막 페이지
     quizs: ["../../img/restaurant/download.jpg",
@@ -20,10 +20,12 @@ export default function survey(state = initialState, action) {
         ...state,
         score: state.score + action.payload.score,
       };
-    case "ADD_SCORE":
+    case "CHANGE_SCORE":
+      var tempScores = [...state.scores];
+      tempScores[action.payload.index] = action.payload.score;
       return {
         ...state,
-        scores: [...state.scores, action.payload.score,]
+        scores: tempScores
       };
     case "NEXT_PAGE":
       return {
@@ -31,9 +33,14 @@ export default function survey(state = initialState, action) {
         page: state.page + 1,
       };
     case "PREVIOUS_PAGE":
+      var tempScores = [...state.scores];
+      for (var i = state.page-1; i < tempScores.length; i++) {
+        tempScores[i] = 0;
+      }
       return {
         ...state,
         page: state.page - 1,
+        scores: tempScores
       };
     case "RESET":
       return {
