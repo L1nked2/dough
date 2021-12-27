@@ -10,14 +10,12 @@ from selenium import webdriver
 from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
-from haversine import haversine
 from firestore_lib import *
 
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
 naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary'
 naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant'
 naver_station_query_root_url = 'https://map.naver.com/v5/api/search'
-service_domain = "https://www.babyak.kr"
 
 NAVER_PAGE_MAX = 6  # maximum page number, <= 6
 MAX_IMG_NUM = 20  # maximum image number for inside, food category, <= 30
@@ -265,7 +263,7 @@ class DoughCrawler:
         # make directory for images
         place_name = place_db.get_value('place_name')
         place_uuid = place_db.get_value('place_uuid')
-        local_path = f'./temp_img/{self.naver_search_query}/{place_name}_{place_uuid}'
+        local_path = f'./temp_img/{self.naver_search_query}/{place_uuid}'
         if not os.path.isdir(local_path):
             os.mkdir(local_path)
             os.mkdir(f'{local_path}/menu')
@@ -277,11 +275,6 @@ class DoughCrawler:
         # download menu, provided images
         self._download_photo(self.naver_search_query, place_db, 'menu')
         self._download_photo(self.naver_search_query, place_db, 'provided')
-
-        # station_coor = (float(self.station_info['y']), float(self.station_info['x']))
-        # place_coor = (float(place_db.get_value('place_coor_y')), float(place_db.get_value('place_coor_x')))
-        # distance_to_station = haversine(station_coor, place_coor)
-        # place_db.update_pair('distance_to_station', distance_to_station)
         return True
 
     def _get_place_info_naver_photo(self, link, relations=''):
@@ -376,7 +369,7 @@ class DoughCrawler:
         place_uuid = place_db.get_value('place_uuid')
 
         if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
-            local_path_root = f'./temp_img/{search_query}/{place_name}_{place_uuid}'
+            local_path_root = f'./temp_img/{search_query}/{place_uuid}'
             if img_type == 'provided':
                 prefix = 'a'
             elif img_type == 'food':
@@ -384,7 +377,7 @@ class DoughCrawler:
             else:
                 prefix = 'i'
         elif img_type == 'menu':
-            local_path_root = f'./temp_img/{search_query}/{place_name}_{place_uuid}/{img_type}'
+            local_path_root = f'./temp_img/{search_query}/{place_uuid}/{img_type}'
             prefix = ''
         else:
             self.crawler_msg(f'invalid image type given;{img_type}')
@@ -401,7 +394,7 @@ class DoughCrawler:
 
     def save(self, name=None):
         if name is not None:
-            path = f'./raw_db/{name}_db'
+            path = f'./raw_db/{name}'
         else:
             path = f'./raw_db/db'
         data_body = [self.station_info, self.place_db_list, self.place_uuid_dict]

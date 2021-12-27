@@ -18,6 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
@@ -25,9 +28,10 @@ const functions = __importStar(require("firebase-functions"));
 const express = require("express");
 const login_1 = require("./login");
 const loader_1 = require("./loader");
+const cors_1 = __importDefault(require("cors"));
 // import bodyParser = require("body-parser");
 const app = express();
-// app.use("/", routes);
+app.use((0, cors_1.default)());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // place info routes
@@ -43,12 +47,12 @@ app.post("/api/place", (req, res) => {
 });
 // station info routes
 app.get("/api/station", (req, res) => {
-    (0, loader_1.getStationInfo)("00000001", "0").then((stationInfo) => {
+    (0, loader_1.getStationInfo)("00000001", "0", [""], "default").then((stationInfo) => {
         res.json(stationInfo);
     });
 });
 app.post("/api/station", (req, res) => {
-    (0, loader_1.getStationInfo)(req.body.stationId, req.body.category).then((stationInfo) => {
+    (0, loader_1.getStationInfo)(req.body.stationId, req.body.category, req.body.tags, req.body.userToken).then((stationInfo) => {
         res.json(stationInfo);
     });
 });

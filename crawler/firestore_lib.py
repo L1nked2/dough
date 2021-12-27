@@ -19,7 +19,6 @@ credentials = service_account.Credentials.from_service_account_file(
 firebase_cloud_storage = storage.Client(credentials=credentials)
 firebase_db = firestore.client()
 firebase_transaction = firebase_db.transaction()
-counter_ref = firebase_db.collection('counter')
 place_ref = firebase_db.collection('place_db')
 
 # data types and key-value pairs
@@ -31,7 +30,6 @@ place_db_empty = dict(
     place_category=None,
     place_cluster_a=None,
     place_cluster_b=None,
-    place_cluster_c=None,
     place_operating_time=None,
     place_kind=None,
     place_menu=[],
@@ -114,6 +112,13 @@ class DB:
             self._data[key] = value
         return
 
+    def delete_pair(self, key):
+        if not (key in self._data):
+            raise AttributeError
+        else:
+            del self._data[key]
+        return
+
     def get_keys(self):
         return self._data.keys()
 
@@ -125,6 +130,10 @@ class DB:
 
 
 def check_db_existence(restaurant_link):
+    snapshot = place_ref.where('place_naver_link', '==', restaurant_link).get()
+    snapshot_exists = len([d for d in snapshot])
+    if snapshot_exists != 0:
+        return True
     return False
 
 
@@ -132,17 +141,17 @@ def check_db_existence(restaurant_link):
 def _update_place_transaction(transaction, db):
     naver_link = db['place_naver_link']
     snapshot = place_ref.where('place_naver_link', '==', naver_link).get(transaction=transaction)
-    is_snapshot_empty = len([d for d in snapshot])
-    if is_snapshot_empty:
+    snapshot_exists = len([d for d in snapshot])
+    if snapshot_exists:
         print('snapshot exists')
         for doc in snapshot:
             print(f'{doc.id} => {doc.to_dict()}')
     else:
-        counter_snapshot = counter_ref.document('place').get(transaction=firebase_transaction)
-        place_counter = counter_snapshot.to_dict()
-        transaction.set(place_ref.document(str(place_counter['place_num']).zfill(8)), db, merge=True)
-        place_counter['place_num'] = place_counter['place_num'] + 1
-        transaction.update(counter_ref.document('place'), place_counter)
+        #counter_snapshot = counter_ref.document('place').get(transaction=firebase_transaction)
+        #place_counter = counter_snapshot.to_dict()
+        #transaction.set(place_ref.document(str(place_counter['place_num']).zfill(8)), db, merge=True)
+        #place_counter['place_num'] = place_counter['place_num'] + 1
+        #transaction.update(counter_ref.document('place'), place_counter)
         print('place transaction successful')
         return True
     print('place transaction aborted')

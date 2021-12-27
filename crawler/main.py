@@ -16,6 +16,7 @@ for station_name in stations:
         else:
             dhc.run_crawler_naver(station_name=station_name, search_keyword=search_keyword, options=crawler_options)
             # test code for category analysis
+            """
             db_list = dhc.get_db_list()
             category_csv_path = f'category_output/{station_name}_{search_keyword}.csv'
             f = open(category_csv_path, 'w+', encoding='ANSI', newline='')
@@ -23,5 +24,6 @@ for station_name in stations:
             for item in db_list:
                 wr.writerow([item.get_value('place_name'), item.get_value('place_category')])
             f.close()
+            """
 
 

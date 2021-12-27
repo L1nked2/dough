@@ -84,9 +84,12 @@ function getUserInfo(userId: string) {
  *
  * @param  {string} stationId
  * @param  {string} category
+ * @param {Array} tags
+ * @param  {string} userToken
  * @return {Promise<any>}
  */
-function getStationInfo(stationId: string, category: string) {
+async function getStationInfo(stationId: string, category: string,
+    tags: Array<string>, userToken: string) {
   try {
     if (category === "음식점") {
       category = "0";
@@ -95,7 +98,13 @@ function getStationInfo(stationId: string, category: string) {
     } else if (category === "술집") {
       category = "2";
     }
-    return getInfoBase("station", `${stationId}_${category}`);
+    if (userToken === "default") {
+      return getInfoBase("station", `${stationId}_${category}`);
+    } else {
+      const userId = await getUserId(userToken);
+      const userInfo = await getInfoBase("user", userId);
+      return getInfoBase("station", `${stationId}_${category}`);
+    }
   } catch (error) {
     console.log(error);
     throw error;

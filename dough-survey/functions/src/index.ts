@@ -3,12 +3,12 @@ import * as functions from "firebase-functions";
 import express = require("express");
 import {getKakaoToken, createFirebaseToken} from "./login";
 import {getPlaceInfo, getUserInfo, getStationInfo} from "./loader";
+import cors from "cors";
 // import bodyParser = require("body-parser");
 const app = express();
-// app.use("/", routes);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
 // place info routes
 app.get("/api/place", (req, res) => {
   getPlaceInfo("00000001_0", "00000001").then((placeInfo) => {
@@ -24,13 +24,14 @@ app.post("/api/place", (req, res) => {
 
 // station info routes
 app.get("/api/station", (req, res) => {
-  getStationInfo("00000001", "0").then((stationInfo) => {
+  getStationInfo("00000001", "0", [""], "default").then((stationInfo) => {
     res.json(stationInfo);
   });
 });
 
 app.post("/api/station", (req, res) => {
-  getStationInfo(req.body.stationId, req.body.category).then((stationInfo) => {
+  getStationInfo(req.body.stationId, req.body.category,
+      req.body.tags, req.body.userToken).then((stationInfo) => {
     res.json(stationInfo);
   });
 });

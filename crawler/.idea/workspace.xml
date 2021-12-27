@@ -5,21 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8676586a-691f-4772-8a55-6a18a5f4a383" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/cat_to_tag_table/category_to_tag_table_cafe.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cat_to_tag_table/category_to_tag_table_drink.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cat_to_tag_table/category_to_tag_table_res.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db_converter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dough-survey/public/static/js/2.5a760ad5.chunk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dough-survey/public/static/js/2.5a760ad5.chunk.js.LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dough-survey/public/static/js/2.5a760ad5.chunk.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dough-survey/public/static/js/main.65a2632f.chunk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dough-survey/public/static/js/main.65a2632f.chunk.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromedriver.exe" beforeDir="false" afterPath="$PROJECT_DIR$/chromedriver.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dough_crawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/dough_crawler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firestore_lib.py" beforeDir="false" afterPath="$PROJECT_DIR$/firestore_lib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/.firebase/hosting.cHVibGlj.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/.firebase/hosting.cHVibGlj.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/loader.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/loader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/lib/loader.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/lib/loader.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/functions/src/loader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/functions/src/loader.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/public/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/public/asset-manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dough-survey/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../dough-survey/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.04ad5145.chunk.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.04ad5145.chunk.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.54a5e9ed.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.54a5e9ed.chunk.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.54a5e9ed.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.d68b6f41.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.d68b6f41.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.b8b6fb5b.chunk.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/css/main.b8b6fb5b.chunk.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.b0013bd9.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.b0013bd9.chunk.js.LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/2.b0013bd9.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.fd2e050e.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dough-survey/public/static/js/main.fd2e050e.chunk.js.map" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +73,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JSON" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="firestore_lib" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
