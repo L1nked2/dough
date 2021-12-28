@@ -10,3 +10,5 @@ dough-survey/functions/index.js
 dough-survey/functions/package-lock.json
 dough-survey/functions/package.json
 dough-survey/storage.rules
+
+.idea
