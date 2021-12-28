@@ -226,7 +226,7 @@ class DoughCrawler:
         try:
             for item in res['menus']:
                 del item['isRecommended']
-        except TypeError:
+        except (TypeError, KeyError):
             self.crawler_msg(f'menu not exists, {link}')
 
         # get menu image

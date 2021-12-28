@@ -11,7 +11,7 @@ done_list = os.listdir('./raw_db')
 dhc = DoughCrawler()
 for station_name in stations:
     for search_keyword in search_keywords:
-        if f'{station_name}_{search_keyword}_db' in done_list:
+        if f'{station_name}_{search_keyword}' in done_list:
             continue
         else:
             dhc.run_crawler_naver(station_name=station_name, search_keyword=search_keyword, options=crawler_options)
