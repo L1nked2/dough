@@ -1,5 +1,5 @@
 import sys
-sys.path.append('.')
+sys.path.append('..')
 
 from model.CoAtNet import CoAtNet
 

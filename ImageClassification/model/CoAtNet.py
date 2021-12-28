@@ -4,9 +4,9 @@ import sys
 from math import sqrt
 import numpy as np
 
-sys.path.append('.')
-from model.MBConv import MBConvBlock
-from model.SelfAttention import ScaledDotProductAttention
+sys.path.append('')
+from ImageClassification.model.MBConv import MBConvBlock
+from ImageClassification.model.SelfAttention import ScaledDotProductAttention
 
 
 class CoAtNet(nn.Module):
