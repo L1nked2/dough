@@ -1,3 +1,15 @@
+"""
+class DoughCrawler
+
+WHAT FUNCTION IS API?
+ .run_crawler_naver (this will do (1)~(4) all)
+
+(1) Request query (e.g. 강남역 맛집) to graphql_url => ( 음식점 id ) list 만듦 ( len <= 300 ) 
+(2) Request query (음식점 id) to restaruant_api_url => (음식점 제공 사진, 메뉴판 사진) list
+(3) Request query (음식점 id) to graphql_url => (유저들이 찍어놓은 음식/내부 사진) list
+(4) Convert the collected data to our DB's format, in `firestore_lib.py`
+"""
+
 import time
 import copy
 import os

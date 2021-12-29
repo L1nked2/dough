@@ -1,3 +1,8 @@
+"""
+Stores the format of our DB
+
+class DB
+"""
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -71,7 +76,7 @@ station_db_empty = dict(
 )
 
 
-class DB:
+class DB: # place_db, place_db_thumb, station_db 각각 class DB
     def __init__(self, init_list=None, **kwargs):
         """
         make new database using given init_list
