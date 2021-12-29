@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getKakaoToken = exports.createFirebaseToken = exports.updateOrCreateUser = exports.requestMe = void 0;
+exports.kakaoLogin = void 0;
 // import {initializeApp} from "firebase-admin/app";
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const axios_1 = __importDefault(require("axios"));
@@ -69,7 +69,6 @@ function requestMe(kakaoAccessToken) {
         url: requestMeUrl,
     });
 }
-exports.requestMe = requestMe;
 /**
  * updateOrCreateUser - Update Firebase user with the give email, create if
  * none exists.
@@ -109,7 +108,6 @@ function updateOrCreateUser(userId, email, displayName, photoURL) {
         throw error;
     });
 }
-exports.updateOrCreateUser = updateOrCreateUser;
 /**
  * createFirebaseToken - returns Firebase token using Firebase Admin SDK
  *
@@ -127,7 +125,7 @@ function createFirebaseToken(kakaoAccessToken) {
         let nickname = null;
         let profileImage = null;
         let email = null;
-        console.log(`kakao_response:${response}`);
+        console.log(`Kakao token Verified: ${kakaoAccessToken}`);
         console.log(`kakao_id:${kakaoID}`);
         if (kakaoAc) {
             nickname = kakaoAc.profile.nickname;
@@ -141,7 +139,6 @@ function createFirebaseToken(kakaoAccessToken) {
         return firebaseAdmin.auth().createCustomToken(userId, { provider: "KAKAO" });
     });
 }
-exports.createFirebaseToken = createFirebaseToken;
 /**
  * getKakaoToken - returns kakao token using given kakao code
  *
@@ -168,5 +165,19 @@ async function getKakaoToken(kakaoCode) {
     const token = res.data.access_token;
     return token;
 }
-exports.getKakaoToken = getKakaoToken;
+/**
+ * kakaologin
+ *
+ * @param  {Request} req
+ * @return {Promise<String>}
+ */
+async function kakaoLogin(req) {
+    const code = req.body.code;
+    console.log(`kakao code: ${code}`);
+    const kakaoToken = await getKakaoToken(code);
+    const firebaseToken = await createFirebaseToken(kakaoToken);
+    console.log(`Returning firebase token to user: ${firebaseToken}`);
+    return firebaseToken;
+}
+exports.kakaoLogin = kakaoLogin;
 //# sourceMappingURL=login.js.map
