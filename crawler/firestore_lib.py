@@ -1,7 +1,18 @@
 """
-Stores the format of our DB
+module firestore_lib
+ ... this is a module for 
+     (1) initiating Firebase storage(CDN) and firestore(DB) with authentication
+     (2) class and functions managing firestore(DB)
 
-class DB
+Classes
+  Document
+
+Functions
+  check_db_existence
+  @firestore.transactional _update_place_transaction
+  upload_db
+  place_db_img_transform
+  img_upload_from_link
 """
 import firebase_admin
 from firebase_admin import credentials
@@ -16,70 +27,47 @@ cdn_root_url = 'https://storage.googleapis.com/dough-survey.appspot.com/'
 
 # Use the application default credentials
 cred = credentials.Certificate('./service-account.json')
-firebase_admin.initialize_app(cred, {
+firebase_admin.initialize_app(credential=cred, options={
     'projectId': 'dough-survey',
 })
 credentials = service_account.Credentials.from_service_account_file(
     './service-account.json')
-firebase_cloud_storage = storage.Client(credentials=credentials)
-firebase_db = firestore.client()
-firebase_transaction = firebase_db.transaction()
-place_ref = firebase_db.collection('place_db')
 
-# data types and key-value pairs
-place_db_empty = dict(
-    place_name=None,
-    place_uuid=None,
-    place_road_address=None,
-    place_legacy_address=None,
-    place_category=None,
-    place_cluster_a=None,
-    place_cluster_b=None,
-    place_operating_time=None,
-    place_kind=None,
-    place_menu_info=[],
-    place_naver_link=None,
-    place_photo_provided=[],
-    place_photo_inside=[],
-    place_photo_food=[],
-    place_photo_menu=[],
-    place_photo_main_list=[],
-    place_telephone=None,
-    place_last_timestamp=None,
-    parent_station_list=None,
-    place_coor_x=None,
-    place_coor_y=None,
-    place_views=0,
-)
+firebase_cloud_storage = storage.Client(credentials=credentials) # CDN (= storage)
+firebase_db = firestore.client() # client for interacting DB (= firestore)
+firebase_transaction = firebase_db.transaction() # transaction that uses this client(DB)
+place_ref = firebase_db.collection('place_db') # DB(firestore) consists of collections ('place_db', 'station_db', 'user_db'). 
+                                               # Each collection(e.g. 'place_db') has multiple keys(e.g. multiple 'place's), each key corresp to a (extended) JSON file.  
+ 
 
-place_db_thumb_empty = dict(
-    place_name=None,
-    place_uuid=None,
-    place_category=None,
-    place_kind=None,
-    place_cluster_a=None,
-    place_cluster_b=None,
-    place_photo_main_list=[],
-    place_telephone=None,
-    parent_station=None,
-    place_coor_x=None,
-    place_coor_y=None,
-    place_views=0,
-)
-
-station_db_empty = dict(
-    place_thumb_list=[],
-    station_name=None,
-    station_coor_x=None,
-    station_coor_y=None,
-    station_views=0,
-)
+"""
+FireStorage
+|_ collection(db) 1 (place_db)
+   |_ document 1  (00000001) ... corresp. to one place 
+      |_ field 1 (place_category : "음식점")  
+      |_ field 2 (place_cluster_a : "2")
+   |_ document 2
+   |_ document 3 
+|_ collection(db) 2 (station_db)
+   |_ document 1 ... corresp. to one station
+|_ collection(db) 3 (user_db)
+   |_ document 1 ... corresp. to one user
+"""
 
 
-class DB: # place_db, place_db_thumb, station_db 각각 class DB
+"""
+class Document
+ ... single document in the collection(db)
+
+attribute/ _data : the primary data of Document, fields of document.
+method/ add_pair, update_pair, delete_pair, get_keys, get_value, to_dict : functions on _data
+
+attribute/ parent_station, kind_filled, img_selected, img_transform, cluster_filled : boolean flags denoting status of _data, use with direct access.
+"""
+class Document: 
     def __init__(self, init_list=None, **kwargs):
         """
-        make new database using given init_list
+        make new document using given init_list
         data is stored to _data: dictionary
 
         :param init_list: dictionary
@@ -129,7 +117,58 @@ class DB: # place_db, place_db_thumb, station_db 각각 class DB
     def to_dict(self):
         return self._data
 
+# Document._data will have one of the following dictionaries' key-value pairs.
+place_document_empty = dict(
+    place_name=None,
+    place_uuid=None,
+    place_road_address=None,
+    place_legacy_address=None,
+    place_category=None,
+    place_cluster_a=None,
+    place_cluster_b=None,
+    place_operating_time=None,
+    place_kind=None,
+    place_menu_info=[],
+    place_naver_link=None,
+    place_photo_provided=[],
+    place_photo_inside=[],
+    place_photo_food=[],
+    place_photo_menu=[],
+    place_photo_main_list=[],
+    place_telephone=None,
+    place_last_timestamp=None,
+    parent_station_list=None,
+    place_coor_x=None,
+    place_coor_y=None,
+    place_views=0,
+)
 
+place_thumb_document_empty = dict(
+    place_name=None,
+    place_uuid=None,
+    place_category=None,
+    place_kind=None,
+    place_cluster_a=None,
+    place_cluster_b=None,
+    place_photo_main_list=[],
+    place_telephone=None,
+    parent_station=None,
+    place_coor_x=None,
+    place_coor_y=None,
+    place_views=0,
+)
+
+station_document_empty = dict(
+    place_thumb_list=[],
+    station_name=None,
+    station_coor_x=None,
+    station_coor_y=None,
+    station_views=0,
+)
+
+"""
+check if place document with field value `restaruant_link` exists in place_db 
+"""
 def check_db_existence(restaurant_link):
     snapshot = place_ref.where('place_naver_link', '==', restaurant_link).get()
     snapshot_exists = len([d for d in snapshot])
@@ -137,10 +176,18 @@ def check_db_existence(restaurant_link):
         return True
     return False
 
+"""
+!! deprecated
 
+increment the place_counter db to manage each place document's name.
+!but switched into managing the place document's name with uid provided by Naver.
+
+** need to change this to update document_data on the DB,
+w/o incrementing place_db
+"""
 @firestore.transactional
-def _update_place_transaction(transaction, db):
-    naver_link = db['place_naver_link']
+def _update_place_transaction(transaction, document_data):
+    naver_link = document_data['place_naver_link']
     snapshot = place_ref.where('place_naver_link', '==', naver_link).get(transaction=transaction)
     snapshot_exists = len([d for d in snapshot])
     if snapshot_exists:
@@ -159,7 +206,10 @@ def _update_place_transaction(transaction, db):
     return False
 
 
-def upload_db(db_list, db_type=''):
+"""
+ upload document to db 
+"""
+def upload_db(document_list, db_type=''):
     """
     upload data to database using given data_dict
 
@@ -168,9 +218,9 @@ def upload_db(db_list, db_type=''):
     :return:
     """
     if db_type == 'place':
-        for db in db_list:
-            print(db.to_dict()['place_name'])
-            _update_place_transaction(firebase_transaction, db.to_dict())
+        for document in document_list:
+            print(document.to_dict()['place_name'])
+            _update_place_transaction(firebase_transaction, document.to_dict())
     elif db_type == 'station':
         pass
     elif db_type == 'user':
@@ -180,10 +230,16 @@ def upload_db(db_list, db_type=''):
     return True
 
 
+"""
+part of "Uploader" 
+"""
 def place_db_img_transform(place_db):
     pass
 
 
+"""
+part of "Uploader"
+"""
 def img_upload_from_link(img_link, img_type=None, place_name=None, place_uuid=None, img_num=None, img_transform=True):
     if img_type is None:
         print('img_upload: type is empty')

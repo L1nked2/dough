@@ -4,6 +4,11 @@ import time
 import numpy as np
 import pandas as pd
 
+
+"""
+1-1 of convertor (read csv and fill category of Document object)
+"""
+
 cat_to_tag_table_path = f'./cat_to_tag_table'
 db_list_path = './raw_db'
 db_list_files = list(file for file in os.listdir(db_list_path)
