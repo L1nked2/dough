@@ -2,6 +2,7 @@
 import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
+import {Request} from "express";
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -108,7 +109,7 @@ function createFirebaseToken(kakaoAccessToken: string) {
     let nickname = null;
     let profileImage = null;
     let email = null;
-    console.log(`kakao_response:${response}`);
+    console.log(`Kakao token Verified: ${kakaoAccessToken}`);
     console.log(`kakao_id:${kakaoID}`);
     if (kakaoAc) {
       nickname = kakaoAc.profile.nickname;
@@ -150,4 +151,19 @@ async function getKakaoToken(kakaoCode: string) {
   return token;
 }
 
-export {requestMe, updateOrCreateUser, createFirebaseToken, getKakaoToken};
+/**
+ * kakaologin
+ *
+ * @param  {Request} req
+ * @return {Promise<String>}
+ */
+async function kakaoLogin(req: Request) {
+  const code = req.body.code;
+  console.log(`kakao code: ${code}`);
+  const kakaoToken = await getKakaoToken(code);
+  const firebaseToken = await createFirebaseToken(kakaoToken);
+  console.log(`Returning firebase token to user: ${firebaseToken}`);
+  return firebaseToken;
+}
+
+export {kakaoLogin};

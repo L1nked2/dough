@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 // import firebaseAdmin from "firebase-admin";
 import express = require("express");
-import {getKakaoToken, createFirebaseToken} from "./login";
+import {kakaoLogin} from "./login";
 import {getInfo} from "./loader";
 import cors from "cors";
 // import bodyParser = require("body-parser");
@@ -16,20 +16,8 @@ app.get("/api/login", (req, res) => {
 });
 
 app.post("/api/login", (req, res) => {
-  const {code} = req.body;
-  console.log(`code: ${code}`);
-  getKakaoToken(code).then((token) => {
-    if (!token) {
-      return res.status(400).send({error: "There is no token."})
-          .send({message: "Access token is a required parameter."});
-    }
-    console.log(`Verifying Kakao token: ${token}`);
-    createFirebaseToken(token)
-        .then((firebaseToken) => {
-          console.log(`Returning firebase token to user: ${firebaseToken}`);
-          return res.send({access_token: firebaseToken});
-        });
-    return;
+  kakaoLogin(req).then((token) => {
+    res.send({access_token: token});
   });
 });
 

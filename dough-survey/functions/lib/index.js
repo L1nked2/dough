@@ -39,20 +39,8 @@ app.get("/api/login", (req, res) => {
     res.send("Forbidden GET /login");
 });
 app.post("/api/login", (req, res) => {
-    const { code } = req.body;
-    console.log(`code: ${code}`);
-    (0, login_1.getKakaoToken)(code).then((token) => {
-        if (!token) {
-            return res.status(400).send({ error: "There is no token." })
-                .send({ message: "Access token is a required parameter." });
-        }
-        console.log(`Verifying Kakao token: ${token}`);
-        (0, login_1.createFirebaseToken)(token)
-            .then((firebaseToken) => {
-            console.log(`Returning firebase token to user: ${firebaseToken}`);
-            return res.send({ access_token: firebaseToken });
-        });
-        return;
+    (0, login_1.kakaoLogin)(req).then((token) => {
+        res.send({ access_token: token });
     });
 });
 // getInfo routes, provide test data
