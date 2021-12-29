@@ -142,3 +142,6 @@ log/
 category_output/
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+# pycache
+__pycache__/
