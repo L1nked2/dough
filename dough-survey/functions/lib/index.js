@@ -59,11 +59,11 @@ app.post("/api/login", (req, res) => {
 app.get("/api/:infoType", (req, res) => {
     const type = req.params.infoType;
     if (type === "place") {
-        req.body.stationId = "00000001_0";
+        req.body.stationId = "00000001";
         req.body.placeId = "00000001";
     }
     else if (type === "station") {
-        req.body.stationId = "00000001_0";
+        req.body.stationId = "00000001";
         req.body.userToken = "";
         req.body.category = "음식점";
         req.body.tags = [""];

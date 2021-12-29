@@ -178,8 +178,8 @@ async function getStationInfo(req) {
  */
 async function getPlaceInfo(req) {
     try {
-        const stationId = await req.body.stationId;
-        const placeId = await req.body.placeId;
+        const stationId = `${req.body.stationId}_0`;
+        const placeId = req.body.placeId;
         const stationData = await getInfoBase("station", stationId);
         const placeData = await getInfoBase("place", placeId);
         const stationCoor = { lon: stationData.station_coor_x,
