@@ -2,6 +2,8 @@ import {initializeApp} from "@firebase/app";
 import {getFirestore} from "@firebase/firestore";
 import {doc, getDoc} from "@firebase/firestore";
 import * as firebaseAdmin from "firebase-admin";
+import {Request} from "express";
+import {user} from "firebase-functions/v1/auth";
 // import haversine from "haversine";
 
 const firebaseConfig = {
@@ -28,6 +30,9 @@ const db = getFirestore();
  */
 async function getUserId(userToken: string): Promise<string> {
   try {
+    if (userToken === "") {
+      return "default";
+    }
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(userToken);
     const uid = decodedToken.uid;
     return uid.toString();
@@ -38,6 +43,33 @@ async function getUserId(userToken: string): Promise<string> {
 }
 
 /**
+ * getInfo
+ *
+ * @param  {string} infotype
+ * @param  {Request} req
+ * @return {Promise<any>}
+ */
+async function getInfo(infotype: string, req: Request): Promise<any> {
+  try {
+    if (infotype === "user") {
+      return getUserInfo(req);
+    } else if (infotype === "place") {
+      return getPlaceInfo(req);
+    } else if (infotype === "station") {
+      return getStationInfo(req);
+    } else if (infotype === "post") {
+      return getPostInfo(req);
+    } else {
+      console.log("Not implemented types");
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+/**
  * getInfoBase
  *
  * @param  {string} infotype
@@ -46,7 +78,8 @@ async function getUserId(userToken: string): Promise<string> {
  */
 async function getInfoBase(infotype: string, Id:string): Promise<any> {
   try {
-    if (infotype === "user" || infotype === "place" || infotype === "station") {
+    if (infotype === "user" || infotype === "place" ||
+        infotype === "station" || infotype === "post") {
       const docRef = doc(db, `${infotype}_db`, Id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -67,11 +100,12 @@ async function getInfoBase(infotype: string, Id:string): Promise<any> {
 /**
  * getUserInfo
  *
- * @param  {string} userId
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-function getUserInfo(userId: string) {
+async function getUserInfo(req: Request) {
   try {
+    const userId = await getUserId(req.body.userToken);
     return getInfoBase("user", userId);
   } catch (error) {
     console.log(error);
@@ -82,15 +116,15 @@ function getUserInfo(userId: string) {
 /**
  * getStationInfo
  *
- * @param  {string} stationId
- * @param  {string} category
- * @param {Array} tags
- * @param  {string} userToken
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-async function getStationInfo(stationId: string, category: string,
-    tags: Array<string>, userToken: string) {
+async function getStationInfo(req: Request): Promise<any> {
   try {
+    const stationId = req.body.stationId;
+    const userId = await getUserId(req.body.userToken);
+    let category = req.body.category;
+    const tags = req.body.tags;
     if (category === "음식점") {
       category = "0";
     } else if (category === "카페") {
@@ -98,10 +132,9 @@ async function getStationInfo(stationId: string, category: string,
     } else if (category === "술집") {
       category = "2";
     }
-    if (userToken === "default") {
+    if (userId === "default") {
       return getInfoBase("station", `${stationId}_${category}`);
     } else {
-      const userId = await getUserId(userToken);
       const userInfo = await getInfoBase("user", userId);
       return getInfoBase("station", `${stationId}_${category}`);
     }
@@ -114,12 +147,13 @@ async function getStationInfo(stationId: string, category: string,
 /**
  * getPlaceInfo
  *
- * @param  {string} stationId
- * @param  {string} placeId
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-async function getPlaceInfo(stationId: string, placeId: string) {
+async function getPlaceInfo(req: Request): Promise<any> {
   try {
+    const stationId = `${req.body.stationId}_0`;
+    const placeId = req.body.placeId;
     const stationData = await getInfoBase("station", stationId);
     const placeData = await getInfoBase("place", placeId);
     const stationCoor: coordinate = {lon: stationData.station_coor_x,
@@ -131,6 +165,22 @@ async function getPlaceInfo(stationId: string, placeId: string) {
       ${JSON.stringify(placeData)}`);
     console.log(`distance: ${distance}`);
     return {placeData: placeData, distance: distance};
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+/**
+ * getPostInfo
+ *
+ * @param  {Request} req
+ * @return {Promise<any>}
+ */
+async function getPostInfo(req: Request): Promise<any> {
+  try {
+    const postId = await req.body.postId;
+    return getInfoBase("post", postId);
   } catch (error) {
     console.log(error);
     throw error;
@@ -169,4 +219,4 @@ function haversineDistance(coords1: coordinate, coords2:coordinate) {
   return d;
 }
 
-export {getPlaceInfo, getUserInfo, getStationInfo};
+export {getInfo};

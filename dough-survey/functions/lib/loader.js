@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStationInfo = exports.getUserInfo = exports.getPlaceInfo = void 0;
+exports.getInfo = void 0;
 const app_1 = require("@firebase/app");
 const firestore_1 = require("@firebase/firestore");
 const firestore_2 = require("@firebase/firestore");
@@ -47,6 +47,9 @@ const db = (0, firestore_1.getFirestore)();
  */
 async function getUserId(userToken) {
     try {
+        if (userToken === "") {
+            return "default";
+        }
         const decodedToken = await firebaseAdmin.auth().verifyIdToken(userToken);
         const uid = decodedToken.uid;
         return uid.toString();
@@ -57,6 +60,37 @@ async function getUserId(userToken) {
     }
 }
 /**
+ * getInfo
+ *
+ * @param  {string} infotype
+ * @param  {Request} req
+ * @return {Promise<any>}
+ */
+async function getInfo(infotype, req) {
+    try {
+        if (infotype === "user") {
+            return getUserInfo(req);
+        }
+        else if (infotype === "place") {
+            return getPlaceInfo(req);
+        }
+        else if (infotype === "station") {
+            return getStationInfo(req);
+        }
+        else if (infotype === "post") {
+            return getPostInfo(req);
+        }
+        else {
+            console.log("Not implemented types");
+        }
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+exports.getInfo = getInfo;
+/**
  * getInfoBase
  *
  * @param  {string} infotype
@@ -65,7 +99,8 @@ async function getUserId(userToken) {
  */
 async function getInfoBase(infotype, Id) {
     try {
-        if (infotype === "user" || infotype === "place" || infotype === "station") {
+        if (infotype === "user" || infotype === "place" ||
+            infotype === "station" || infotype === "post") {
             const docRef = (0, firestore_2.doc)(db, `${infotype}_db`, Id);
             const docSnap = await (0, firestore_2.getDoc)(docRef);
             if (docSnap.exists()) {
@@ -88,11 +123,12 @@ async function getInfoBase(infotype, Id) {
 /**
  * getUserInfo
  *
- * @param  {string} userId
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-function getUserInfo(userId) {
+async function getUserInfo(req) {
     try {
+        const userId = await getUserId(req.body.userToken);
         return getInfoBase("user", userId);
     }
     catch (error) {
@@ -100,18 +136,18 @@ function getUserInfo(userId) {
         throw error;
     }
 }
-exports.getUserInfo = getUserInfo;
 /**
  * getStationInfo
  *
- * @param  {string} stationId
- * @param  {string} category
- * @param {Array} tags
- * @param  {string} userToken
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-async function getStationInfo(stationId, category, tags, userToken) {
+async function getStationInfo(req) {
     try {
+        const stationId = req.body.stationId;
+        const userId = await getUserId(req.body.userToken);
+        let category = req.body.category;
+        const tags = req.body.tags;
         if (category === "음식점") {
             category = "0";
         }
@@ -121,11 +157,10 @@ async function getStationInfo(stationId, category, tags, userToken) {
         else if (category === "술집") {
             category = "2";
         }
-        if (userToken === "default") {
+        if (userId === "default") {
             return getInfoBase("station", `${stationId}_${category}`);
         }
         else {
-            const userId = await getUserId(userToken);
             const userInfo = await getInfoBase("user", userId);
             return getInfoBase("station", `${stationId}_${category}`);
         }
@@ -135,16 +170,16 @@ async function getStationInfo(stationId, category, tags, userToken) {
         throw error;
     }
 }
-exports.getStationInfo = getStationInfo;
 /**
  * getPlaceInfo
  *
- * @param  {string} stationId
- * @param  {string} placeId
+ * @param  {Request} req
  * @return {Promise<any>}
  */
-async function getPlaceInfo(stationId, placeId) {
+async function getPlaceInfo(req) {
     try {
+        const stationId = await req.body.stationId;
+        const placeId = await req.body.placeId;
         const stationData = await getInfoBase("station", stationId);
         const placeData = await getInfoBase("place", placeId);
         const stationCoor = { lon: stationData.station_coor_x,
@@ -162,7 +197,22 @@ async function getPlaceInfo(stationId, placeId) {
         throw error;
     }
 }
-exports.getPlaceInfo = getPlaceInfo;
+/**
+ * getPostInfo
+ *
+ * @param  {Request} req
+ * @return {Promise<any>}
+ */
+async function getPostInfo(req) {
+    try {
+        const postId = await req.body.postId;
+        return getInfoBase("post", postId);
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 /**
  * haversineDistance
  *

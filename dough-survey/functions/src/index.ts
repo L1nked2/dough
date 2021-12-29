@@ -2,52 +2,13 @@ import * as functions from "firebase-functions";
 // import firebaseAdmin from "firebase-admin";
 import express = require("express");
 import {getKakaoToken, createFirebaseToken} from "./login";
-import {getPlaceInfo, getUserInfo, getStationInfo} from "./loader";
+import {getInfo} from "./loader";
 import cors from "cors";
 // import bodyParser = require("body-parser");
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-// place info routes
-app.get("/api/place", (req, res) => {
-  getPlaceInfo("00000001_0", "00000001").then((placeInfo) => {
-    res.json(placeInfo);
-  });
-});
-
-app.post("/api/place", (req, res) => {
-  getPlaceInfo(req.body.stationId, req.body.placeId).then((placeInfo) => {
-    res.json(placeInfo);
-  });
-});
-
-// station info routes
-app.get("/api/station", (req, res) => {
-  getStationInfo("00000001", "0", [""], "default").then((stationInfo) => {
-    res.json(stationInfo);
-  });
-});
-
-app.post("/api/station", (req, res) => {
-  getStationInfo(req.body.stationId, req.body.category,
-      req.body.tags, req.body.userToken).then((stationInfo) => {
-    res.json(stationInfo);
-  });
-});
-
-// user info routes
-app.get("/api/user", (req, res) => {
-  getUserInfo("00000001").then((userInfo) => {
-    res.json(userInfo);
-  });
-});
-
-app.post("/api/user", (req, res) => {
-  getUserInfo(req.body.userId).then((userInfo) => {
-    res.json(userInfo);
-  });
-});
 
 // login using kakao code
 app.get("/api/login", (req, res) => {
@@ -69,6 +30,34 @@ app.post("/api/login", (req, res) => {
           return res.send({access_token: firebaseToken});
         });
     return;
+  });
+});
+
+// getInfo routes, provide test data
+app.get("/api/:infoType", (req, res) => {
+  const type = req.params.infoType;
+  if (type === "place") {
+    req.body.stationId = "00000001_0";
+    req.body.placeId = "00000001";
+  } else if (type === "station") {
+    req.body.stationId = "00000001_0";
+    req.body.userToken = "";
+    req.body.category = "음식점";
+    req.body.tags = [""];
+  } else if (type === "user") {
+    req.body.userToken = "";
+  } else if (type === "post") {
+    req.body.postId = "00000001";
+  }
+  getInfo(type, req).then((info) => {
+    res.json(info);
+  });
+});
+
+app.post("/api/:infoType", (req, res) => {
+  const type = req.params.infoType;
+  getInfo(type, req).then((info) => {
+    res.json(info);
   });
 });
 
