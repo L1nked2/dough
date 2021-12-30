@@ -18,10 +18,6 @@ import json
 import datetime
 import re
 import dill
-from selenium import webdriver
-from selenium.common.exceptions import *
-from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
 from firestore_lib import *
 
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
@@ -94,15 +90,6 @@ class DoughCrawler:
         if self.log:
             self.log_file = open(self.log_path, "w+")
 
-        # webdriver initializing
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        options.add_argument('headless')
-        options.add_argument('window-size=1920x1080')
-        options.add_argument("disable-gpu")
-        self.driver = webdriver.Chrome('./chromedriver.exe', options=options)
-        self.driver.implicitly_wait(3)
-        self.driver.refresh()
         return
 
     def __del__(self):
@@ -124,21 +111,16 @@ class DoughCrawler:
         self.save(name=f'{station_name}_{search_keyword}')
         self.crawler_msg(f'{station_name} {search_keyword} crawling done')
 
-    def _driver_get(self, target_url, **kwargs):
-        if target_url:
-            try:
-                self.driver.get(target_url.format(**kwargs))
-            except AttributeError:
-                self.crawler_msg('AttributeError, check target_url and attributes')
-        return
-
     def set_arg_naver(self, station='', search_keyword='', delay=0):
         naver_restaurant_query_json['variables']['input']['query'] = f'{station} {search_keyword}'
         station_query_table = dict(query=station, displayCount=1, lang='ko')
         station_res = requests.get(naver_station_query_root_url,
                                    params=station_query_table)
+        print(station_res.status_code)
+      
         if station_res.status_code == 200:
             station_res = station_res.json()
+
         self.station_info = station_res['result']['place']['list'][0]
         cookie_res = requests.get("https://www.naver.com/")
         if cookie_res.status_code == 200:
@@ -349,7 +331,7 @@ class DoughCrawler:
     def get_place_info_naver(self):
         self.crawler_msg('naver_info_get start')
         self._remove_duplicates()
-        self.current_place_db = DB(place_db_empty)
+        self.current_place_db = Document(place_document_empty)
         self.current_place_db.parent_station = self.naver_station_name
         for link in self.place_link_list:
             try:
