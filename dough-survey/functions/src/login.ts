@@ -120,7 +120,7 @@ function createFirebaseToken(kakaoAccessToken: string) {
   }).then((userRecord) => {
     const userId = userRecord.uid;
     console.log(`creating a custom firebase token based on uid ${userId}`);
-    return firebaseAdmin.auth().createCustomToken(userId, {provider: "KAKAO"});
+    return firebaseAdmin.auth().createCustomToken(userId, {provider: "kakao"});
   });
 }
 

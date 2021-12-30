@@ -1,6 +1,5 @@
 import {initializeApp} from "@firebase/app";
-import {getFirestore} from "@firebase/firestore";
-import {doc, getDoc} from "@firebase/firestore";
+import {getFirestore, doc, getDoc} from "@firebase/firestore";
 import * as firebaseAdmin from "firebase-admin";
 import {Request} from "express";
 import {user} from "firebase-functions/v1/auth";
@@ -106,7 +105,8 @@ async function getInfoBase(infotype: string, Id:string): Promise<any> {
 async function getUserInfo(req: Request) {
   try {
     const userId = await getUserId(req.body.userToken);
-    return getInfoBase("user", userId);
+    const UserInfo = await getInfoBase("user", userId);
+    return {UserInfo: UserInfo};
   } catch (error) {
     console.log(error);
     throw error;
@@ -133,10 +133,14 @@ async function getStationInfo(req: Request): Promise<any> {
       category = "2";
     }
     if (userId === "default") {
-      return getInfoBase("station", `${stationId}_${category}`);
+      const stationInfo =
+        await getInfoBase("station", `${stationId}_${category}`);
+      return {stationInfo: stationInfo};
     } else {
       const userInfo = await getInfoBase("user", userId);
-      return getInfoBase("station", `${stationId}_${category}`);
+      const stationInfo =
+        await getInfoBase("station", `${stationId}_${category}`);
+      return {stationInfo: stationInfo};
     }
   } catch (error) {
     console.log(error);
@@ -155,16 +159,16 @@ async function getPlaceInfo(req: Request): Promise<any> {
     const stationId = `${req.body.stationId}_0`;
     const placeId = req.body.placeId;
     const stationData = await getInfoBase("station", stationId);
-    const placeData = await getInfoBase("place", placeId);
+    const placeInfo = await getInfoBase("place", placeId);
     const stationCoor: coordinate = {lon: stationData.station_coor_x,
       lat: stationData.station_coor_y};
-    const placeCoor: coordinate = {lon: placeData.place_coor_x,
-      lat: placeData.place_coor_y};
+    const placeCoor: coordinate = {lon: placeInfo.place_coor_x,
+      lat: placeInfo.place_coor_y};
     const distance = haversineDistance(stationCoor, placeCoor);
     console.log(`getPlaceInfo: ${JSON.stringify(stationData)},
-      ${JSON.stringify(placeData)}`);
+      ${JSON.stringify(placeInfo)}`);
     console.log(`distance: ${distance}`);
-    return {placeData: placeData, distance: distance};
+    return {placeInfo: placeInfo, distance: distance};
   } catch (error) {
     console.log(error);
     throw error;
@@ -180,7 +184,8 @@ async function getPlaceInfo(req: Request): Promise<any> {
 async function getPostInfo(req: Request): Promise<any> {
   try {
     const postId = await req.body.postId;
-    return getInfoBase("post", postId);
+    const postInfo = await getInfoBase("post", postId);
+    return {postInfo: postInfo};
   } catch (error) {
     console.log(error);
     throw error;
