@@ -22,7 +22,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getInfo = void 0;
 const app_1 = require("@firebase/app");
 const firestore_1 = require("@firebase/firestore");
-const firestore_2 = require("@firebase/firestore");
 const firebaseAdmin = __importStar(require("firebase-admin"));
 // import haversine from "haversine";
 const firebaseConfig = {
@@ -101,8 +100,8 @@ async function getInfoBase(infotype, Id) {
     try {
         if (infotype === "user" || infotype === "place" ||
             infotype === "station" || infotype === "post") {
-            const docRef = (0, firestore_2.doc)(db, `${infotype}_db`, Id);
-            const docSnap = await (0, firestore_2.getDoc)(docRef);
+            const docRef = (0, firestore_1.doc)(db, `${infotype}_db`, Id);
+            const docSnap = await (0, firestore_1.getDoc)(docRef);
             if (docSnap.exists()) {
                 console.log(`returning ${infotype} data: ${Id}`);
                 return docSnap.data();
@@ -129,7 +128,8 @@ async function getInfoBase(infotype, Id) {
 async function getUserInfo(req) {
     try {
         const userId = await getUserId(req.body.userToken);
-        return getInfoBase("user", userId);
+        const userInfo = await getInfoBase("user", userId);
+        return { userInfo: userInfo };
     }
     catch (error) {
         console.log(error);
@@ -158,11 +158,13 @@ async function getStationInfo(req) {
             category = "2";
         }
         if (userId === "default") {
-            return getInfoBase("station", `${stationId}_${category}`);
+            const stationInfo = await getInfoBase("station", `${stationId}_${category}`);
+            return { stationInfo: stationInfo };
         }
         else {
             const userInfo = await getInfoBase("user", userId);
-            return getInfoBase("station", `${stationId}_${category}`);
+            const stationInfo = await getInfoBase("station", `${stationId}_${category}`);
+            return { stationInfo: stationInfo };
         }
     }
     catch (error) {
@@ -181,16 +183,16 @@ async function getPlaceInfo(req) {
         const stationId = `${req.body.stationId}_0`;
         const placeId = req.body.placeId;
         const stationData = await getInfoBase("station", stationId);
-        const placeData = await getInfoBase("place", placeId);
+        const placeInfo = await getInfoBase("place", placeId);
         const stationCoor = { lon: stationData.station_coor_x,
             lat: stationData.station_coor_y };
-        const placeCoor = { lon: placeData.place_coor_x,
-            lat: placeData.place_coor_y };
+        const placeCoor = { lon: placeInfo.place_coor_x,
+            lat: placeInfo.place_coor_y };
         const distance = haversineDistance(stationCoor, placeCoor);
         console.log(`getPlaceInfo: ${JSON.stringify(stationData)},
-      ${JSON.stringify(placeData)}`);
+      ${JSON.stringify(placeInfo)}`);
         console.log(`distance: ${distance}`);
-        return { placeData: placeData, distance: distance };
+        return { placeInfo: placeInfo, distance: distance };
     }
     catch (error) {
         console.log(error);
@@ -206,7 +208,8 @@ async function getPlaceInfo(req) {
 async function getPostInfo(req) {
     try {
         const postId = await req.body.postId;
-        return getInfoBase("post", postId);
+        const postInfo = await getInfoBase("post", postId);
+        return { postInfo: postInfo };
     }
     catch (error) {
         console.log(error);
