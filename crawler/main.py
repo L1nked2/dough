@@ -22,6 +22,6 @@ if __name__ == "__main__":
     crawler_options = dict(log=True, msg=True)
     done_list = os.listdir('./raw_db')
 
-    #crawl(stations, search_keywords, crawler_options, done_list)
+    crawl(stations, search_keywords, crawler_options, done_list)
 
-    upload_to_db(raw_db=done_list)
+    # upload_to_db(raw_db=done_list)

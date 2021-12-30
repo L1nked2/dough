@@ -9,7 +9,7 @@ WHAT FUNCTION IS API?
 (3) Request query (음식점 id) to graphql_url => (유저들이 찍어놓은 음식/내부 사진) list
 (4) Convert the collected data to our DB's format, in `firestore_lib.py`
 """
-
+  
 import time
 import copy
 import os
@@ -18,7 +18,8 @@ import json
 import datetime
 import re
 import dill
-from firestore_lib import *
+import uuid
+#from firestore_lib import *
 
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
 naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary'
@@ -72,7 +73,6 @@ class DoughCrawler:
         self.station_info = dict()
         self.current_place_db = None
         self.place_db_list = []
-        self.place_uuid_dict = dict()
         self.photo_error_list = []
 
         # update for attributes
@@ -205,11 +205,8 @@ class DoughCrawler:
         return self.place_link_list
 
     def _get_place_info_naver_basic(self, link):
-        # check_db_existence
+
         restaurant_link = f'{naver_restaurant_api_root_url}/{link}'
-        if check_db_existence(restaurant_link):
-            # only add parent station, to be added
-            return False
 
         # manipulate raw_data
         params = {"lang": "ko"}
@@ -245,18 +242,17 @@ class DoughCrawler:
         # add items to current_place_db
         for key in parse_table_naver:
             try:
-                place_db.update_pair(parse_table_naver[key], res[key])
+                place_db[parse_table_naver[key]]= res[key]
             except KeyError:
                 self.crawler_msg(f'{link}, {parse_table_naver[key]} treated as None')
-                place_db.update_pair(parse_table_naver[key], None)
-        place_db.update_pair('place_naver_link', f'{naver_restaurant_root_url}/{link}')
-        place_db.update_pair('parent_stations', [self.naver_station_name])
-        place_db.update_pair('place_last_timestamp', datetime.date.today().isoformat())
-        place_db.update_pair('place_uuid', uuid.uuid5(uuid.NAMESPACE_DNS, link))
+                place_db[parse_table_naver[key]] = None
+        place_db['place_naver_link'] = f'{naver_restaurant_root_url}/{link}'
+        place_db['parent_stations'] = [self.naver_station_name]
+        place_db['place_last_timestamp'] = datetime.date.today().isoformat()
+        place_db['place_uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, link)
 
         # make directory for images
-        place_name = place_db.get_value('place_name')
-        place_uuid = place_db.get_value('place_uuid')
+        place_uuid = place_db['place_uuid']
         local_path = f'./temp_img/{self.naver_search_query}/{place_uuid}'
         if not os.path.isdir(local_path):
             os.mkdir(local_path)
@@ -322,7 +318,7 @@ class DoughCrawler:
             self.crawler_msg(f'{relations} photo not exists, {link}')
 
         # add img_links to current_place_db
-        self.current_place_db.update_pair(f'place_photo_{relations}', img_links)
+        self.current_place_db[f'place_photo_{relations}'] = img_links
 
         # download images
         self._download_photo(self.naver_search_query, self.current_place_db, relations)
@@ -331,8 +327,34 @@ class DoughCrawler:
     def get_place_info_naver(self):
         self.crawler_msg('naver_info_get start')
         self._remove_duplicates()
-        self.current_place_db = Document(place_document_empty)
-        self.current_place_db.parent_station = self.naver_station_name
+
+        place_document_empty = dict(
+            place_name=None,
+            place_uuid=None,
+            place_road_address=None,
+            place_legacy_address=None,
+            place_category=None,
+            place_cluster_a=None,
+            place_cluster_b=None,
+            place_operating_time=None,
+            place_kind=None,
+            place_menu_info=[],
+            place_naver_link=None,
+            place_photo_provided=[],
+            place_photo_inside=[],
+            place_photo_food=[],
+            place_photo_menu=[],
+            place_photo_main_list=[],
+            place_telephone=None,
+            place_last_timestamp=None,
+            parent_station_list=[],
+            place_coor_x=None,
+            place_coor_y=None,
+            place_views=0,
+        )
+
+        self.current_place_db = place_document_empty
+        self.current_place_db["parent_station_list"].append(self.naver_station_name)
         for link in self.place_link_list:
             try:
                 validity = self._get_place_info_naver_basic(link)
@@ -342,9 +364,8 @@ class DoughCrawler:
             except TypeError:
                 self.crawler_msg(f'type error occurred while getting place_info_naver, {link}')
                 continue
-            self.place_uuid_dict[str(self.current_place_db.get_value('place_uuid'))] = len(self.place_db_list)
             self.place_db_list.append(copy.deepcopy(self.current_place_db))
-            place_name = self.current_place_db.to_dict()['place_name']
+            place_name = self.current_place_db['place_name']
             self.crawler_msg(f'{place_name} added to db list')
         if not self.photo_error_list:
             self.crawler_msg('photo error list')
@@ -358,9 +379,8 @@ class DoughCrawler:
             self.crawler_msg('type is empty')
             raise TypeError
 
-        img_url_array = place_db.get_value(f'place_photo_{img_type}')
-        place_name = place_db.get_value('place_name')
-        place_uuid = place_db.get_value('place_uuid')
+        img_url_array = place_db[f'place_photo_{img_type}']
+        place_uuid = place_db['place_uuid']
 
         if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
             local_path_root = f'./temp_img/{search_query}/{place_uuid}'
@@ -391,7 +411,7 @@ class DoughCrawler:
             path = f'./raw_db/{name}'
         else:
             path = f'./raw_db/db'
-        data_body = [self.station_info, self.place_db_list, self.place_uuid_dict]
+        data_body = [self.station_info, self.place_db_list]
         file = open(path, "wb+")
         dill.dump(data_body, file=file)
         file.close()
@@ -402,7 +422,6 @@ class DoughCrawler:
         data_body = dill.load(file)
         self.station_info = data_body[0]
         self.place_db_list = data_body[1]
-        self.place_uuid_dict = data_body[2]
         return
 
     def crawler_msg(self, string='', log=True, **kwargs):

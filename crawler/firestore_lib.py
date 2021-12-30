@@ -19,7 +19,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud import storage
 from google.oauth2 import service_account
-import uuid
 import requests
 
 bucket_root_url = 'dough-survey.appspot.com'
@@ -73,11 +72,11 @@ class Document:
         :param init_list: dictionary
         :return: None
         """
-        self.parent_station = None
-        self.kind_filled = False
-        self.img_selected = False
-        self.img_transform = False
-        self.cluster_filled = False
+        self.parent_station = list()
+        # self.kind_filled = False
+        # self.img_selected = False
+        # self.img_transform = False
+        # self.cluster_filled = False
         self._data = dict()
         if init_list is not None:
             for key, value in init_list.items():
@@ -167,15 +166,6 @@ station_document_empty = dict(
     station_views=0,
 )
 
-"""
-check if place document with field value `restaruant_link` exists in place_db 
-"""
-def check_db_existence(restaurant_link):
-    snapshot = place_ref.where('place_naver_link', '==', restaurant_link).get()
-    snapshot_exists = len([d for d in snapshot])
-    if snapshot_exists != 0:
-        return True
-    return False
 
 """
 !! deprecated
