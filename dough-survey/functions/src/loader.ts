@@ -105,8 +105,8 @@ async function getInfoBase(infotype: string, Id:string): Promise<any> {
 async function getUserInfo(req: Request) {
   try {
     const userId = await getUserId(req.body.userToken);
-    const UserInfo = await getInfoBase("user", userId);
-    return {UserInfo: UserInfo};
+    const userInfo = await getInfoBase("user", userId);
+    return {userInfo: userInfo};
   } catch (error) {
     console.log(error);
     throw error;
