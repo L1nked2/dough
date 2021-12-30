@@ -143,6 +143,7 @@ place_document_empty = dict(
     place_views=0,
 )
 
+# thumbnail == essential
 place_thumb_document_empty = dict(
     place_name=None,
     place_uuid=None,
