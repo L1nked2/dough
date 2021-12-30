@@ -127,7 +127,7 @@ function PostSurvey(props) {
     }
     // axios post scores
     setTimeout(() => {
-      history.push('/home');
+      history.replace('/survey/result');
     }, 3000)
   }
   return (

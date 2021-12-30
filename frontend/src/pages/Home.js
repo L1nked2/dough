@@ -28,7 +28,7 @@ function Home() {
       dispatch(initialMenuState(fullFoodList, fullDrinkList))
     }
     return null;
-  },[])
+  },[]);
   
   return (
     <div className="Home-page">

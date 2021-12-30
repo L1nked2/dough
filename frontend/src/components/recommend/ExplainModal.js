@@ -39,7 +39,7 @@ function Triangle () {
                 <filter id="다각형_1" x="0" y="0" width="41.5" height="38" filterUnits="userSpaceOnUse">
                 <feOffset dy="1" input="SourceAlpha"/>
                 <feGaussianBlur stdDeviation="4" result="blur"/>
-                <feFlood flood-opacity="0.161"/>
+                <feFlood floodOpacity="0.161"/>
                 <feComposite operator="in" in2="blur"/>
                 <feComposite in="SourceGraphic"/>
                 </filter>

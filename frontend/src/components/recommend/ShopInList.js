@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 import './ShopInList.css';
 import SlideImages from "../common/SlideImages";
+import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 
 import Chevron from '../icon/Chevron';
 import WonIcon from '../icon/Won';
@@ -25,10 +27,17 @@ function ShopInList (props) {
         setDetailedHeight(fold ? "0px" : `${detailed.current.scrollHeight}px`);
     }, [fold])
 
+    
+    const dispatch = useDispatch();
+    const openPage = (shop) => {
+        dispatch(openShopPage());
+        document.body.style.overflow = 'hidden';
+        dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    }
     return (
         <div className="shopInList">
             <div className="header">
-                <div className="info">
+                <div className="info" onClick={()=>{openPage(elem)}}>
                     <div className="nameAndButton">
                         <div className="name">{elem.name}</div>
                         <div className="moreButton"><Chevron width={"0.7em"} color={"rgba(0,0,0,0.9)"}/></div>
