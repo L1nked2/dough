@@ -2,12 +2,12 @@ from torch import nn, sqrt
 import torch
 import sys
 from math import sqrt
-import numpy as np
 
-sys.path.append('')
+sys.path.append('.')
 from ImageClassification.model.MBConv import MBConvBlock
 from ImageClassification.model.SelfAttention import ScaledDotProductAttention
 
+CLASSIFIER = 8 # classification channel
 
 class CoAtNet(nn.Module):
     def __init__(self, in_ch, image_size, out_chs=[64, 96, 192, 384, 768]):
@@ -15,6 +15,7 @@ class CoAtNet(nn.Module):
         self.out_chs = out_chs
         self.maxpool2d = nn.MaxPool2d(kernel_size=2, stride=2)
         self.maxpool1d = nn.MaxPool1d(kernel_size=2, stride=2)
+        self.gap = nn.AdaptiveAvgPool2d(1)
 
         self.s0 = nn.Sequential(
             nn.Conv2d(in_ch, in_ch, kernel_size=3, padding=1),
@@ -55,6 +56,12 @@ class CoAtNet(nn.Module):
             nn.Linear(out_chs[4], out_chs[4])
         )
 
+        self.mlp5 = nn.Sequential(
+            nn.Linear(out_chs[4], CLASSIFIER),
+            nn.Softmax(dim=0)
+        )
+
+
     def forward(self, x):
         B, C, H, W = x.shape
         # stage0
@@ -75,13 +82,18 @@ class CoAtNet(nn.Module):
         y = self.maxpool1d(y.permute(0, 2, 1))
         N = y.shape[-1]
         y = y.reshape(B, self.out_chs[4], int(sqrt(N)), int(sqrt(N)))
+        # stage5
+        y = self.gap(y)
+        y = y.reshape(self.out_chs[4])
+        y = self.mlp5(y)
 
         return y
 
 
 if __name__ == '__main__':
     x = torch.randn(1, 3, 224, 224)
-    print(np.shape(x))
+    print(x.shape)
     coatnet = CoAtNet(3, 224)
     y = coatnet(x)
     print(y.shape)
+    print(y)
