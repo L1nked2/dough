@@ -17,7 +17,7 @@ from google.oauth2 import service_account
 from firebase_admin import firestore
 from google.cloud import storage
 
-from firebase_document import Document
+from firebase_document import PlaceDocument
 
 """
 FireStore(DB)
@@ -75,7 +75,7 @@ class DB:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload(self, document : Document):
+    def upload(self, document : PlaceDocument):
         raise NotImplementedError
 
     """
@@ -96,11 +96,22 @@ class DB:
 
 def convert_documents_and_upload_to_db(raw_db_from_crawling : str):
     # 1. open dumped raw_db with `dill`
-    
-    # 2. for all dict in raw_db, make it into `Document` and do converting
 
-    # 2. init `DB` instance
+    # crawler/raw_db/강남역_맛집 is single dumped dill file
+    # use below to load
+    #     file = open(path, "rb")
+    #     data_body = dill.load(file)
+    #     self.station_info = data_body[0] ----> init StationDocument -> station_db에 넣기
+    #     self.place_db_list = data_body[1] -----> init PlaceDocument -> place_db에 넣기 (단, 이미 있으면 parents_list append)
+    #     return 
 
-    # 3. upload `Document`s to `DB`
+    # 2. for all dict in raw_db, make it into `PlaceDocument` and do converting
+
+    # 3. init `DB` instance
+
+    # 4. upload all `PlaceDocument`s to `DB`
     
+    # 5. By inspecting `place_db`, update `station_db` by sending a query to firestore s.t.
+    #    parent_station_list contains current station then collect ...
+
     raise NotImplementedError

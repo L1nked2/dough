@@ -24,4 +24,4 @@ if __name__ == "__main__":
 
     crawl(stations, search_keywords, crawler_options, done_list)
 
-    # upload_to_db(raw_db=done_list)
+    upload_to_db(raw_db=done_list)
