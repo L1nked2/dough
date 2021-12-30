@@ -128,8 +128,8 @@ async function getInfoBase(infotype, Id) {
 async function getUserInfo(req) {
     try {
         const userId = await getUserId(req.body.userToken);
-        const UserInfo = await getInfoBase("user", userId);
-        return { UserInfo: UserInfo };
+        const userInfo = await getInfoBase("user", userId);
+        return { userInfo: userInfo };
     }
     catch (error) {
         console.log(error);
