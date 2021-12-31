@@ -1,18 +1,27 @@
-from torch import nn, sqrt
+from torch import nn
 import torch
 import sys
 from math import sqrt
 
 sys.path.append('.')
+sys.path.append('..')
 from ImageClassification.model.MBConv import MBConvBlock
 from ImageClassification.model.SelfAttention import ScaledDotProductAttention
 
-CLASSIFIER = 8 # classification channel
 
+# initialization
+def weight_init(layer):
+    if isinstance(layer, nn.Conv2d):
+        nn.init.xavier_uniform_(layer.weight)
+    elif isinstance(layer, nn.Linear):
+        nn.init.xavier_uniform_(layer.weight)
+
+# Model
 class CoAtNet(nn.Module):
-    def __init__(self, in_ch, image_size, out_chs=[64, 96, 192, 384, 768]):
-        super().__init__()
+    def __init__(self, in_ch, image_size, classes, out_chs=[64, 96, 192, 384, 768]):
+        super(CoAtNet, self).__init__()
         self.out_chs = out_chs
+        self.classes = classes
         self.maxpool2d = nn.MaxPool2d(kernel_size=2, stride=2)
         self.maxpool1d = nn.MaxPool1d(kernel_size=2, stride=2)
         self.gap = nn.AdaptiveAvgPool2d(1)
@@ -57,10 +66,9 @@ class CoAtNet(nn.Module):
         )
 
         self.mlp5 = nn.Sequential(
-            nn.Linear(out_chs[4], CLASSIFIER),
-            nn.Softmax(dim=0)
+            nn.Linear(out_chs[4], self.classes),
+            nn.Softmax(dim=1)
         )
-
 
     def forward(self, x):
         B, C, H, W = x.shape
@@ -84,16 +92,17 @@ class CoAtNet(nn.Module):
         y = y.reshape(B, self.out_chs[4], int(sqrt(N)), int(sqrt(N)))
         # stage5
         y = self.gap(y)
-        y = y.reshape(self.out_chs[4])
+        y = y.reshape(B, self.out_chs[4])
         y = self.mlp5(y)
 
         return y
 
 
 if __name__ == '__main__':
-    x = torch.randn(1, 3, 224, 224)
-    print(x.shape)
-    coatnet = CoAtNet(3, 224)
+    x = torch.randn(4, 3, 224, 224)
+    # print(x.shape)
+    coatnet = CoAtNet(3, 224, 8)
+    coatnet.apply(weight_init)
     y = coatnet(x)
     print(y.shape)
     print(y)

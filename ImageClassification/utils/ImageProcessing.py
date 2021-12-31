@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import transforms
 
-img_size = 224
 
 '''
 def center_crop(im):
@@ -25,10 +24,10 @@ def center_crop(im):
 '''
 
 class ImageTransform():
-    def __init__(self):
+    def __init__(self, args):
         self.data_transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.RandomCrop(img_size),
+            transforms.RandomCrop(args.img_size),
             transforms.GaussianBlur(kernel_size=3)
         ])
 
@@ -36,7 +35,7 @@ class ImageTransform():
         return self.data_transform(img)
 
 '''
-something more for processing
+something more for utils
 '''
 
 if __name__=='__main__':
