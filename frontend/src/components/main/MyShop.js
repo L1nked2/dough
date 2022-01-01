@@ -65,7 +65,8 @@ function MyShop(props) {
   }
 
   useEffect(() => {
-    getIdToken(true).then(function(idToken) {
+    const user = getAuth().currentUser;
+    getIdToken(user, true).then(function(idToken) {
       console.log(idToken);
       const getPlaceList = async () => {
         const res = await axios({
