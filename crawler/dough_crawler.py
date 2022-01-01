@@ -40,8 +40,8 @@ parse_table_naver = dict(
     category='place_category',
     bizHour='place_operating_time',
     menus='place_menu_info',
-    menuImages='place_photo_menu',
-    images='place_photo_provided',
+    menuImages='place_menu_photo_list',
+    images='place_provided_photo_list',
     phone='place_telephone',
     x='place_coor_x',
     y='place_coor_y',
@@ -248,7 +248,7 @@ class DoughCrawler:
                 self.crawler_msg(f'{link}, {parse_table_naver[key]} treated as None')
                 place_db[parse_table_naver[key]] = None
         place_db['place_naver_link'] = f'{naver_restaurant_root_url}/{link}'
-        place_db['parent_stations'] = [self.naver_station_name]
+        place_db['parent_station_list'] = [self.naver_station_name]
         place_db['place_last_timestamp'] = datetime.date.today().isoformat()
         place_db['place_uuid'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, link))
 
@@ -319,7 +319,7 @@ class DoughCrawler:
             self.crawler_msg(f'{relations} photo not exists, {link}')
 
         # add img_links to current_place_db
-        self.current_place_db[f'place_photo_{relations}'] = img_links
+        self.current_place_db[f'place_{relations}_photo_list'] = img_links
 
         # download images
         self._download_photo(self.naver_search_query, self.current_place_db, relations)
@@ -341,17 +341,21 @@ class DoughCrawler:
             place_kind=None,
             place_menu_info=[],
             place_naver_link=None,
-            place_photo_provided=[],
-            place_photo_inside=[],
-            place_photo_food=[],
-            place_photo_menu=[],
-            place_photo_main_list=[],
+
+            place_main_photo_list=[],
+            place_provided_photo_list=[],
+            place_inside_photo_list=[],
+            place_food_photo_list=[],
+            place_menu_photo_list=[],
+            
             place_telephone=None,
             place_last_timestamp=None,
             parent_station_list=[],
             place_coor_x=None,
             place_coor_y=None,
             place_views=0,
+            place_likes=0, 
+            place_recent_views=0,
         )
 
         self.current_place_db = place_document_empty
@@ -380,7 +384,7 @@ class DoughCrawler:
             self.crawler_msg('type is empty')
             raise TypeError
 
-        img_url_array = place_db[f'place_photo_{img_type}']
+        img_url_array = place_db[f'place_{img_type}_photo_list']
         place_uuid = place_db['place_uuid']
 
         if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
