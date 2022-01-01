@@ -70,7 +70,7 @@ class DoughCrawler:
 
         # variables for db collecting
         # data to be saved by self.save(), can be loaded with self.load()
-        self.station_info = dict()
+        self.station_raw_info = dict()
         self.current_place_db = None
         self.place_db_list = []
         self.photo_error_list = []
@@ -116,12 +116,13 @@ class DoughCrawler:
         station_query_table = dict(query=station, displayCount=1, lang='ko')
         station_res = requests.get(naver_station_query_root_url,
                                    params=station_query_table)
-        print(station_res.status_code)
       
         if station_res.status_code == 200:
             station_res = station_res.json()
+        else:
+            assert "status_code not 200"
 
-        self.station_info = station_res['result']['place']['list'][0]
+        self.station_raw_info = station_res['result']['place']['list'][0]
         cookie_res = requests.get("https://www.naver.com/")
         if cookie_res.status_code == 200:
             self.site_cookies = cookie_res.cookies.get_dict()

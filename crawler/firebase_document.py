@@ -83,13 +83,15 @@ class PlaceDocument:
     
     raise NotImplementedError
 
+
+
 class StationDocument:
-  def __init__(self, station_data_dict : dict):
-    self.__name = station_data_dict['station_name']
-    self.__coor_x = station_data_dict['station_coor_x']
-    self.__coor_y = station_data_dict['station_coor_y']
-    self.__views = station_data_dict['station_views']
-    self.__place_list = station_data_dict['place_thumb_list']
+  def __init__(self, raw_station_data_dict : dict):
+    self.__name = raw_station_data_dict['name']
+    self.__coor_x = raw_station_data_dict['x']
+    self.__coor_y = raw_station_data_dict['y']
+    self.__views = 0 
+    self.__place_list = list()
 
   def into_dict(self) -> dict:
     station_data_dict = dict()
@@ -97,5 +99,5 @@ class StationDocument:
     station_data_dict['station_coor_x'] = self.__coor_x
     station_data_dict['station_coor_y'] = self.__coor_y 
     station_data_dict['station_views'] = self.__views
-    station_data_dict['place_thumb_list'] = self.__place_list
+    station_data_dict['place_list'] = self.__place_list
     return station_data_dict
