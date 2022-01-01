@@ -250,7 +250,7 @@ class DoughCrawler:
         place_db['place_naver_link'] = f'{naver_restaurant_root_url}/{link}'
         place_db['parent_stations'] = [self.naver_station_name]
         place_db['place_last_timestamp'] = datetime.date.today().isoformat()
-        place_db['place_uuid'] = uuid.uuid5(uuid.NAMESPACE_DNS, link)
+        place_db['place_uuid'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, link))
 
         # make directory for images
         place_uuid = place_db['place_uuid']
