@@ -125,7 +125,10 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
-            place_docu.convert_with()
-            db.upload_place(place_docu)
+            # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
+            # do not upload on CDN          
+            if place_docu.has_photo_folder():
+                place_docu.convert_with()
+                db.upload_place(place_docu)
 
     db.update_station_db()
