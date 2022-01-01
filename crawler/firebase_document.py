@@ -114,17 +114,19 @@ class PlaceDocument:
         temp_tags = np.append(item[1:], category)
         cat_to_tag_table[item[0]] = temp_tags
 
-        temp_category = self._category
-        if not temp_category in cat_to_tag_table.keys():
-          print(f' category of {self._name} is weird. {temp_category}')
+    temp_category = self._category
+    if temp_category in cat_to_tag_table.keys():
+      temp_kind = cat_to_tag_table[temp_category]
+      self._kind = temp_kind[:-2]
+      self._cluster_b = temp_kind[-2]
+      self._category = temp_kind[-1]
+    else: 
+      print(f' category of {self._name} is weird. Its category is {temp_category}')
 
-        temp_kind = cat_to_tag_table[temp_category]
-        self._kind = temp_kind[:-2]
-        self._cluster_b = temp_kind[-2]
-        self._category = temp_kind[-1]
-  
+     
   # (2) fill in photo_provided_{food,inside,...} with `photo_dir`
   def _fill_in_photo_provided(self, photo_dir):
+    
     raise NotImplementedError
   
   # (3) fill in main_list (i.e. thumbnail photos) with `photo_dir`
