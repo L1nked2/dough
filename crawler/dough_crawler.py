@@ -416,7 +416,7 @@ class DoughCrawler:
             path = f'./raw_db/{name}'
         else:
             path = f'./raw_db/db'
-        data_body = [self.station_info, self.place_db_list]
+        data_body = [self.station_raw_info, self.place_db_list]
         file = open(path, "wb+")
         dill.dump(data_body, file=file)
         file.close()
@@ -425,7 +425,7 @@ class DoughCrawler:
     def load(self, path):
         file = open(path, "rb")
         data_body = dill.load(file)
-        self.station_info = data_body[0]
+        self.station_raw_info = data_body[0]
         self.place_db_list = data_body[1]
         return
 
