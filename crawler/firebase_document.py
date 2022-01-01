@@ -93,6 +93,7 @@ class PlaceDocument:
     self._fill_in_photo_lists(photo_dir)
     self._fill_in_cluster_a(classifier_path)
 
+
   # (1) fill in category with files in `category_to_tag`
   # CODE COPY-PASTED FROM 이어진's
   def _fill_in_category(self, cat_to_tag_table_path):
@@ -147,33 +148,49 @@ class PlaceDocument:
   /thumbnail_inside
 
   <new_expected>
-  _food' = subset of _food, determined by /food
-  _inside' = subset of _inside, determined by /inside
+  _food' = _food (OLD : subset of _food, determined by /food ... cancelled due to time constraints of labeler)
+  _inside' = _inside (OLD : subset of _inside, determined by /inside ... cancelled due to time constraints of labeler)
   _provided' = _provided
   _main = one from _inside, determined by /thumbnail_inside ; zero~three from _food, determined by /thumbnail_food
   """
   def _fill_in_photo_lists(self, photo_dir_path):
-    # e.g. ./temp_img/강남역_맛집/505e7ffc-dd02-5ade-bc1d-4704a86e2385
-    # in self._category (after filling in), 맛집 = 음식점, 술집 = 술집, 카페 = 카페, need to change 음식점 to 맛집 to be consistent with photo directory name
-    adjusted_category = self._category if self._category != "음식점" else "맛집" 
-    place_dir_path = os.path.join(photo_dir_path, f'{self._parent_station}_{adjusted_category}', self._uuid)
+    # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/"    
+    place_dir_path = os.path.join(photo_dir_path, self._uuid)
 
-    food_dir = os.path.join(place_dir_path, "food")
+    # paths to photo directoires
+    main_food_dir, main_inside_dir = os.path.join(place_dir_path, "thumbnail_food"), os.path.join(place_dir_path, "thumbnail_inside")
 
+    # main_food_entries: e.g. ["f0.jpg", "f24.jpg", "a6.jpg"]
+    main_food_entries, main_inside_entries = os.listdir(main_food_dir), os.listdir(main_inside_dir)
 
-    inside_dir = os.path.join(place_dir_path, "inside")
-    main_food_dir = os.path.join(place_dir_path, "thumbnail_food")
-    main_inside_dir = os.path.join(place_dir_path, "thumbnail_inside")
+    # "f24.jpg" --> "f", 24
+    def extract_kind_index(entry : str) -> tuple[str, int]:
+      first_char = entry[0] # "f"
+      assert first_char in ["a", "f", "i"]
+      number = entry[1:].split(".")[0] # "24"
+      assert number.isnumeric()
+      return first_char, int(number) 
 
-    # food_entries: e.g. ["f0.jpg", "f1.jpg", ...]
-    food_entries, inside_entries = os.listdir(food_dir), os.listdir(inside_dir)
-    main_food_entries, main_food_entries = os.listdir(main_food_dir), os.listdir(main_inside_dir)
+    main_food_infos = [extract_kind_index(entry) for entry in main_food_entries]
+    main_inside_infos = [extract_kind_index(entry) for entry in main_inside_entries]
+   
+    assert 0<=len(main_food_infos)<=3
+    assert len(main_inside_infos)==1
 
-    print(food_entries)
-    #food_indexe
+    # [("i", 4), ("a", 4), ("f", 4), ("f", 27)]
+    main_infos = main_inside_infos + sorted(main_food_infos) 
 
+    def select_photo_link(kind : str, index : int) -> int:
+      if kind == "f":
+        return self._food_photo_list[index]
+      elif kind == "a":
+        return self._provided_photo_list[index]
+      elif kind == "i":
+        return self._inside_photo_list[index]
+      else:
+        assert False, "kind must be one of f, a, i"
 
-    raise NotImplementedError
+    self._main_photo_list = [select_photo_link(info[0], info[1]) for info in main_infos]
   
   
   # (3) fill in cluster_a with `classifier_path`

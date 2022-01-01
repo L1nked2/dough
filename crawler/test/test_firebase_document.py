@@ -49,5 +49,9 @@ def test_place_document_convert_fill_in_photo_lists():
     place_docu._fill_in_category("../cat_to_tag_table")
     place_docu._fill_in_photo_lists("../temp_img")
 
-    ## use directory of 505ef7ffc ...
-    pass
+    assert place_docu._main_photo_list == [
+        place_docu._provided_photo_list[7],
+        place_docu._provided_photo_list[6],
+        place_docu._provided_photo_list[24],
+        place_docu._food_photo_list[12]
+    ]
