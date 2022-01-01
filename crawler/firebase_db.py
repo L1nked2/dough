@@ -55,19 +55,19 @@ class DB:
         google_cred = service_account.Credentials.from_service_account_file(certificate_file)
         
         # create interfaces to DB
-        self.__db = firestore.client() # client for interacting DB (= firestore)
-        self.__db_transaction = self.__firebase_db.transaction() # interface to transaction that uses this client(DB)
+        self._db = firestore.client() # client for interacting DB (= firestore)
+        self._db_transaction = self._db.transaction() # interface to transaction that uses this client(DB)
         
         # create references to collections under DB
-        self.__db_place_collection = self.__db.collection('place_db')
-        self.__db_station_collection = self.__db.collection('station_db')
-        self.__db_user_collection = self.__db.collection('user_db')
-        self.__db_post_collection = self.__db.collection('post_db')
+        self._db_place_collection = self._db.collection('place_db')
+        self._db_station_collection = self._db.collection('station_db')
+        self._db_user_collection = self._db.collection('user_db')
+        self._db_post_collection = self._db.collection('post_db')
 
         # create interfaces to CDN
-        self.__cdn = storage.Client(credentials=credentials) # CDN (= storage)
-        self.__bucket_root_url = bucket_root_url
-        self.__cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
+        self._cdn = storage.Client(credentials=credentials) # CDN (= storage)
+        self._bucket_root_url = bucket_root_url
+        self._cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
 
     def upload_station(self, document : StationDocument):
         raise NotImplementedError
@@ -87,7 +87,7 @@ class DB:
     """
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
-    def __upload_photos():
+    def _upload_photos():
         raise NotImplementedError
 
     """
