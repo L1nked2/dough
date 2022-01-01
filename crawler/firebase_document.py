@@ -18,6 +18,7 @@ Functions
 import numpy as np
 from numpy.lib.function_base import place 
 import pandas as pd
+import os
 
 class PlaceDocument:
   def __init__(self, place_data_dict : dict):
@@ -33,11 +34,13 @@ class PlaceDocument:
     self._views = place_data_dict['place_views']
     self._likes = place_data_dict['place_likes']
     self._recent_views = place_data_dict['place_recent_views']
+
     self._main_photo_list = place_data_dict['place_main_photo_list']
     self._provided_photo_list = place_data_dict['place_provided_photo_list']
     self._food_photo_list = place_data_dict['place_food_photo_list']
     self._inside_photo_list = place_data_dict['place_inside_photo_list']
     self._menu_photo_list = place_data_dict['place_menu_photo_list']
+
     self._road_address = place_data_dict['place_road_address']
     self._legacy_address = place_data_dict['place_legacy_address']
     self._menu_info = place_data_dict['place_menu_info']
@@ -62,11 +65,13 @@ class PlaceDocument:
     place_data_dict['place_views'] = self._views
     place_data_dict['place_likes'] = self._likes
     place_data_dict['place_recent_views'] = self._recent_views
-    place_data_dict['place_main_photo_list'] = self._main_photo_list
-    place_data_dict['place_provided_photo_list'] = self._provided_photo_list
+
     place_data_dict['place_food_photo_list'] = self._food_photo_list
     place_data_dict['place_inside_photo_list'] = self._inside_photo_list
     place_data_dict['place_menu_photo_list'] = self._menu_photo_list
+    place_data_dict['place_main_photo_list'] = self._main_photo_list 
+    place_data_dict['place_provided_photo_list'] = self._provided_photo_list
+
     place_data_dict['place_road_address'] = self._road_address
     place_data_dict['place_legacy_address'] = self._legacy_address
     place_data_dict['place_menu_info'] = self._menu_info
@@ -82,8 +87,7 @@ class PlaceDocument:
     classifier_path=None):
 
     self._fill_in_category(category_to_tag_dir)
-    self._fill_in_photo_provided(photo_dir)
-    self._fill_in_main_list(photo_dir)
+    self._fill_in_photo_lists(photo_dir)
     self._fill_in_cluster_a(classifier_path)
 
   # (1) fill in category with files in `category_to_tag`
@@ -124,18 +128,51 @@ class PlaceDocument:
       print(f' category of {self._name} is weird. Its category is {temp_category}')
 
      
-  # (2) fill in photo_provided_{food,inside,...} with `photo_dir`
-  def _fill_in_photo_provided(self, photo_dir):
-    
+  # (2) fill in *_photo_lists with `photo_dir_path`
+
+  """
+  <old>
+  _food : full
+  _inside : full
+  _provided : full
+  _main : empty
+
+  <auxiliary>
+  /food
+  /inside
+  (/menu ... will not be used here)
+  /thumbnail_food
+  /thumbnail_inside
+
+  <new_expected>
+  _food' = subset of _food, determined by /food
+  _inside' = subset of _inside, determined by /inside
+  _provided' = _provided
+  _main = one from _inside, determined by /thumbnail_inside ; zero~three from _food, determined by /thumbnail_food
+  """
+  def _fill_in_photo_lists(self, photo_dir_path):
+
+    place_dir_path = os.path.join(photo_dir_path, )
+    food_dir = os.path.join(photo_dir_path, "/food")
+    inside_dir = os.path.join(photo_dir_path, "/inside")
+    main_food_dir = os.path.join(photo_dir_path, "/thumbnail_food")
+    main_inside_dir = os.path.join(photo_dir_path, "/thumbnail_inside")
+
+    # food_entries: e.g. ["f0.jpg", "f1.jpg", ...]
+    food_entries, inside_entries = os.listdir(food_dir), os.listdir(inside_dir)
+    main_food_entries, main_food_entries = os.listdir(main_food_dir), os.listdir(main_inside_dir)
+
+    print(food_entries)
+    #food_indexe
+
+
     raise NotImplementedError
   
-  # (3) fill in main_list (i.e. thumbnail photos) with `photo_dir`
-  def _fill_in_main_list(self):
-    raise NotImplementedError
   
-  # (4) fill in cluster_a with `classifier_path`
+  # (3) fill in cluster_a with `classifier_path`
   def _fill_in_cluster_a(self):
-    raise NotImplementedError
+    pass # classifier side not implemented yet
+    #raise NotImplementedError
 
 
 class StationDocument:

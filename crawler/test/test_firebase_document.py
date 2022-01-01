@@ -42,3 +42,11 @@ def test_place_document_convert_fill_in_cateogry():
     assert place_docu._cluster_b == 0
     assert place_docu._category == '음식점'
   
+
+def test_place_document_convert_fill_in_photo_lists():
+    place_docu = PlaceDocument(deepcopy(PLACE_DICT_SAMPLE))
+
+    place_docu._fill_in_photo_lists("../temp_img")
+
+    ## use directory of 505ef7ffc ...
+    pass
