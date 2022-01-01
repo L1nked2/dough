@@ -65,30 +65,32 @@ function MyShop(props) {
   }
 
   useEffect(() => {
-    const user = getAuth().currentUser;
-    getIdToken(user, true).then(function(idToken) {
-      console.log(idToken);
-      const getPlaceList = async () => {
-        const res = await axios({
-            method: 'POST',
-            url: 'https://dough-survey.web.app/api/station',
-            headers: {
-                "Content-Type": `application/json`
-            },
-            data: {stationId: "00000001", userToken: idToken, category: "음식점", tags: ["분식"]},
-        }).then(response => {
-            console.log(response);
-            return response.data;
-        }).catch(err => {
-            console.log(err);
-          });
-        }
-      getPlaceList();
-    }).catch(function(error) {
-      console.log(error);
-    });
-    
-    
+    getAuth().onAuthStateChanged(function(user){
+      console.log(user);
+      if (user) {
+        user.getIdToken(true).then(function(idToken) {
+          console.log(idToken);
+          const getPlaceList = async () => { 
+            const res = await axios({
+                method: 'POST',
+                url: 'https://dough-survey.web.app/api/station',
+                headers: {
+                    "Content-Type": `application/json`
+                },
+                data: {stationId: "00000001", userToken: idToken, category: "음식점", tags: ["분식"]},
+            }).then(response => {
+                console.log(response);
+                return response.data;
+            }).catch(err => {
+                console.log(err);
+              });
+            }
+          getPlaceList();
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    })
   },[]);
 
   return (
