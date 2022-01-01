@@ -46,7 +46,10 @@ class PlaceDocument:
     self._menu_info = place_data_dict['place_menu_info']
     self._naver_link = place_data_dict['place_naver_link']
     self._telephone = place_data_dict['place_telephone']
-    self._parent_station_list = place_data_dict['parent_station_list']
+    
+    assert len(place_data_dict['parent_station_list']) == 1, "at crawling, each place dict actually have only one parent station"
+    self._parent_station = place_data_dict['parent_station_list'][0]
+
     self._last_timestamp = place_data_dict['place_last_timestamp']
 
     self.has_converted = False
@@ -77,7 +80,7 @@ class PlaceDocument:
     place_data_dict['place_menu_info'] = self._menu_info
     place_data_dict['place_naver_link'] = self._naver_link
     place_data_dict['place_telephone'] = self._telephone
-    place_data_dict['parent_station_list'] = self._parent_station_list
+    place_data_dict['parent_station_list'] = [self._parent_station] # list, because after uploaded to DB, parent can be more than one.
     place_data_dict['place_last_timestamp'] = self._last_timestamp
     return place_data_dict
 
@@ -129,7 +132,6 @@ class PlaceDocument:
 
      
   # (2) fill in *_photo_lists with `photo_dir_path`
-
   """
   <old>
   _food : full
@@ -151,12 +153,17 @@ class PlaceDocument:
   _main = one from _inside, determined by /thumbnail_inside ; zero~three from _food, determined by /thumbnail_food
   """
   def _fill_in_photo_lists(self, photo_dir_path):
+    # e.g. ./temp_img/강남역_맛집/505e7ffc-dd02-5ade-bc1d-4704a86e2385
+    # in self._category (after filling in), 맛집 = 음식점, 술집 = 술집, 카페 = 카페, need to change 음식점 to 맛집 to be consistent with photo directory name
+    adjusted_category = self._category if self._category != "음식점" else "맛집" 
+    place_dir_path = os.path.join(photo_dir_path, f'{self._parent_station}_{adjusted_category}', self._uuid)
 
-    place_dir_path = os.path.join(photo_dir_path, )
-    food_dir = os.path.join(photo_dir_path, "/food")
-    inside_dir = os.path.join(photo_dir_path, "/inside")
-    main_food_dir = os.path.join(photo_dir_path, "/thumbnail_food")
-    main_inside_dir = os.path.join(photo_dir_path, "/thumbnail_inside")
+    food_dir = os.path.join(place_dir_path, "food")
+
+
+    inside_dir = os.path.join(place_dir_path, "inside")
+    main_food_dir = os.path.join(place_dir_path, "thumbnail_food")
+    main_inside_dir = os.path.join(place_dir_path, "thumbnail_inside")
 
     # food_entries: e.g. ["f0.jpg", "f1.jpg", ...]
     food_entries, inside_entries = os.listdir(food_dir), os.listdir(inside_dir)

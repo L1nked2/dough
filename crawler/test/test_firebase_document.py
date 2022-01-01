@@ -46,6 +46,7 @@ def test_place_document_convert_fill_in_cateogry():
 def test_place_document_convert_fill_in_photo_lists():
     place_docu = PlaceDocument(deepcopy(PLACE_DICT_SAMPLE))
 
+    place_docu._fill_in_category("../cat_to_tag_table")
     place_docu._fill_in_photo_lists("../temp_img")
 
     ## use directory of 505ef7ffc ...
