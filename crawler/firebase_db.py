@@ -16,8 +16,10 @@ from firebase_admin import credentials
 from google.oauth2 import service_account
 from firebase_admin import firestore
 from google.cloud import storage
+import os 
+import dill
 
-from firebase_document import PlaceDocument
+from firebase_document import PlaceDocument, StationDocument
 
 """
 FireStore(DB)
@@ -67,6 +69,9 @@ class DB:
         self.__bucket_root_url = bucket_root_url
         self.__cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
 
+    def upload_station(self, document : StationDocument):
+        raise NotImplementedError
+    
     """
     upload new Document to collection.
     (1) by default, all fields in dictionary directly to JSON
@@ -75,7 +80,8 @@ class DB:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload(self, document : PlaceDocument):
+    def upload_place(self, document : PlaceDocument):
+        # if not document.has_converted: assert "must upload converted place"
         raise NotImplementedError
 
     """
@@ -94,24 +100,32 @@ class DB:
     # def upload_transaction():
     #     raise NotImplementedError
 
-def convert_documents_and_upload_to_db(raw_db_from_crawling : str):
-    # 1. open dumped raw_db with `dill`
+    """
+    update `station_db`'s each station's `place_list` field with `place_db` info.
+    by sending a query to firestore s.t.
+    parent_station_list contains current station then collect ...
+    """
+    def update_station_db():
+        raise NotImplemented
 
-    # crawler/raw_db/강남역_맛집 is single dumped dill file
-    # use below to load
-    #     file = open(path, "rb")
-    #     data_body = dill.load(file)
-    #     self.station_info = data_body[0] ----> init StationDocument -> station_db에 넣기
-    #     self.place_db_list = data_body[1] -----> init PlaceDocument -> place_db에 넣기 (단, 이미 있으면 parents_list append)
-    #     return 
+def convert_documents_and_upload_to_db(path_to_raw_db : str):
+    db = DB()
 
-    # 2. for all dict in raw_db, make it into `PlaceDocument` and do converting
+    for entry in os.listdir(path_to_raw_db):
+        filename = os.path.join(path_to_raw_db, entry)
+        if not os.path.isfile(filename): continue
 
-    # 3. init `DB` instance
+        # e.g. 강남역_맛집, 뚝섬역_술집
+        station_category_dumped = filename 
+        # 강남역 info + all (맛집)places near 강남역 infos
+        raw_station_dict, place_dict_list = dill.load(open(station_category_dumped))
+        
+        station_docu = StationDocument(raw_station_dict)
+        db.upload_station(station_docu)        
 
-    # 4. upload all `PlaceDocument`s to `DB`
-    
-    # 5. By inspecting `place_db`, update `station_db` by sending a query to firestore s.t.
-    #    parent_station_list contains current station then collect ...
+        for place_dict in place_dict_list:
+            place_docu = PlaceDocument(place_dict)
+            place_docu.convert_with()
+            db.upload_place(place_docu)
 
-    raise NotImplementedError
+    db.update_station_db()
