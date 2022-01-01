@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from './Header';
 import ExpandIcon2 from "../icon/Expand2";
+import MapIcon from "../icon/Map";
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 import { openListPage, setListPageContents } from "../../actions/recommendPageInfo"
 
@@ -184,6 +185,11 @@ function ResultPageImageSlide (props) {
   const slideContentList = [testResult.mainImg, testResult.subImg1, testResult.subImg2, testResult.subImg3];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const sampleCuration = {
+    name: "컨템포",
+    station: "성수",
+    value1: 80,value2: 80,value3: 80,value4: 80,
+  }
   return (
     <Swiper pagination={{clickable: true}} loop={true}
             slidesPerView={3} slidesPerView={'auto'} 
@@ -206,6 +212,13 @@ function ResultPageImageSlide (props) {
                 <div className="modal">
                   <div className="closeButton" onClick={() => {setIsModalOpen(false)}}>
                     <ExpandIcon2 width={'1em'} color="#FFFFFF" />
+                  </div>
+                  <div className="content">
+                    <span className="station">
+                      <MapIcon width={"0.8em"} color="#FFFFFF" strokeWidth={0.01}/>
+                      <span id="station">{sampleCuration.station}</span>
+                    </span>
+                    <div></div>
                   </div>
                 </div> 
                 :

@@ -11,7 +11,7 @@ import { CSSTransition } from 'react-transition-group';
 import BackButton from '../components/icon/Back';
 import WonIcon from '../components/icon/Won';
 import LocationIcon from '../components/icon/Location';
-import MapIcon from '../components/icon/MapBold';
+import MapBoldIcon from '../components/icon/MapBold';
 import ClockIcon from '../components/icon/Clock';
 import CallIcon from '../components/icon/Call';
 import MenuIcon from '../components/icon/Menu';
@@ -93,9 +93,9 @@ function ShopModal() {
     useEffect(() => {
         // axios 
         if (gallery.length !== 0) {
-            if (galleryType === "store"){setGallery(shopPageContent.placeData.place_photo_list);}
-            else if (galleryType === "inside"){setGallery(shopPageContent.placeData.place_photo_list);}
-            else if (galleryType === "food"){setGallery(shopPageContent.placeData.place_photo_list);}
+            if (galleryType === "store"){setGallery(shopPageContent.placeInfo.place_photo_list);}
+            else if (galleryType === "inside"){setGallery(shopPageContent.placeInfo.place_photo_list);}
+            else if (galleryType === "food"){setGallery(shopPageContent.placeInfo.place_photo_list);}
         }
     }, [galleryType]);
 
@@ -109,6 +109,7 @@ function ShopModal() {
                 },
                 data: {stationId: "00000001", placeId: "00000001"},
             }).then(response => {
+                console.log(response);
                 return response.data;
             }).catch(err => {
                 console.log(err);
@@ -135,7 +136,7 @@ function ShopModal() {
         if (shopPageContent.isLoaded){
             setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
             setMenuHeight(eachMenu.current.scrollHeight * 3);
-            setGallery(shopPageContent.placeData.place_photo_list);
+            setGallery(shopPageContent.placeInfo.place_photo_list);
         }
     }, [shopPageContent])
     return (
@@ -162,20 +163,20 @@ function ShopModal() {
                     </div>
                     <div className="fourPictures" >
                         <div className="twoPictures">
-                            <img src={shopPageContent.placeData.place_photo_list[0]} alt="first" />
-                            <img src={shopPageContent.placeData.place_photo_list[1]} alt="second" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[0]} alt="first" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[1]} alt="second" />
                         </div>
                         <div className="twoPictures">
-                            <img src={shopPageContent.placeData.place_photo_list[2]} alt="third" />
-                            <img src={shopPageContent.placeData.place_photo_list[3]} alt="fourth" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[2]} alt="third" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[3]} alt="fourth" />
                         </div>
                     </div>
                     <div className="information">
                         <div className="eachInformation">
-                            <div className="icon"><MapIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
+                            <div className="icon"><MapBoldIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
                             <div className="contents">
-                                <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.placeData.place_road_address}</div>
-                                <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.placeData.place_road_address}`}</div>
+                                <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.placeInfo.place_road_address}</div>
+                                <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.placeInfo.place_road_address}`}</div>
                             </div>
                         </div>
                         <div className="eachInformation">
@@ -214,7 +215,7 @@ function ShopModal() {
                         </div>
                         <div className="eachInformation">
                             <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
-                            <a className="contents" href={shopPageContent.placeData.place_naver_link} target="_blank">{shopPageContent.placeData.place_naver_link}</a>
+                            <a className="contents" href={shopPageContent.placeInfo.place_naver_link} target="_blank">{shopPageContent.placeInfo.place_naver_link}</a>
                         </div>
                         <div className="eachInformation">
                             <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
