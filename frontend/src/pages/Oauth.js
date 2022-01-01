@@ -3,28 +3,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios';
 import { Cookies } from "react-cookie";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",
-  authDomain: "dough-survey.web.app",
-  databaseURL: "https://dough-survey-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "dough-survey",
-  storageBucket: "dough-survey.appspot.com",
-  messagingSenderId: "111678578513",
-  appId: "1:111678578513:web:32f35f3eb65cfb2f19bd70",
-  measurementId: "G-VS98EGYRJL"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+import { firebaseInit } from "../firebaseInit";
+firebaseInit();
 
 function Oauth() {
     const cookie = new Cookies();
