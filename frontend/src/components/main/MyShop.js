@@ -3,7 +3,7 @@ import { CSSTransition } from "react-transition-group";
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
-import { getAuth } from 'firebase/auth';
+import { getAuth, getIdToken } from 'firebase/auth';
 import { firebaseInit } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
@@ -65,8 +65,7 @@ function MyShop(props) {
   }
 
   useEffect(() => {
-    console.log(getAuth());
-    getAuth().currentUser.getIdToken(true).then(function(idToken) {
+    getIdToken(true).then(function(idToken) {
       console.log(idToken);
       const getPlaceList = async () => {
         const res = await axios({
