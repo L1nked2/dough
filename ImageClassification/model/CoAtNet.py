@@ -18,13 +18,14 @@ def weight_init(layer):
 
 # Model
 class CoAtNet(nn.Module):
-    def __init__(self, in_ch, image_size, classes, out_chs=[64, 96, 192, 384, 768]):
+    def __init__(self, in_ch, image_size, classes, dropout_rate, out_chs=[64, 96, 192, 384, 768]):
         super(CoAtNet, self).__init__()
         self.out_chs = out_chs
         self.classes = classes
         self.maxpool2d = nn.MaxPool2d(kernel_size=2, stride=2)
         self.maxpool1d = nn.MaxPool1d(kernel_size=2, stride=2)
         self.gap = nn.AdaptiveAvgPool2d(1)
+        self.dropout = nn.Dropout(dropout_rate)
 
         self.s0 = nn.Sequential(
             nn.Conv2d(in_ch, in_ch, kernel_size=3, padding=1),
@@ -91,6 +92,7 @@ class CoAtNet(nn.Module):
         N = y.shape[-1]
         y = y.reshape(B, self.out_chs[4], int(sqrt(N)), int(sqrt(N)))
         # stage5
+        y = self.dropout(y)
         y = self.gap(y)
         y = y.reshape(B, self.out_chs[4])
         y = self.mlp5(y)
