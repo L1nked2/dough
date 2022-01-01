@@ -6,7 +6,7 @@ Module firebase_doucment
 Classes
   PlaceDocument
   |_ Public Methods
-      PlaceDocument, convert_with, into_dict
+      PlaceDocument, has_photo_folder, convert_with, into_dict
   
   StationDocument
   |_ Public Methods
@@ -83,6 +83,9 @@ class PlaceDocument:
     place_data_dict['parent_station_list'] = [self._parent_station] # list, because after uploaded to DB, parent can be more than one.
     place_data_dict['place_last_timestamp'] = self._last_timestamp
     return place_data_dict
+
+  def has_photo_folder(self, category_to_tag_dir="./temp_img"):
+    raise NotImplementedError
 
   def convert_with(self, 
     category_to_tag_dir="./cat_to_tag_table",
