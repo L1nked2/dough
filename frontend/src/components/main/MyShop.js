@@ -1,5 +1,10 @@
 import React, {useState, useEffect } from 'react';
 import { CSSTransition } from "react-transition-group";
+import { Cookies } from 'react-cookie';
+import axios from 'axios';
+
+import { getAuth } from 'firebase/auth';
+import { firebaseInit } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
 import MoreShop from '../main/MoreShop';
@@ -11,6 +16,8 @@ import sampleImage from "../../img/login_background.png";
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openLocationPage, openMenuModal } from '../../actions/homePageInfo';
+
+firebaseInit();
 
 function MyShop(props) {
   const dispatch = useDispatch();
@@ -57,12 +64,39 @@ function MyShop(props) {
     }
   }
 
+  useEffect(() => {
+    console.log(getAuth());
+    getAuth().currentUser.getIdToken(true).then(function(idToken) {
+      console.log(idToken);
+      const getPlaceList = async () => {
+        const res = await axios({
+            method: 'POST',
+            url: 'https://dough-survey.web.app/api/station',
+            headers: {
+                "Content-Type": `application/json`
+            },
+            data: {stationId: "00000001", userToken: idToken, category: "음식점", tags: ["분식"]},
+        }).then(response => {
+            console.log(response);
+            return response.data;
+        }).catch(err => {
+            console.log(err);
+          });
+        }
+      getPlaceList();
+    }).catch(function(error) {
+      console.log(error);
+    });
+    
+    
+  },[]);
+
   return (
     <div className="myShop">
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
         <span onClick={()=>{openPage(openLocationPage)}} className="locationButton">
-          <MapIcon width={"1.253em"} color={"rgba(0,0,0,0.36)"}/>
+          <MapIcon width={"1.253em"} color={"rgba(0,0,0,0.36)"} strokeWidth={0.01}/>
           <span id="location">{`${currLocation.name === "위치 선택" ? "" : "서울/"}${currLocation.name}`}</span>
         </span>
       </div>

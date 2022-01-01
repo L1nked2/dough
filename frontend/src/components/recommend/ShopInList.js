@@ -8,7 +8,7 @@ import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 import Chevron from '../icon/Chevron';
 import WonIcon from '../icon/Won';
 import LocationIcon from '../icon/Location';
-import MapIcon from '../icon/MapBold';
+import MapBoldIcon from '../icon/MapBold';
 import MenuIcon from '../icon/Menu';
 import HeartIcon from '../icon/HeartSub';
 import HeartFilledIcon from '../icon/HeartFilled';
@@ -44,7 +44,7 @@ function ShopInList (props) {
                     </div>
                     <div className="severalInfoSet" >
                         <div className="severalInfo">
-                            <div className="button"><MapIcon height={"1.2em"} color={"rgba(0,0,0,0.9)"}/></div>
+                            <div className="button"><MapBoldIcon height={"1.2em"} color={"rgba(0,0,0,0.9)"}/></div>
                             <div>{elem.station}</div>
                         </div>
                         <div className="severalInfo">

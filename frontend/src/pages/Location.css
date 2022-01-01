@@ -137,7 +137,7 @@
     color: #3FB8D5;
 }
 
-.station {
+.locationPage .station {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
@@ -147,13 +147,13 @@
     font-family: "SpoqaRegular";
     color: rgba(0, 0, 0, 0.9);
 }
-.station .spellStation{
+.locationPage .station .spellStation{
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-bottom: 20px;
 }
-.station .spellStation .eachStation{
+.locationPage .station .spellStation .eachStation{
     cursor: pointer;
     padding-left: 10px;
     padding-right: 10px;
@@ -163,10 +163,10 @@
     user-select: none;
     background-color: white
 }
-.station .spellStation .eachStation.active{
+.locationPage .station .spellStation .eachStation.active{
     background-color: rgba(0, 0, 0, 0.12);
 }
-.station .spellStation .spell{
+.locationPage .station .spellStation .spell{
     position: absolute;
     right: 30px;
     color: rgba(0, 0, 0, 0.36);

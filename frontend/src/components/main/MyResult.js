@@ -9,7 +9,9 @@ function MyResult() {
     }
     return(
         <div>
+            <div className="resultIcon"><img src={testResult.iconImg} alt="testResult" /></div>
             <div className="resultHeader">{testResult.titleShort}</div>
+            <div className="resultDisc">{testResult.description}</div>
             <div className="resultContainer">
                 <div className="leftWord">
                     <div>차가운</div><div>어두운</div><div>모던한</div><div>고급스러운</div>

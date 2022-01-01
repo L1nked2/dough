@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Cookies } from 'react-cookie';
+
 import './Home.css';
 import Header from '../components/common/Header'
 import MyShop from '../components/main/MyShop'
@@ -22,7 +24,9 @@ function Home() {
   const initializedMenuList = useSelector((state) => state.homePageInfo.initializedList); 
   const dispatch = useDispatch();
 
+  const cookie = new Cookies();
   useEffect(() => {
+    const currAccessToken = cookie.get("accessToken");
     dispatch(initializeList(sampleList));
     if (!initializedMenuList) {
       dispatch(initialMenuState(fullFoodList, fullDrinkList))
