@@ -40,6 +40,8 @@ class PlaceDocument:
     self.__parent_station_list = place_data_dict['parent_station_list']
     self.__last_timestamp = place_data_dict['place_last_timestamp']
 
+    self.has_converted = False
+
   def into_dict(self) -> dict :
     place_data_dict = dict()
     place_data_dict['place_name'] = self.__name 
