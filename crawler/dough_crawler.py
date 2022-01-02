@@ -1,6 +1,8 @@
 """
 class DoughCrawler
 
+Fn crawl()
+
 WHAT FUNCTION IS API?
  .run_crawler_naver (this will do (1)~(4) all)
 
@@ -450,3 +452,13 @@ class DoughCrawler:
     # migrate img_transform part to firestore_lib, transform_img_url function(using db_list) add
     # resume_getting_photo function(using photo_error_list) add
 
+
+def crawl(stations, search_keywords, crawler_options, db_path):
+    done_list = os.listdir(db_path)
+    dhc = DoughCrawler()
+    for station_name in stations:
+        for search_keyword in search_keywords:
+            if f'{station_name}_{search_keyword}' in done_list:
+                continue
+            else:
+                dhc.run_crawler_naver(station_name=station_name, search_keyword=search_keyword, options=crawler_options)
