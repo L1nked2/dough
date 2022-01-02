@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 import './ShopInList.css';
 import SlideImages from "../common/SlideImages";
+import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 
 import Chevron from '../icon/Chevron';
 import WonIcon from '../icon/Won';
 import LocationIcon from '../icon/Location';
-import MapIcon from '../icon/MapBold';
+import MapBoldIcon from '../icon/MapBold';
 import MenuIcon from '../icon/Menu';
 import HeartIcon from '../icon/HeartSub';
 import HeartFilledIcon from '../icon/HeartFilled';
@@ -25,17 +27,24 @@ function ShopInList (props) {
         setDetailedHeight(fold ? "0px" : `${detailed.current.scrollHeight}px`);
     }, [fold])
 
+    
+    const dispatch = useDispatch();
+    const openPage = (shop) => {
+        dispatch(openShopPage());
+        document.body.style.overflow = 'hidden';
+        dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    }
     return (
         <div className="shopInList">
             <div className="header">
-                <div className="info">
+                <div className="info" onClick={()=>{openPage(elem)}}>
                     <div className="nameAndButton">
                         <div className="name">{elem.name}</div>
                         <div className="moreButton"><Chevron width={"0.7em"} color={"rgba(0,0,0,0.9)"}/></div>
                     </div>
                     <div className="severalInfoSet" >
                         <div className="severalInfo">
-                            <div className="button"><MapIcon height={"1.2em"} color={"rgba(0,0,0,0.9)"}/></div>
+                            <div className="button"><MapBoldIcon height={"1.2em"} color={"rgba(0,0,0,0.9)"}/></div>
                             <div>{elem.station}</div>
                         </div>
                         <div className="severalInfo">

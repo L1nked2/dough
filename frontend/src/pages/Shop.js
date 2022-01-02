@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import './Shop.css';
-import { closeShopPage, tempLikeChange } from '../actions/homePageInfo';
+import { closeShopPage, tempLikeChange, setShopPageContents } from '../actions/homePageInfo';
+import { openListPage } from '../actions/recommendPageInfo';
 import { likeChange } from '../actions/myPlaceList';
 import CallModal from '../components/main/CallModal';
 import { CSSTransition } from 'react-transition-group';
@@ -10,7 +11,7 @@ import { CSSTransition } from 'react-transition-group';
 import BackButton from '../components/icon/Back';
 import WonIcon from '../components/icon/Won';
 import LocationIcon from '../components/icon/Location';
-import MapIcon from '../components/icon/MapBold';
+import MapBoldIcon from '../components/icon/MapBold';
 import ClockIcon from '../components/icon/Clock';
 import CallIcon from '../components/icon/Call';
 import MenuIcon from '../components/icon/Menu';
@@ -31,27 +32,9 @@ import SwiperCore, {
 } from 'swiper';
 
 function ShopModal() {
-    const getPlaceDB = async () => {
-        const res = await axios({
-            method: 'POST',
-            url: 'https://dough-survey.web.app/api/place',
-            headers: {
-                "Content-Type": `application/json`
-            },
-            data: {stationId: "00000001", placeId: "00000001"},
-        }).then(response => {
-            console.log(response);
-        }).catch(err => {
-            console.log(err);
-        });
-    };
-    
-    useEffect(() => {
-        getPlaceDB();
-    }, []);
-
-    const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
     const dispatch = useDispatch();
+    const [shopPageContent, setShopPageContents] = useState({...useSelector(state => state.homePageInfo.shopPageContent), isLoaded: false});
+    const listPageIsOpen = useSelector(state => state.recommendPageInfo.listPageIsOpen);
 
     function clickLike (rank) {
         if (shopPageContent.tag === 'myPlaceList') {
@@ -91,20 +74,11 @@ function ShopModal() {
     const closePage = () => {
         dispatch(closeShopPage())
         document.body.style.overflow = 'unset';
+        if (listPageIsOpen) {dispatch(openListPage())}
     };
     const goBack = () => {
         window.history.back();
-        closePage();
     }
-    useEffect (() => {
-        setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
-        setMenuHeight(eachMenu.current.scrollHeight * 3);
-        window.history.pushState({page: "shop_modal"}, "shop_modal");
-        window.addEventListener("popstate",closePage);
-        return () => {
-            window.removeEventListener("popstate",closePage);
-        }
-    }, []);
 
     const [isCallModalOpen, setIsCallModalOpen] = useState(false);
     function openCallModal () {
@@ -115,15 +89,59 @@ function ShopModal() {
     SwiperCore.use([Navigation]);
 
     const [galleryType, setGalleryType] = useState("store");
-    const [gallery, setGallery] = useState(shopPageContent.imgSrc.slice(5));
+    const [gallery, setGallery] = useState([]);
     useEffect(() => {
         // axios 
-        if (galleryType === "store"){setGallery(shopPageContent.imgSrc.slice(0,5));}
-        else if (galleryType === "inside"){setGallery(shopPageContent.imgSrc.slice(0,3));}
-        else if (galleryType === "food"){setGallery(shopPageContent.imgSrc.slice(0,8));}
+        if (gallery.length !== 0) {
+            if (galleryType === "store"){setGallery(shopPageContent.placeInfo.place_photo_list);}
+            else if (galleryType === "inside"){setGallery(shopPageContent.placeInfo.place_photo_list);}
+            else if (galleryType === "food"){setGallery(shopPageContent.placeInfo.place_photo_list);}
+        }
     }, [galleryType]);
+
+    useEffect(() => {
+        const getShopData = async () => {
+            const res = await axios({
+                method: 'POST',
+                url: 'https://dough-survey.web.app/api/place',
+                headers: {
+                    "Content-Type": `application/json`
+                },
+                data: {stationId: "00000001", placeId: "00000001"},
+            }).then(response => {
+                console.log(response);
+                return response.data;
+            }).catch(err => {
+                console.log(err);
+            });
+            setShopPageContents({reviews: shopPageContent.reviews,
+                                name: shopPageContent.name,
+                                price: shopPageContent.price,
+                                businessHours: shopPageContent.businessHours,
+                                breakTime: shopPageContent.breakTime,
+                                holiday: shopPageContent.holiday,
+                                menuList: shopPageContent.menuList,
+                                isLoaded: true,
+                                ...res});
+        }
+        getShopData();
+        window.history.pushState({page: "shop_modal"}, "shop_modal");
+        window.addEventListener("popstate",closePage);
+        return () => {
+            window.removeEventListener("popstate",closePage);
+        }
+    }, [])
+    useEffect(() => {
+        console.log(shopPageContent)
+        if (shopPageContent.isLoaded){
+            setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
+            setMenuHeight(eachMenu.current.scrollHeight * 3);
+            setGallery(shopPageContent.placeInfo.place_photo_list);
+        }
+    }, [shopPageContent])
     return (
         <div className="shopPage" id="shopPage">
+        {shopPageContent.isLoaded && <>
             <CSSTransition in={isCallModalOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
                         <CallModal setIsCallModalOpen={setIsCallModalOpen} callNum={"010-5250-0316"}/>
             </CSSTransition>
@@ -139,26 +157,26 @@ function ShopModal() {
                     <div className="name">{shopPageContent.name}</div>
                     <div className="simpleInfo">
                         <span className="price">
-                            <span className="temp"><WonIcon width={15} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.price}</span>
+                            <span className="temp"><WonIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.price}</span>
                         </span>
-                        <span className="location"><LocationIcon width={15} color={"rgba(0,0,0,0.65)"}/>{`역에서 ${shopPageContent.distance}`}</span>
+                        <span className="location"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/>{`역에서 ${shopPageContent.distance}`}</span>
                     </div>
                     <div className="fourPictures" >
                         <div className="twoPictures">
-                            <img src={shopPageContent.imgSrc[0]} alt="first" />
-                            <img src={shopPageContent.imgSrc[1]} alt="second" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[0]} alt="first" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[1]} alt="second" />
                         </div>
                         <div className="twoPictures">
-                            <img src={shopPageContent.imgSrc[2]} alt="third" />
-                            <img src={shopPageContent.imgSrc[3]} alt="fourth" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[2]} alt="third" />
+                            <img src={shopPageContent.placeInfo.place_photo_list[3]} alt="fourth" />
                         </div>
                     </div>
                     <div className="information">
                         <div className="eachInformation">
-                            <div className="icon"><MapIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
+                            <div className="icon"><MapBoldIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
                             <div className="contents">
-                                <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.roadAddress}</div>
-                                <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.lotAddress}`}</div>
+                                <div style={{color: "rgba(0,0,0,0.9)"}}>{shopPageContent.placeInfo.place_road_address}</div>
+                                <div style={{color: "rgba(0,0,0,0.36)"}}>{`( 지번 ) ${shopPageContent.placeInfo.place_road_address}`}</div>
                             </div>
                         </div>
                         <div className="eachInformation">
@@ -197,7 +215,7 @@ function ShopModal() {
                         </div>
                         <div className="eachInformation">
                             <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
-                            <a className="contents" href={shopPageContent.naverLink} target="_blank">{shopPageContent.naverLink}</a>
+                            <a className="contents" href={shopPageContent.placeInfo.place_naver_link} target="_blank">{shopPageContent.placeInfo.place_naver_link}</a>
                         </div>
                         <div className="eachInformation">
                             <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
@@ -254,7 +272,8 @@ function ShopModal() {
                     </div>
                     <div className="shareButton"><ShareIcon width={22} color={"#a3a3a3"}/>공유</div>
                 </div>
-            </div>
+            </div> 
+            </>}
         </div>
     );
 }

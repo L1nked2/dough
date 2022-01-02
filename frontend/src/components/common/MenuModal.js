@@ -2,11 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import './MenuModal.css';
 import ResetIcon from '../icon/Reset';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeMenuModal, applyFoodList, applyDrinkList } from '../../actions/homePageInfo';
+import { closeMenuModal, applyFoodList, applyCafeList, applyDrinkList } from '../../actions/homePageInfo';
 
 function MenuModal(props) {
     const dispatch = useDispatch();
-    const stateList = useSelector(state => props.name==='음식'?state.homePageInfo.tempFoodStateList:state.homePageInfo.tempDrinkStateList);
+    const stateList = useSelector(state => props.name==='음식'?state.homePageInfo.tempFoodStateList:props.name==='카페'?state.homePageInfo.tempCafeStateList:state.homePageInfo.tempDrinkStateList);
     
     const [tempStateList, setTempStateList] = useState(stateList);
     const closePage = () => {
@@ -30,6 +30,9 @@ function MenuModal(props) {
     function applyStates () {
         if (props.name === '음식') {
             dispatch(applyFoodList(tempStateList));
+        }
+        else if (props.name === '카페') {
+            dispatch(applyCafeList(tempStateList));
         }
         else {
             dispatch(applyDrinkList(tempStateList));
