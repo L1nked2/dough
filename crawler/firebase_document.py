@@ -84,8 +84,9 @@ class PlaceDocument:
     place_data_dict['place_last_timestamp'] = self._last_timestamp
     return place_data_dict
 
-  def has_photo_folder(self, category_to_tag_dir="./temp_img"):
-    raise NotImplementedError
+  def has_photo_folder(self, photo_dir_path="./temp_img") -> bool:
+    uuids = os.listdir(photo_dir_path)    
+    return str(self._uuid) in uuids
 
   def convert_with(self, 
     category_to_tag_dir="./cat_to_tag_table",
