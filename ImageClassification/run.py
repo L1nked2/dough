@@ -9,7 +9,7 @@ def parse():
     parser.add_argument('-e', '--epochs', type=int, default=2, help='Number of epochs')
     parser.add_argument('-c', '--classes', type=int, default=8, help='Number of classes')
     parser.add_argument('-s', '--img-size', type=int, default=256, help='Size of Image, num*num')
-    parser.add_argument('-l', '--lr', type=float, default=1e-7, help='Learning rate')
+    parser.add_argument('-l', '--lr', type=float, default=1e-9, help='Learning rate')
     parser.add_argument('-t', '--test-size', type=int, default=0.1, help='Size of test dataset')
     parser.add_argument('-p', '--path', type=str, default='./data', help='train_part module is in utils dir')
     parser.add_argument('-d', '--dropout-rate', type=int, default=0.99, help='Dropout rate to tune')

@@ -12,9 +12,9 @@ from ImageClassification.model.SelfAttention import ScaledDotProductAttention
 # initialization
 def weight_init(layer):
     if isinstance(layer, nn.Conv2d):
-        nn.init.xavier_uniform_(layer.weight)
-    elif isinstance(layer, nn.Linear):
-        nn.init.xavier_uniform_(layer.weight)
+        nn.init.xavier_normal_(layer.weight)
+    if isinstance(layer, nn.Linear):
+        nn.init.xavier_normal_(layer.weight)
 
 # Model
 class CoAtNet(nn.Module):
@@ -55,14 +55,14 @@ class CoAtNet(nn.Module):
         self.s3 = ScaledDotProductAttention(out_chs[2], out_chs[2] // 8, out_chs[2] // 8, 8)
         self.mlp3 = nn.Sequential(
             nn.Linear(out_chs[2], out_chs[3]),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Linear(out_chs[3], out_chs[3])
         )
 
         self.s4 = ScaledDotProductAttention(out_chs[3], out_chs[3] // 8, out_chs[3] // 8, 8)
         self.mlp4 = nn.Sequential(
             nn.Linear(out_chs[3], out_chs[4]),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.Linear(out_chs[4], out_chs[4])
         )
 
