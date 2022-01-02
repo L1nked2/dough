@@ -10,5 +10,12 @@ if __name__ == "__main__":
     SEARCH_KEYWORD = ['맛집', '카페', '술집']
     CRAWLER_OPTIONS = dict(log=True, msg=True)
 
-    #crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH)
-    convert_documents_and_upload_to_db (DB_PATH, PHOTO_DIR_PATH, CATEGORY_TO_TAG_TABLE_DIR_PATH)
+    DO_CRAWL = False    
+    DO_UPLOAD = True
+
+    USE_OLD_DB = True
+
+    if DO_CRAWL:
+        crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH)
+    if DO_UPLOAD:
+        convert_documents_and_upload_to_db (DB_PATH, PHOTO_DIR_PATH, CATEGORY_TO_TAG_TABLE_DIR_PATH, USE_OLD_DB)

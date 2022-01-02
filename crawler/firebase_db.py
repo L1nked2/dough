@@ -239,7 +239,7 @@ def process_loaded_old_DB_info(old_data_body):
 
 
 def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
-    category_to_tag_table_dir_path : str):
+    category_to_tag_table_dir_path : str, use_old_db : bool):
     
     db_cdn = DB_and_CDN()
     station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
@@ -251,11 +251,12 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
         # e.g. 강남역_맛집, 뚝섬역_술집
         station_category_dumped = filename 
         print(station_category_dumped)
-        # 강남역 info + all (맛집)places near 강남역 infos
         ############################# To support picked old_raw_db ###########################################
-        raw_station_dict, place_dict_list = process_loaded_old_DB_info(dill.load(open(station_category_dumped, "rb")))
+        if use_old_db:
+            raw_station_dict, place_dict_list = process_loaded_old_DB_info(dill.load(open(station_category_dumped, "rb")))
         ###################################################################################################### 
-        # raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
+        else:
+            raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
         ###################################################################################################### 
 
         station_docu = StationDocument(raw_station_dict)
