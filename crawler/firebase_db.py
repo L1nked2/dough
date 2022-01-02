@@ -4,14 +4,11 @@ Module firebase_db
 
 Classes
   DB_and_CDN
-  |_ Public Methods
-      DB_and_CDN, upload
 
 Functions
   convert_documents_and_upload_to_db
 """
 
-from pickle import NONE
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud.firestore_v1 import transaction
@@ -88,7 +85,8 @@ class DB_and_CDN:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument):
+    def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument,
+        photo_dir_path : str):
         assert place_doc.has_converted, "place document must be converted before uploaded to db"
 
         same_place_docs = list(self._db_place_collection.
@@ -104,7 +102,7 @@ class DB_and_CDN:
                 place_doc_ref, current_parent_station)
         else: # no document for current place on placedb -> create new one & upload photos
             self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
-            self._upload_photos(place_doc)
+            # self._upload_photos(place_doc, photo_dir_path)
 
     """
     transaction of
@@ -127,9 +125,58 @@ class DB_and_CDN:
     """
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
-    def _upload_photos(self, place_doc : PlaceDocument):
-
+    def _upload_photos(self, place_doc : PlaceDocument, photo_dir_path : str):
         raise NotImplementedError
+        # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/" 
+        photos_of_current_place_path = os.path.join(photo_dir_path, self._uuid)
+        place_id = place_doc._uuid
+
+        """
+        Explanation:
+            photo links in [food_photo_list, inside_photo_list, provided_photo_list, menu_photo_list]
+            were stored in order to download the photo from Naver before uploading to CDN.
+            But I(안해찬) has found out that it is not necessary,
+            as we already have photos at local inside `photo_dir_path`.
+
+            Therefore, for food/inside/provided/menu/main links in `PlaceDocument` class 
+            are actually useless.
+            Currently, they're use to get the number of photos of each kind.
+        """
+        
+        # # food, inside, provided
+        # for entry in os.listdir(photos_of_current_place_path):
+        #     file_path = os.path.join(photos_of_current_place_path, entry)
+        #     if not os.path.isfile(file_path):
+        #         continue
+            
+        #     if entry.endswith(".jpg") and (entry.startswith("f") or
+        #     entry.startswith("i") or entry.startswith("a")):
+        #         self._upload_photo(place_id, file_path)
+
+        # # main
+        # for entry in os.listdir(os.path.join(photos_of_current_place_path, "/"))
+        # # menu
+
+
+    # , 00b7a056-d99d-b47e, "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/f2.jpg" 
+    def _upload_photo(self, place_id : str, photo_path : str):
+        raise NotImplementedError
+        # path_to_load_from_local = photos_of_current_place_path
+        # if photo_kind == "food":
+        #     path_to_load_from_local += f"f{photo_idx}.jpg"
+        # elif photo_kind == "inside":
+        #     path_to_load_from_local += f"i{photo_idx}.jpg"
+        # elif photo_kind == "provided":
+        #     path_to_load_from_local += f"a{photo_idx}.jpg"
+        # elif photo_kind == "menu":
+        #     path_to_load_from_local += f"menu/{photo_idx}.jpg"
+        # elif photo_kind == "main":
+        #     if photo_idx == 0:
+        #         path_to_load_from_local += f""
+
+        # path_to_store_on_CDN = \
+        #     f'restaurant_images/{place_id}/{photo_kind}_{photo_idx}.jpg'
+        
 
 
     """
@@ -196,7 +243,6 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
         station_category_dumped = filename 
         print(station_category_dumped)
         # 강남역 info + all (맛집)places near 강남역 infos
-
         ############################# To support picked old_raw_db ###########################################
         raw_station_dict, place_dict_list = process_loaded_old_DB_info(dill.load(open(station_category_dumped, "rb")))
         ###################################################################################################### 
@@ -212,6 +258,6 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
             # do not upload on CDN          
             if place_docu.has_photo_folder(photo_dir_path):
                 place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
-                db_cdn.upload_place(place_docu, station_docu)
+                db_cdn.upload_place(place_docu, station_docu, photo_dir_path)
 
     # db_cdn.update_station_db()
