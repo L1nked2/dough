@@ -15,6 +15,7 @@ Functions
   - 
 """
 
+from functools import total_ordering
 import numpy as np
 from numpy.lib.function_base import place 
 import pandas as pd
@@ -214,11 +215,17 @@ class StationDocument:
     NAVER_LINK_PREFIX = "https://pcmap.place.naver.com/restaurant/"
     self._naver_link =  NAVER_LINK_PREFIX + raw_station_data_dict['id']
     self._uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, self._naver_link))
-    self._name = raw_station_data_dict['name']
+    self._name = StationDocument._parse_name(raw_station_data_dict['name'])
     self._coor_x = raw_station_data_dict['x']
     self._coor_y = raw_station_data_dict['y']
     self._views = 0 
     self._place_list = list()
+
+  # '강남역 2호선' -> '강남역'
+  def _parse_name(raw_name : str) -> str:
+    tokens = raw_name.split() 
+    assert len(tokens) == 2 , "name of station info must be in forms of 00역 0호선"
+    return tokens[0]
 
   def get_uuid(self) -> str:
     return self._uuid
