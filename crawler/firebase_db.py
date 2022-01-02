@@ -3,9 +3,9 @@ Module firebase_db
   a module for initiating & uploading on Firebase firestore(DB) and stroage(CDN)
 
 Classes
-  DB
+  DB_and_CDN
   |_ Public Methods
-      DB, upload
+      DB_and_CDN, upload
 
 Functions
   convert_documents_and_upload_to_db
@@ -20,6 +20,9 @@ import os
 import dill
 
 from firebase_document import PlaceDocument, StationDocument
+
+
+
 
 """
 FireStore(DB)
@@ -38,7 +41,7 @@ FireStore(DB)
 
 Storage(CDN)
 """
-class DB:
+class DB_and_CDN:
     """
     initialize interfaces to Firebase DB and CDN with credentials.
     """
@@ -108,8 +111,52 @@ class DB:
     def update_station_db(self):
         raise NotImplementedError
 
+
+############################# To support picked old_raw_db ###########################################
+from firestore_lib import DB
+"""
+Why do we need to use this?
+
+(1) the already-cralwed data in `old_raw_db` (previously named `raw_db`)
+    contains dumped data of class `DB` of `firestore_lib.py`.
+
+(2) But we're not using `firestore_lib.py` anymore, thus no `DB` class. 
+    Crawler in `dough_crawler` not stores the data about place with dictionary type, instead of `DB` class.
+
+(3) Thus, in order to load crawled data in `old_raw_db`, we need to bring back `DB` class of `firestore_lib.py`
+
+(4) After 22-01-04 (Tue), we'll crawl from the beginning with current cralwer, and will deprecate `old_raw_db`.
+    This code section is only necessary until 22-01-04 (Tue).
+"""
+# stored data = [self.station_info : dict, self.place_db_list : list of DB, self.place_uuid_dict : list]
+def process_loaded_old_DB_info(old_data_body):
+    station_dict = old_data_body[0]
+    place_db_list: list[DB] = old_data_body[1]
+    _ = old_data_body[2]
+
+    def place_db_to_dict(place_db : DB) -> dict:
+        raw_dict = place_db._data
+        # match with current dict structure
+        raw_dict["place_likes"] = 0
+        raw_dict["place_recent_views"] = 0
+        raw_dict["place_main_photo_list"] = []
+        raw_dict["place_provided_photo_list"] = raw_dict["place_photo_provided"]
+        raw_dict["place_food_photo_list"] = raw_dict["place_photo_food"]
+        raw_dict["place_inside_photo_list"] = raw_dict["place_photo_inside"]
+        raw_dict["place_menu_photo_list"] = raw_dict["place_photo_menu"]
+        raw_dict["place_menu_info"] = raw_dict["place_menu"]
+        raw_dict["parent_station_list"] = raw_dict["parent_stations"]
+        return raw_dict
+
+    place_dict_list = [place_db_to_dict(db) for db in place_db_list]
+
+    return station_dict, place_dict_list
+
+######################################################################################################
+
+
 def convert_documents_and_upload_to_db(path_to_raw_db : str):
-    db = DB()
+    db_cdn = DB_and_CDN()
 
     for entry in os.listdir(path_to_raw_db):
         filename = os.path.join(path_to_raw_db, entry)
@@ -117,18 +164,24 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
 
         # e.g. 강남역_맛집, 뚝섬역_술집
         station_category_dumped = filename 
+        print(station_category_dumped)
         # 강남역 info + all (맛집)places near 강남역 infos
-        raw_station_dict, place_dict_list = dill.load(open(station_category_dumped))
-        
+
+        ############################# To support picked old_raw_db ###########################################
+        raw_station_dict, place_dict_list = process_loaded_old_DB_info(dill.load(open(station_category_dumped, "rb")))
+        ###################################################################################################### 
+        # raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
+        ###################################################################################################### 
+
         station_docu = StationDocument(raw_station_dict)
-        db.upload_station(station_docu)        
+        #db_cdn.upload_station(station_docu)        
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
             # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
             # do not upload on CDN          
             if place_docu.has_photo_folder():
-                place_docu.convert_with()
-                db.upload_place(place_docu)
+               place_docu.convert_with()
+            #   db_cdn.upload_place(place_docu)
 
-    db.update_station_db()
+    # db_cdn.update_station_db()

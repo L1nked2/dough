@@ -134,6 +134,7 @@ temp_img/
 
 # db files
 raw_db/
+old_raw_db/
 
 # log files
 log/
