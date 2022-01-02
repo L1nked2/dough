@@ -159,7 +159,7 @@ class PlaceDocument:
   """
   def _fill_in_photo_lists(self, photo_dir_path):
     # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/"    
-    place_dir_path = os.path.join(photo_dir_path, self._uuid)
+    place_dir_path = os.path.join(photo_dir_path, str(self._uuid))
 
     # paths to photo directoires
     main_food_dir, main_inside_dir = os.path.join(place_dir_path, "thumbnail_food"), os.path.join(place_dir_path, "thumbnail_inside")
@@ -198,7 +198,7 @@ class PlaceDocument:
   
   
   # (3) fill in cluster_a with `classifier_path`
-  def _fill_in_cluster_a(self):
+  def _fill_in_cluster_a(self, classfier_path: str):
     self._cluster_a = -2
     # classifier side not implemented yet
     #raise NotImplementedError
