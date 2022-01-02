@@ -97,14 +97,19 @@ class DB_and_CDN:
         assert len(same_place_docs) == 0 or len(same_place_docs) == 1, \
             "document for one place must not exist or only one exists"
         
-        if len(same_place_docs) == 1: # document for current place already exists -> update parent_station_list
+        if len(same_place_docs) == 1: # document for current place already exists 
+                                      # -> update parent_station_list
             place_doc_ref = same_place_docs[0].reference
             DB_and_CDN._add_parent_station(self._db_transaction, 
                 place_doc_ref, current_parent_station)
-        else: # no document for current place on placedb -> create new one
+        else: # no document for current place on placedb -> create new one & upload photos
             self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
+            self._upload_photos(place_doc)
 
-
+    """
+    transaction of
+        Read current parent list -> append new parent -> Update parent list
+    """
     @firestore.transactional
     def _add_parent_station(transaction, place_doc_ref, current_parent_station : StationDocument):
         snapshot = place_doc_ref.get(transaction=transaction)
@@ -122,19 +127,9 @@ class DB_and_CDN:
     """
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
-    def _upload_photos():
+    def _upload_photos(self, place_doc : PlaceDocument):
+
         raise NotImplementedError
-
-
-    """
-    transaction for uploading?
-    |_ transaction : useful when you want to update a field's value based on its current value or value of some other field
-    *** need to find out when trasactions are necessary.
-    *** just 'add' exists according to https://firebase.google.com/docs/firestore/manage-data/add-data
-    """
-    # @firestore.transactional
-    # def upload_transaction():
-    #     raise NotImplementedError
 
 
     """
@@ -189,11 +184,12 @@ def process_loaded_old_DB_info(old_data_body):
 ######################################################################################################
 
 
-def convert_documents_and_upload_to_db(path_to_raw_db : str):
+def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
+    category_to_tag_table_dir_path : str):
     db_cdn = DB_and_CDN()
 
-    for entry in os.listdir(path_to_raw_db):
-        filename = os.path.join(path_to_raw_db, entry)
+    for entry in os.listdir(raw_db_path):
+        filename = os.path.join(raw_db_path, entry)
         if not os.path.isfile(filename): continue
 
         # e.g. 강남역_맛집, 뚝섬역_술집
@@ -214,8 +210,8 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
             place_docu = PlaceDocument(place_dict)
             # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
             # do not upload on CDN          
-            if place_docu.has_photo_folder():
-                place_docu.convert_with()
+            if place_docu.has_photo_folder(photo_dir_path):
+                place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
                 db_cdn.upload_place(place_docu, station_docu)
 
     # db_cdn.update_station_db()

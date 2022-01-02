@@ -11,11 +11,14 @@ def crawl(stations, search_keywords, crawler_options, done_list):
             else:
                 dhc.run_crawler_naver(station_name=station_name, search_keyword=search_keyword, options=crawler_options)
 
-def upload_to_db(raw_db : str):
-    convert_documents_and_upload_to_db(raw_db)
+def upload_to_db(raw_db_path : str, photo_dir_path : str, 
+    category_to_tag_table_dir_path : str):
+    convert_documents_and_upload_to_db(raw_db_path, photo_dir_path, category_to_tag_table_dir_path)
 
 if __name__ == "__main__":
     DB_PATH = "./old_raw_db"
+    PHOTO_DIR_PATH = "./temp_img"
+    CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
     stations = ['강남역', '뚝섬역', '합정역']
     search_keywords = ['맛집', '카페', '술집']
     crawler_options = dict(log=True, msg=True)
@@ -23,4 +26,4 @@ if __name__ == "__main__":
 
     #crawl(stations, search_keywords, crawler_options, done_list)
 
-    upload_to_db(DB_PATH)
+    upload_to_db(DB_PATH, PHOTO_DIR_PATH, CATEGORY_TO_TAG_TABLE_DIR_PATH)

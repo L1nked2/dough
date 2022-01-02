@@ -89,17 +89,17 @@ class PlaceDocument:
     place_data_dict['place_last_timestamp'] = self._last_timestamp
     return place_data_dict
 
-  def has_photo_folder(self, photo_dir_path="./temp_img") -> bool:
+  def has_photo_folder(self, photo_dir_path) -> bool:
     uuids = os.listdir(photo_dir_path)    
     return str(self._uuid) in uuids
 
   def convert_with(self, 
-    category_to_tag_dir="./cat_to_tag_table",
-    photo_dir="./temp_img",
+    category_to_tag_dir,
+    photo_dir_path,
     classifier_path=None):
 
     self._fill_in_category(category_to_tag_dir)
-    self._fill_in_photo_lists(photo_dir)
+    self._fill_in_photo_lists(photo_dir_path)
     self._fill_in_cluster_a(classifier_path)
     self.has_converted = True
 
