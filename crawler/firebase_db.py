@@ -11,8 +11,10 @@ Functions
   convert_documents_and_upload_to_db
 """
 
+from pickle import NONE
 import firebase_admin
 from firebase_admin import credentials
+from google.cloud.firestore_v1 import transaction
 from google.oauth2 import service_account
 from firebase_admin import firestore
 from google.cloud import storage
@@ -86,9 +88,35 @@ class DB_and_CDN:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload_place(self, doc : PlaceDocument):
-        assert doc.has_converted, "it must be converted before uploaded to db"
-        self._db_place_collection.document(doc.get_uuid()).set(doc.into_dict())
+    def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument):
+        assert place_doc.has_converted, "place document must be converted before uploaded to db"
+
+        same_place_docs = list(self._db_place_collection.
+                            where('place_uuid', '==', place_doc.get_uuid()).stream())
+        
+        assert len(same_place_docs) == 0 or len(same_place_docs) == 1, \
+            "document for one place must not exist or only one exists"
+        
+        if len(same_place_docs) == 1: # document for current place already exists -> update parent_station_list
+            place_doc_ref = same_place_docs[0].reference
+            DB_and_CDN._add_parent_station(self._db_transaction, 
+                place_doc_ref, current_parent_station)
+        else: # no document for current place on placedb -> create new one
+            self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
+
+
+    @firestore.transactional
+    def _add_parent_station(transaction, place_doc_ref, current_parent_station : StationDocument):
+        snapshot = place_doc_ref.get(transaction=transaction)
+        parent_station_list = snapshot.get("parent_station_list")
+        new_parent_name = current_parent_station._name
+        
+        # update only if new parent name is not included in original ones
+        if new_parent_name not in parent_station_list:
+            parent_station_list.append(new_parent_name)
+            transaction.update(reference=place_doc_ref, field_updates={
+                "parent_station_list" : parent_station_list
+            })
 
 
     """
@@ -188,6 +216,6 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
             # do not upload on CDN          
             if place_docu.has_photo_folder():
                 place_docu.convert_with()
-                db_cdn.upload_place(place_docu)
+                db_cdn.upload_place(place_docu, station_docu)
 
     # db_cdn.update_station_db()
