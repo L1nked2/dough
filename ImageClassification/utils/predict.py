@@ -23,12 +23,12 @@ def predict(args):
     saved_coatnet.eval()
 
     test_dataloader = PASS.pass_test_dataloader()
-
     with torch.no_grad():
         names = []
         preds = []
         answers = [] # if real
         for i, (name, X, y) in enumerate(test_dataloader):
+            # print(i, name, X, y)
             if args.GPU:
                 device = torch.device('cuda')
                 X = X.to(device)
@@ -37,10 +37,11 @@ def predict(args):
             pred = saved_coatnet(X)
             pred = pred.argmax(1).cpu().numpy()
 
-            for j in range(args.batch_size):
-                names.append(name[j])
-                preds.append(pred[j])
-                answers.append(y.cpu().numpy()[j]) # if real
+            for n, p, y in zip(name, pred, y.cpu().numpy()):
+                print(n, p, y)
+                names.append(n)
+                preds.append(p)
+                answers.append(y) # if real
 
         answers = {
             'hash' : names,

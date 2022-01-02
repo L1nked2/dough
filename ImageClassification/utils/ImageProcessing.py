@@ -27,7 +27,7 @@ class ImageTransform():
     def __init__(self, args):
         self.data_transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.RandomCrop(args.img_size),
+            transforms.RandomCrop(args.img_size), # transforms.Resize(args.img_size)
             transforms.GaussianBlur(kernel_size=3)
         ])
 

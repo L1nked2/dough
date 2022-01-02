@@ -24,7 +24,7 @@ def train_loop(dataloader, model, loss_fn, optimizer, args):
             y = y.to(device)
         pred = model(X)
         # pred = pred.unsqueeze(0)
-        print(pred.argmax(1), y)
+        # print(pred.argmax(1), y)
         loss = loss_fn(pred, y)
 
         optimizer.zero_grad()
@@ -90,6 +90,7 @@ def train(args):
     optimizer = optim.Adam(coatnet.parameters(), lr=learning_rate)
 
     for t in range(EPOCHS):
+        print('\n')
         print(f"Epoch {t+1}\n-------------------------------")
 
         train_loop(train_dataloader, coatnet, criterion, optimizer, args)

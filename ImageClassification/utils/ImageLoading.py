@@ -8,7 +8,8 @@ import torch.utils.data as data
 from glob import glob
 import matplotlib.pyplot as plt
 import pandas as pd
-import torch
+from sklearn.model_selection import train_test_split
+from tqdm import tqdm
 
 def file_list(path):
     dir_list = glob(f'{path}/*')
@@ -16,20 +17,35 @@ def file_list(path):
     if './data/trash' in dir_list: dir_list.remove('./data/trash')
     real_dir_list = []
     for dir in dir_list:
-        img_list = glob(f'{dir}/thumbnail_inside/*.jpg')
+        img_list = glob(f'{dir}/*.jpg')
         real_dir_list += img_list
 
     return real_dir_list
 
+def to_trash(path_list, args):
+    df = pd.read_csv(f'{args.path}/file_list.csv', encoding='utf=8')
+    print('-----image loading and throwing away------')
+    for path in tqdm(path_list):
+        im = plt.imread(path)
+        # print(np.shape(im))
+        if (np.shape(im)[0] < args.img_size or np.shape(im)[1] < args.img_size)or np.shape(im)[2] != 3:
+            path_list.remove(path)
+            index = df.index[df['Name']==path[7:43]].tolist()[0]
+            df.drop(index)
+
+    return path_list, df
+
+
 
 class DoughDataset(data.Dataset):
-    def __init__(self, path_list, annotation_dir, transform, args, train=True):
+    def __init__(self, path_list, df, transform, args, train=True):
         self.path_list = path_list
-        self.annotation = pd.read_csv(f'{annotation_dir}/file_list.csv', encoding='utf-8')
+        self.annotation = df  # pd.read_csv(f'{args.path}/file_list.csv', encoding='utf-8')
         # print(self.annotation)
         self.transform = transform
         self.train = train
         self.args = args
+
     def __len__(self):
         return len(self.path_list)
 
@@ -44,7 +60,6 @@ class DoughDataset(data.Dataset):
         # print(index)
         hash = self.annotation[self.annotation['Name']==img_path[7:43]].iloc[0, 0]
         label = self.annotation.iloc[index, 1]
-        # print(label)
 
         return hash, img, label
 
@@ -53,22 +68,30 @@ class PassTheData():
         base_path = args.path
         BATCH = args.batch_size
         test_size = args.test_size
+        path_list, df = to_trash(file_list(base_path), args)
         # train_test split
+        train_img_path_list, test_img_path_list = train_test_split(
+            path_list,
+            test_size=test_size,
+            shuffle=True,
+        )
+        '''
         img_path_list = file_list(base_path)
         train_img_path_list = img_path_list[test_size:]
+        print(img_path_list)
         test_img_path_list = img_path_list[:test_size]
         # print(train_img_path_list)
-
+        '''
         train_dataset = DoughDataset(
             path_list=train_img_path_list,
-            annotation_dir=base_path,
             transform=ImageTransform(args),
+            df=df,
             args=args
         )
         test_dataset = DoughDataset(
             path_list=test_img_path_list,
-            annotation_dir=base_path,
             transform=ImageTransform(args),
+            df=df,
             args=args,
             train=False
         )
@@ -81,21 +104,4 @@ class PassTheData():
 
     def pass_test_dataloader(self):
         return self.test_dataloader
-
-
-if __name__=='__main__':
-
-    PASS = PassTheData()
-    train_dataloader = PASS.pass_train_dataloader()
-
-
-    hash, train_img, train_label = next(iter(train_dataloader))
-    print(f"Feature batch shape: {train_img.size()}")
-    print(f"Labels batch shape: {train_label.size()}")
-
-    img = train_img.squeeze()
-    print(img.size())
-    plt.imshow(np.moveaxis(img.numpy(), 0, -1), cmap="gray")
-    plt.show()
-    print(f"Label: {train_label}")
 
