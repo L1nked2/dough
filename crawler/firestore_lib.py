@@ -7,7 +7,7 @@ Why do we need to use this?
     contains dumped data of class `DB` of `firestore_lib.py`.
 
 (2) But we're not using `firestore_lib.py` anymore, thus no `DB` class. 
-    Crawler in `dough_crawler` not stores the data about place with dictionary type, instead of `DB` class.
+    Crawler in `dough_crawler` now stores the data about place with dictionary type, instead of `DB` class.
 
 (3) Thus, in order to load crawled data in `old_raw_db`, we need to bring back `DB` class of `firestore_lib.py`
 

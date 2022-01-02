@@ -13,6 +13,21 @@ if __name__ == "__main__":
     DO_CRAWL = False    
     DO_UPLOAD = True
 
+    """
+    USE_OLD_DB
+    What is this?
+
+    (1) the already-cralwed data in `old_raw_db` (previously named `raw_db`)
+    contains dumped data of class `DB` of `firestore_lib.py`.
+
+    (2) But we're not using `firestore_lib.py` anymore, thus no `DB` class either. 
+        Crawler in `dough_crawler` now stores the data about place with dictionary type, instead of `DB` class.
+
+    (3) In order to load alread-ycrawled data in `old_raw_db`, we need to bring back `DB` class of `firestore_lib.py`
+
+    (4) After 22-01-04 (Tue), we'll crawl from the beginning with current cralwer, and will deprecate `old_raw_db`.
+        This code section is only necessary until 22-01-04 (Tue).
+    """
     USE_OLD_DB = True
 
     if DO_CRAWL:
