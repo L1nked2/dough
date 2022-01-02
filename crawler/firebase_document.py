@@ -19,6 +19,7 @@ import numpy as np
 from numpy.lib.function_base import place 
 import pandas as pd
 import os
+import uuid
 
 class PlaceDocument:
   def __init__(self, place_data_dict : dict):
@@ -206,6 +207,9 @@ class PlaceDocument:
 
 class StationDocument:
   def __init__(self, raw_station_data_dict : dict):
+    NAVER_LINK_PREFIX = "https://pcmap.place.naver.com/restaurant/"
+    self._naver_link =  NAVER_LINK_PREFIX + raw_station_data_dict['id']
+    self._uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, self._naver_link))
     self._name = raw_station_data_dict['name']
     self._coor_x = raw_station_data_dict['x']
     self._coor_y = raw_station_data_dict['y']
@@ -214,6 +218,8 @@ class StationDocument:
 
   def into_dict(self) -> dict:
     station_data_dict = dict()
+    station_data_dict['station_naver_link'] = self._naver_link
+    station_data_dict['station_uuid'] = self._uuid
     station_data_dict['station_name'] = self._name 
     station_data_dict['station_coor_x'] = self._coor_x
     station_data_dict['station_coor_y'] = self._coor_y 

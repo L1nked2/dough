@@ -62,6 +62,7 @@ class DB_and_CDN:
         self._db_transaction = self._db.transaction() # interface to transaction that uses this client(DB)
         
         # create references to collections under DB
+
         self._db_place_collection = self._db.collection('place_db')
         self._db_station_collection = self._db.collection('station_db')
         self._db_user_collection = self._db.collection('user_db')
@@ -72,9 +73,11 @@ class DB_and_CDN:
         self._bucket_root_url = bucket_root_url
         self._cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
 
-    def upload_station(self, document : StationDocument):
-        raise NotImplementedError
+
+    def upload_station(self, doc : StationDocument):
+        self._db_station_collection.document(doc._uuid).set(doc.into_dict())
     
+
     """
     upload new Document to collection.
     (1) by default, all fields in dictionary directly to JSON
@@ -87,11 +90,13 @@ class DB_and_CDN:
         # if not document.has_converted: assert "must upload converted place"
         raise NotImplementedError
 
+
     """
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
     def _upload_photos():
         raise NotImplementedError
+
 
     """
     transaction for uploading?
@@ -102,6 +107,7 @@ class DB_and_CDN:
     # @firestore.transactional
     # def upload_transaction():
     #     raise NotImplementedError
+
 
     """
     update `station_db`'s each station's `place_list` field with `place_db` info.
@@ -174,14 +180,16 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
         ###################################################################################################### 
 
         station_docu = StationDocument(raw_station_dict)
-        #db_cdn.upload_station(station_docu)        
+        db_cdn.upload_station(station_docu)        
+
+        continue
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
             # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
             # do not upload on CDN          
             if place_docu.has_photo_folder():
-               place_docu.convert_with()
-            #   db_cdn.upload_place(place_docu)
+                place_docu.convert_with()
+                db_cdn.upload_place(place_docu)
 
     # db_cdn.update_station_db()
