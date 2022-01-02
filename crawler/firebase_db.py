@@ -21,8 +21,6 @@ import dill
 from firebase_document import PlaceDocument, StationDocument
 
 
-
-
 """
 FireStore(DB)
 |_ collection 1 (place_db)
@@ -176,7 +174,6 @@ class DB_and_CDN:
 
         # path_to_store_on_CDN = \
         #     f'restaurant_images/{place_id}/{photo_kind}_{photo_idx}.jpg'
-        
 
 
     """
@@ -184,8 +181,18 @@ class DB_and_CDN:
     by sending a query to firestore s.t.
     parent_station_list contains current station then collect ...
     """
-    def update_station_db(self):
-        raise NotImplementedError
+    """
+    is read-then-write, but chose to not use transaction,
+    because (1) it is likely that only single user will write at a time
+    (2) happening write during this function does not matter that much 
+    """
+    def update_station_db(self, station_id_names : list[tuple[str, str]]):
+        for station_uuid, station_name in station_id_names:
+            docs_with_parent_as_current_station = self._db_place_collection. \
+                where('parent_station_list', 'array_contains', station_name).stream()
+            place_uuids = [doc.id for doc in docs_with_parent_as_current_station]
+            self._db_station_collection.document(station_uuid).update({'place_list' : place_uuids})
+
 
 
 ############################# To support picked old_raw_db ###########################################
@@ -233,8 +240,10 @@ def process_loaded_old_DB_info(old_data_body):
 
 def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
     category_to_tag_table_dir_path : str):
+    
     db_cdn = DB_and_CDN()
-
+    station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
+ 
     for entry in os.listdir(raw_db_path):
         filename = os.path.join(raw_db_path, entry)
         if not os.path.isfile(filename): continue
@@ -250,7 +259,8 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
         ###################################################################################################### 
 
         station_docu = StationDocument(raw_station_dict)
-        db_cdn.upload_station(station_docu)        
+        db_cdn.upload_station(station_docu)       
+        station_id_names.append((station_docu._uuid, station_docu._name)) 
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
@@ -260,4 +270,4 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
                 place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
                 db_cdn.upload_place(place_docu, station_docu, photo_dir_path)
 
-    # db_cdn.update_station_db()
+    db_cdn.update_station_db(station_id_names)
