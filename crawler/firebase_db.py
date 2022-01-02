@@ -65,7 +65,7 @@ class DB:
         self._db_post_collection = self._db.collection('post_db')
 
         # create interfaces to CDN
-        self._cdn = storage.Client(credentials=credentials) # CDN (= storage)
+        self._cdn = storage.Client(credentials=google_cred) # CDN (= storage)
         self._bucket_root_url = bucket_root_url
         self._cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
 
@@ -105,8 +105,8 @@ class DB:
     by sending a query to firestore s.t.
     parent_station_list contains current station then collect ...
     """
-    def update_station_db():
-        raise NotImplemented
+    def update_station_db(self):
+        raise NotImplementedError
 
 def convert_documents_and_upload_to_db(path_to_raw_db : str):
     db = DB()
