@@ -1,6 +1,5 @@
 import sys
 
-from numpy.lib.function_base import place
 sys.path.append("../")
 
 from copy import deepcopy
@@ -24,7 +23,9 @@ def test_station_document_constructor_destructor():
     station_dict = station_docu.into_dict()
 
     station_dict_ref = dict(
-        station_name = '강남역 2호선',
+        station_naver_link = 'https://pcmap.place.naver.com/restaurant/13479290',
+        station_uuid = '2a2fb6a8-e995-515c-a24b-849030c8d8ea',
+        station_name = '강남역',
         station_coor_x= '127.0276188',
         station_coor_y= '37.4979517',
         station_views= 0,
