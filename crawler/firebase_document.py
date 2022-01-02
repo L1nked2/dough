@@ -198,7 +198,8 @@ class PlaceDocument:
   
   # (3) fill in cluster_a with `classifier_path`
   def _fill_in_cluster_a(self):
-    pass # classifier side not implemented yet
+    self._cluster_a = -2
+    # classifier side not implemented yet
     #raise NotImplementedError
 
 
