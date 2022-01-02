@@ -51,11 +51,11 @@ parse_table_naver = dict(
 
 
 class DoughCrawler:
-    def __init__(self, **kwargs):
+    def __init__(self, db_path, photo_dir_path, log_dir_path, **kwargs):
         # attributes initializing
         self.log = True
         current_time = datetime.datetime.now().isoformat('-', timespec='seconds').replace(':', '')
-        self.log_path = f'./log/log_{current_time}.txt'
+        self.log_path = f'{log_dir_path}/log_{current_time}.txt'
         self.msg = True
         # db set arg to be added, changed after crawl or load db
         # variables for only crawling
@@ -77,16 +77,17 @@ class DoughCrawler:
         self.place_db_list = []
         self.photo_error_list = []
 
-        # update for attributes
-        self.__dict__.update((k, v) for k, v in kwargs.items())
-
         # check and make directories
-        if not os.path.isdir(f'./temp_img'):
-            os.mkdir(f'./temp_img')
-        if not os.path.isdir(f'./raw_db'):
-            os.mkdir(f'./raw_db')
-        if not os.path.isdir(f'./log'):
-            os.mkdir(f'./log')
+        if not os.path.isdir(photo_dir_path):
+            os.mkdir(photo_dir_path)
+        if not os.path.isdir(db_path):
+            os.mkdir(db_path)
+        if not os.path.isdir(log_dir_path):
+            os.mkdir(log_dir_path)
+
+        self.photo_dir_path = photo_dir_path
+        self.db_path = db_path
+        self.log_dir_path = log_dir_path
 
         # open logfile
         if self.log:
@@ -100,13 +101,13 @@ class DoughCrawler:
             self.log_file.close()
         return
 
-    def clear(self, **kwargs):
-        self.__init__(**kwargs)
+    def clear(self, db_path, photo_dir_path, log_dir_path, **kwargs):
+        self.__init__(db_path, photo_dir_path, log_dir_path, **kwargs)
         return
 
     def run_crawler_naver(self, station_name=None, search_keyword=None, options=None):
         self.crawler_msg(f'{station_name} {search_keyword} crawling start')
-        self.clear(**options)
+        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, **options)
         self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
         self.get_place_link_list_naver()
         self.get_place_info_naver()
@@ -200,8 +201,8 @@ class DoughCrawler:
                     self.place_link_list.append(item['id'])
                 except AttributeError:
                     continue
-        if not os.path.isdir(f'./temp_img/{self.naver_search_query}'):
-            os.mkdir(f'./temp_img/{self.naver_search_query}')
+        if not os.path.isdir(f'{self.photo_dir_path}/{self.naver_search_query}'):
+            os.mkdir(f'{self.photo_dir_path}/{self.naver_search_query}')
         self.duplicate_prone_flag = True
 
         self.crawler_msg('naver_link_list_get done')
@@ -256,7 +257,7 @@ class DoughCrawler:
 
         # make directory for images
         place_uuid = place_db['place_uuid']
-        local_path = f'./temp_img/{self.naver_search_query}/{place_uuid}'
+        local_path = f'{self.photo_dir_path}/{self.naver_search_query}/{place_uuid}'
         if not os.path.isdir(local_path):
             os.mkdir(local_path)
             os.mkdir(f'{local_path}/menu')
@@ -390,7 +391,7 @@ class DoughCrawler:
         place_uuid = place_db['place_uuid']
 
         if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
-            local_path_root = f'./temp_img/{search_query}/{place_uuid}'
+            local_path_root = f'{self.photo_dir_path}/{search_query}/{place_uuid}'
             if img_type == 'provided':
                 prefix = 'a'
             elif img_type == 'food':
@@ -398,7 +399,7 @@ class DoughCrawler:
             else:
                 prefix = 'i'
         elif img_type == 'menu':
-            local_path_root = f'./temp_img/{search_query}/{place_uuid}/{img_type}'
+            local_path_root = f'{self.photo_dir_path}/{search_query}/{place_uuid}/{img_type}'
             prefix = ''
         else:
             self.crawler_msg(f'invalid image type given;{img_type}')
@@ -415,9 +416,9 @@ class DoughCrawler:
 
     def save(self, name=None):
         if name is not None:
-            path = f'./raw_db/{name}'
+            path = f'{self.db_path}/{name}'
         else:
-            path = f'./raw_db/db'
+            path = f'{self.db_path}/db'
         data_body = [self.station_raw_info, self.place_db_list]
         file = open(path, "wb+")
         dill.dump(data_body, file=file)
@@ -453,9 +454,10 @@ class DoughCrawler:
     # resume_getting_photo function(using photo_error_list) add
 
 
-def crawl(stations, search_keywords, crawler_options, db_path):
+def crawl(stations, search_keywords, crawler_options, 
+    db_path, photo_dir_path, log_dir_path):
     done_list = os.listdir(db_path)
-    dhc = DoughCrawler()
+    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path)
     for station_name in stations:
         for search_keyword in search_keywords:
             if f'{station_name}_{search_keyword}' in done_list:
