@@ -24,7 +24,7 @@ import uuid
 class PlaceDocument:
   def __init__(self, place_data_dict : dict):
     self._name = place_data_dict['place_name']
-    self._uuid = place_data_dict['place_uuid']
+    self._uuid = str(place_data_dict['place_uuid'])
     self._category = place_data_dict['place_category']
     self._cluster_a = place_data_dict['place_cluster_a']
     self._cluster_b = place_data_dict['place_cluster_b']
@@ -55,10 +55,13 @@ class PlaceDocument:
 
     self.has_converted = False
 
+  def get_uuid(self) -> str:
+    return self._uuid
+
   def into_dict(self) -> dict :
     place_data_dict = dict()
     place_data_dict['place_name'] = self._name 
-    place_data_dict['place_uuid'] = self._uuid 
+    place_data_dict['place_uuid'] = self._uuid
     place_data_dict['place_category'] = self._category
     place_data_dict['place_cluster_a'] = self._cluster_a
     place_data_dict['place_cluster_b'] = self._cluster_b 
@@ -97,6 +100,7 @@ class PlaceDocument:
     self._fill_in_category(category_to_tag_dir)
     self._fill_in_photo_lists(photo_dir)
     self._fill_in_cluster_a(classifier_path)
+    self.has_converted = True
 
 
   # (1) fill in category with files in `category_to_tag`
@@ -129,7 +133,7 @@ class PlaceDocument:
 
     temp_category = self._category
     if temp_category in cat_to_tag_table.keys():
-      temp_kind = cat_to_tag_table[temp_category]
+      temp_kind = cat_to_tag_table[temp_category].tolist()
       self._kind = temp_kind[:-2]
       self._cluster_b = temp_kind[-2]
       self._category = temp_kind[-1]
@@ -215,6 +219,9 @@ class StationDocument:
     self._coor_y = raw_station_data_dict['y']
     self._views = 0 
     self._place_list = list()
+
+  def get_uuid(self) -> str:
+    return self._uuid
 
   def into_dict(self) -> dict:
     station_data_dict = dict()

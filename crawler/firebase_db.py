@@ -75,7 +75,7 @@ class DB_and_CDN:
 
 
     def upload_station(self, doc : StationDocument):
-        self._db_station_collection.document(doc._uuid).set(doc.into_dict())
+        self._db_station_collection.document(doc.get_uuid()).set(doc.into_dict())
     
 
     """
@@ -86,9 +86,9 @@ class DB_and_CDN:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload_place(self, document : PlaceDocument):
-        # if not document.has_converted: assert "must upload converted place"
-        raise NotImplementedError
+    def upload_place(self, doc : PlaceDocument):
+        assert doc.has_converted, "it must be converted before uploaded to db"
+        self._db_place_collection.document(doc.get_uuid()).set(doc.into_dict())
 
 
     """
@@ -181,8 +181,6 @@ def convert_documents_and_upload_to_db(path_to_raw_db : str):
 
         station_docu = StationDocument(raw_station_dict)
         db_cdn.upload_station(station_docu)        
-
-        continue
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
