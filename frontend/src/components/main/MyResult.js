@@ -4,7 +4,7 @@ import './MyResult.css';
 
 function MyResult() {
     const testResult = useSelector((state) => state.userInfo.testResult);
-    if (!testResult) {
+    if (testResult.length === 0) {
         return (<div>none</div>);
     }
     return(

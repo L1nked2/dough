@@ -54,7 +54,7 @@ function Oauth() {
         getToken();
     }, []);
 
-    return (<div style={{height:"100vh", display:"flex", alignItems:"center"}}><ClipLoader/></div>);
+    return (<div style={{height:"100vh", display:"flex", justifyContent:"center"}}><ClipLoader/></div>);
 }
 
 export default Oauth;

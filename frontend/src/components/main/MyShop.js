@@ -1,9 +1,8 @@
 import React, {useState, useEffect } from 'react';
 import { CSSTransition } from "react-transition-group";
-import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
-import { getAuth, getIdToken } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { firebaseInit } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
@@ -11,7 +10,6 @@ import MoreShop from '../main/MoreShop';
 import MenuModal from '../common/MenuModal';
 
 import MapIcon from '../icon/Map';
-import sampleImage from "../../img/login_background.png";
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,6 +35,7 @@ function MyShop(props) {
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
 
   const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
+  const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
   const stateDrink = useSelector((state) => state.homePageInfo.tempDrinkStateList);
 
   
@@ -66,10 +65,10 @@ function MyShop(props) {
 
   useEffect(() => {
     getAuth().onAuthStateChanged(function(user){
-      console.log(user);
       if (user) {
+        console.log("MyShop.js");
+        console.log(user);
         user.getIdToken(true).then(function(idToken) {
-          console.log(idToken);
           const getPlaceList = async () => { 
             const res = await axios({
                 method: 'POST',
@@ -129,6 +128,19 @@ function MyShop(props) {
 
       {/* cafe */}
       {slideCategory[1] && <>
+        <div className="menuChange">
+          { checkAnyActive(stateCafe)
+            ? <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
+                {`카페 | ${printActiveMenu(stateCafe)}`}<span>{`>`}</span>
+              </div>
+            : <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
+                카페 종류 바꾸기<span>{`>`}</span>
+              </div>
+          }
+        </div>
+        <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+          <MenuModal name="카페"/>
+        </CSSTransition>
         <SlideImages page="main" name="cafe"/>
         <MoreShop name="카페"/>
       </>}

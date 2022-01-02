@@ -83,8 +83,8 @@ function LocationModal(props) {
                     {Object.entries(stationDictionary[stationLineNav]).map((list) => {
                         if (list[1].length !== 0) {
                             return <div className="spellStation">
-                                {list[1].map((station)=>{
-                                    return <div onClick={()=>{changeStation(station)}} 
+                                {list[1].map((station, index)=>{
+                                    return <div onClick={()=>{changeStation(station)}} key={index}
                                                 className={`eachStation ${tempCurrLoc === station ? "active" : ""}`}>{station}</div>
                                 })}
                                 <span className="spell">{list[0]}</span>

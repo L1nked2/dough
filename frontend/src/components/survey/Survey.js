@@ -97,7 +97,7 @@ function PreSurvey(props) {
       </div>
       <div className="contents4">
         <div className="start" onClick={next}>시작하기</div>
-        <Link to={'/home'} className="notYet">나중에 하기</Link>
+        <Link to={'/home'} className="notYet" onClick={()=>{clearTimeout(timer)}}>나중에 하기</Link>
       </div>
     </div>
   );

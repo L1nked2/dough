@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import Navbar from '../components/common/Navbar';
 import './Result.css';
@@ -9,19 +10,49 @@ import { refresh_result } from '../actions/userInfo';
 import MyResult from '../components/main/MyResult';
 import RecommendContent from '../components/recommend/RecommendContent';
 
-import img1 from '../img/result1.png';
-import img2 from '../img/result2.png';
-import img3 from '../img/result3.png';
 import ShareIcon from '../components/icon/Share';
 
 import { sampleShop } from '../data/samplePlaceDB';
+import { sampleTestResult } from '../data/sampleUserDB';
 import sampleImage from "../img/login_background.png";
+
+import { getAuth } from 'firebase/auth';
+import { firebaseInit } from "../firebaseInit";
+
+firebaseInit();
+
 
 function Result(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(refresh_result(sampleTestResult));
-  }, []);
+    getAuth().onAuthStateChanged(function(user){
+      if (user) {
+        console.log("Result.js");
+        console.log(user);
+        user.getIdToken(true).then(function(idToken) {
+          const getUserDB = async () => { 
+            const res = await axios({
+                method: 'POST',
+                url: 'https://dough-survey.web.app/api/user',
+                headers: {
+                    "Content-Type": `application/json`
+                },
+                data: {userToken: idToken},
+            }).then(response => {
+                console.log(response);
+                return response.data;
+            }).catch(err => {
+                console.log(err);
+              });
+            }
+            getUserDB();
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    })
+  },[]);
   
   return (
     <div className="resultPage">
@@ -43,22 +74,6 @@ function Result(props) {
 
 export default Result;
 
-const sampleTestResult = {
-  titleLong: '햇볕에 늘어진 수건',
-  titleShort: '늘어진 수건형',
-  value1: 80,
-  value2: 30,
-  value3: 60,
-  value4: 40,
-  summary: '특기 : 볕 좋은 곳에서 멍때리기\n채광 좋은 카페 창가에서 늘어지기',
-  description: '이 유형의 사람들은 따뜻한 색감의 조명과 내츄럴한 인테리어를 좋아해요. 전체적으로 밝은 색이나 파스텔톤을 사용한 가게, 채광이 좋고 아늑한 공간을 선호하는 편이랍니다.',
-  tags: '#채광 #밝은 조명 #아늑한 인테리어',
-  mainImg: img1,
-  subImg1: img2,
-  subImg2: img2,
-  subImg3: img2,
-  iconImg: img3
-}
 
 
 const sampleRecommendInfo = { 

@@ -20,16 +20,16 @@ function Home() {
   const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   const locationPageIsOpen = useSelector((state) => state.homePageInfo.locationPageIsOpen);
   const fullFoodList = useSelector((state) => state.homePageInfo.fullFoodList); 
+  const fullCafeList = useSelector((state) => state.homePageInfo.fullCafeList); 
   const fullDrinkList = useSelector((state) => state.homePageInfo.fullDrinkList); 
   const initializedMenuList = useSelector((state) => state.homePageInfo.initializedList); 
   const dispatch = useDispatch();
 
   const cookie = new Cookies();
   useEffect(() => {
-    const currAccessToken = cookie.get("accessToken");
     dispatch(initializeList(sampleList));
     if (!initializedMenuList) {
-      dispatch(initialMenuState(fullFoodList, fullDrinkList))
+      dispatch(initialMenuState(fullFoodList, fullCafeList, fullDrinkList))
     }
     return null;
   },[]);
