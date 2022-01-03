@@ -99,10 +99,11 @@ class PlaceDocument:
     classifier_path=None):
 
     self._fill_in_category(category_to_tag_dir)
-    self._fill_in_photo_lists(photo_dir_path)
+    is_photo_filled = self._fill_in_photo_lists(photo_dir_path)
     self._fill_in_cluster_a(classifier_path)
     self.has_converted = True
-
+    if is_photo_filled == False:
+      self.has_converted = False
 
   # (1) fill in category with files in `category_to_tag`
   # CODE COPY-PASTED FROM 이어진's
@@ -183,9 +184,11 @@ class PlaceDocument:
 
     main_food_infos = [extract_kind_index(entry) for entry in main_food_entries]
     main_inside_infos = [extract_kind_index(entry) for entry in main_inside_entries]
-   
-    assert 0<=len(main_food_infos)<=3
-    assert len(main_inside_infos)==1
+
+    if (not 0<=len(main_food_infos)<=3) or (not len(main_inside_infos)==1):
+      return False
+    #assert 0<=len(main_food_infos)<=3
+    #assert len(main_inside_infos)==1
 
     # [("i", 4), ("a", 4), ("f", 4), ("f", 27)]
     main_infos = main_inside_infos + sorted(main_food_infos) 

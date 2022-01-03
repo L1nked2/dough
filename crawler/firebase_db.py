@@ -85,8 +85,9 @@ class DB_and_CDN:
     """
     def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument,
         photo_dir_path : str):
-        assert place_doc.has_converted, "place document must be converted before uploaded to db"
-
+        #assert place_doc.has_converted, "place document must be converted before uploaded to db"
+        if not place_doc.has_converted:
+            return
         same_place_docs = list(self._db_place_collection.
                             where('place_uuid', '==', place_doc.get_uuid()).stream())
         
