@@ -65,10 +65,10 @@ function MainPageSlide (props) {
   else if (slideContentList.length > 3) {
     slideContentList = [...slideContentList.slice(0,3)]
   }
-  const openPage = (shop) => {
+  const openPage = (shop, rank) => {
     dispatch(openShopPage());
     document.body.style.overflow = 'hidden';
-    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    dispatch(setShopPageContents({...shop, rank: rank, tag: 'myPlaceList'}));
   }
 
   return (
@@ -78,7 +78,7 @@ function MainPageSlide (props) {
             className={`mySwiper main ${props.name}`}>
       {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}} className={`swiperSlide main`} key={index}>
+          <SwiperSlide onClick={()=>{openPage(elem, index+1)}} style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}} className={`swiperSlide main`} key={index}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:40}}>{`${index+1}위`}</div>
               <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.place_name}</div>
