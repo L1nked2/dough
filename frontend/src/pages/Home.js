@@ -26,6 +26,7 @@ function Home() {
   const dispatch = useDispatch();
 
   const cookie = new Cookies();
+  
   useEffect(() => {
     dispatch(initializeList(sampleList));
     if (!initializedMenuList) {

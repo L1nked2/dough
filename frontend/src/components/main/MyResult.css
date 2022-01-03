@@ -69,3 +69,17 @@
     background-color: #898989;
     z-index: 2;
 }
+
+.resultContainer.curation {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 0.786em;
+    color: #EBEBEB;
+}
+.resultContainer.curation .centerLine .line{
+    background-image: linear-gradient(270deg, rgba(255,255,255,1), rgba(0,0,0,0.1));
+}
+.resultContainer.curation .centerLine .circle{
+    background-color: #FFEA2E;
+}

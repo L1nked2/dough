@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from './Header';
+import MyResult from '../main/MyResult';
 import ExpandIcon2 from "../icon/Expand2";
 import MapIcon from "../icon/Map";
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
-import { openListPage, setListPageContents } from "../../actions/recommendPageInfo"
+import { openListPage, setListPageContents, openCurationPage, setCurationPageContents } from "../../actions/recommendPageInfo"
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -29,11 +30,14 @@ function SlideImages(props) {
     else if (props.page === 'recContent') {
       return (<RecommendPageContentSlide contents={props.contents} />);
     }
+    else if (props.page === 'curContent') {
+      return (<CurationPageContentSlide contents={props.contents} />);
+    }
     else if (props.page === 'recListPage') {
       return (<RecommendListPageImageSlide contents={props.contents} />);
     }
     else if (props.page === 'result') {
-      return (<ResultPageImageSlide />);
+      return (<ResultPageImageSlide elem={props.elem} />);
     }
     return null;
   }
@@ -144,7 +148,46 @@ function RecommendPageContentSlide (props) {
             className={`mySwiper recContent`}>
       {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide recContent`} key={index}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.placePhotoList[0]})`}} className={`swiperSlide recContent`} key={index}>
+            <div>
+              <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
+                {elem.name}
+              </div>
+              <div style={{fontSize:"1.1em", fontFamily: "SpoqaRegular"}}>
+                {elem.subTitle}
+              </div>
+            </div> 
+          </SwiperSlide>
+        );
+      })}
+    </Swiper>
+  );
+}
+
+function CurationPageContentSlide (props) {
+  const slideContentList = props.contents;
+  if (slideContentList.length === 0){
+    return (
+      <Swiper pagination={false} loop={false}
+              slidesPerView={3} slidesPerView={'auto'} 
+              centeredSlides={true} spaceBetween={0} 
+              className={`mySwiper recommend`}>
+        <SwiperSlide className={`swiperSlide recommend`}>
+          <div>
+            로딩중
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    )
+  }
+  return (
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+            className={`mySwiper recContent`}>
+      {slideContentList.map((elem, index) => {
+        return (
+          <SwiperSlide style={{backgroundImage: `url(${elem.placePhotoList[0]})`}} className={`swiperSlide recContent`} key={index}>
             <div>
               <div style={{fontSize:"1.8em", marginBottom:"0.5em"}}>
                 {elem.name}
@@ -170,7 +213,7 @@ function RecommendListPageImageSlide (props) {
             className={`mySwiper recListPage`}>
       {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide style={{backgroundImage: `url(${elem.imgSrc})`}} className={`swiperSlide recListPage`} key={index}/>
+          <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide recListPage`} key={index}/>
         );
       })}
     </Swiper>
@@ -179,58 +222,79 @@ function RecommendListPageImageSlide (props) {
 
 
 function ResultPageImageSlide (props) {
+  const dispatch = useDispatch();
   SwiperCore.use([Pagination]);
   const testResult = useSelector((state) => state.userInfo.testResult);
   const name = useSelector((state) => state.userInfo.name);
-  const slideContentList = [testResult.mainImg, testResult.subImg1, testResult.subImg2, testResult.subImg3];
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const sampleCuration = {
-    name: "컨템포",
-    station: "성수",
-    value1: 80,value2: 80,value3: 80,value4: 80,
+  
+  const [isModalOpen, setIsModalOpen] = useState([false, false, false, false]);
+  function modalControl(index) {
+    var temp = isModalOpen;
+    temp[index] = !temp[index];
+    setIsModalOpen([...temp]);
   }
+  if (!testResult) {return null;}
+  const slideContentList = [testResult.sampleTestResult.mainImg, ...testResult.mainCuration.contents];
+  
+  function openPage () {
+    dispatch(openCurationPage());
+    dispatch(setCurationPageContents(props.elem));
+  }
+
   return (
     <Swiper pagination={{clickable: true}} loop={true}
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={false} spaceBetween={0} // viewpoint에 따라 변경 예정
             className={`mySwiper result`}>
       {slideContentList.map((elem, index) => {
-        return (
-          <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide result`} key={index}>
-            {index === 0 ? 
-            <div>
-              <Header className="result" />
-              <div className="your">{name}님의 가게 취향은...</div>
-              <div className="title">{testResult.titleLong}</div>
-              <div className="tags">{testResult.tags}</div>
-              <div className="disc">{testResult.summary}</div>
-            </div>
-            : 
-            <div>
-              {isModalOpen ? 
-                <div className="modal">
-                  <div className="closeButton" onClick={() => {setIsModalOpen(false)}}>
+        if (index === 0) {
+          return (
+            <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide result`} key={index}>
+              <div>
+                <Header className="result" />
+                <div className="your">{name}님의 가게 취향은...</div>
+                <div className="title">{testResult.sampleTestResult.titleLong}</div>
+                <div className="tags">{testResult.sampleTestResult.tags}</div>
+                <div className="disc">{testResult.sampleTestResult.summary}</div>
+              </div>
+            </SwiperSlide>
+          )
+        }
+        else {
+          return (
+            <SwiperSlide style={{backgroundImage: `url(${elem.mainPhoto})`}} className={`swiperSlide result`} key={index}>
+              <div>
+                {isModalOpen[index] ? 
+                  <div className="modal">
+                    <div className="closeButton" onClick={() => {modalControl(index)}}>
+                      <ExpandIcon2 width={'1em'} color="#FFFFFF" />
+                    </div>
+                    <div className="content">
+                      <span className="station">
+                        <MapIcon width={"0.8em"} color="#FFFFFF" strokeWidth={0.01}/>
+                        <span id="station">{elem.station}</span>
+                      </span>
+                      <div className="name">{elem.name}</div>
+                      <MyResult className="curation" value1={elem.parameter1} value2={elem.parameter2} value3={elem.parameter3} value4={elem.parameter4}/>
+                      <div className="openCurationPage">
+                        큐레이션 보러 가기
+                        <div onClick={openPage}>
+                          <ExpandIcon2 width={'0.8em'} color="#595959" />
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                  :
+                  <div className="modalButton" onClick={() => {modalControl(index)}}>
+                    <span style={{color: '#C1C1C1', fontFamily: 'SpoqaRegular'}}>예상 취향 가게 | </span>
+                    <span style={{color: '#FFFFFF', fontFamily: 'SpoqaRegular', paddingLeft: '0.3em', paddingRight: '1em'}}>가게 정보 보기</span>
                     <ExpandIcon2 width={'1em'} color="#FFFFFF" />
                   </div>
-                  <div className="content">
-                    <span className="station">
-                      <MapIcon width={"0.8em"} color="#FFFFFF" strokeWidth={0.01}/>
-                      <span id="station">{sampleCuration.station}</span>
-                    </span>
-                    <div></div>
-                  </div>
-                </div> 
-                :
-                <div className="modalButton" onClick={() => {setIsModalOpen(true)}}>
-                  <span style={{color: '#C1C1C1', fontFamily: 'SpoqaRegular'}}>예상 취향 가게 | </span>
-                  <span style={{color: '#FFFFFF', fontFamily: 'SpoqaRegular', paddingLeft: '0.3em', paddingRight: '1em'}}>가게 정보 보기</span>
-                  <ExpandIcon2 width={'1em'} color="#FFFFFF" />
-                </div>
-              }
-            </div>}
-          </SwiperSlide>
-        );
+                }
+              </div>
+            </SwiperSlide>
+          );
+        }
       })}
     </Swiper>
   );

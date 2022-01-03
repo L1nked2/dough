@@ -57,7 +57,7 @@ function ShopInList (props) {
                         </div>
                         <div className="severalInfo">
                             <div className="button"><MenuIcon height={"1em"} color={"rgba(0,0,0,0.9)"}/></div>
-                            <div>{elem.menuCategory}</div>
+                            <div>{elem.menu}</div>
                         </div>
                     </div>
                 </div>
@@ -74,17 +74,16 @@ function ShopInList (props) {
             <div className="images">
                 <SlideImages 
                     page="recListPage" 
-                    contents={[{imgSrc: elem.spaceImg1}, {imgSrc: elem.menuImg1}, {imgSrc: elem.spaceImg2}, 
-                        {imgSrc: elem.menuImg2}, {imgSrc: elem.menuImg3}]}/>
+                    contents={elem.placePhotoList}/>
             </div>
 
             <div className="description">
                 <div className="simple">
-                    {elem.simple}
+                    {elem.summary}
                     {fold && <span className="more" onClick={unfold}>... 더보기</span>}
                 </div>
                 <div className="detailed" ref={detailed} style={{maxHeight: `${detailedHeight}`}}>
-                    {elem.detailed}
+                    {elem.discription}
                     <div className="tags">{elem.tags}</div>
                 </div>
             </div>

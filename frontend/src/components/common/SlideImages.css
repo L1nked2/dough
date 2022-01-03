@@ -214,6 +214,59 @@
 .swiperSlide.result > div .modal .content .station #station{ 
   margin-left: 0.3em;
 }
+.swiperSlide.result > div .modal .content .name{ 
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  width: 100%;
+  font-size: 1.857em;
+  color: white;
+  font-family: SpoqaRegular;
+  margin: 1em 0;
+}
+.swiperSlide.result > div .modal .content .name{ 
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  width: 100%;
+  font-size: 1.857em;
+  color: white;
+  font-family: SpoqaRegular;
+  margin: 1em 0;
+}
+.swiperSlide.result > div .modal .content .openCurationPage{ 
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  width: 100%;
+  color: white;
+  font-family: SpoqaRegular;
+  margin: 2em 0;
+}
+.swiperSlide.result > div .modal .content .openCurationPage div{ 
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  margin-left: 0.5em;
+  background-color: white;
+  height: 2.3395em;
+  width: 2.3395em;
+  border-radius: 10em;
+  cursor: pointer;
+  transform: rotate(270deg);
+}
 .swiperSlide.result > div .modal .closeButton {
   display: flex;
   display: -webkit-flex;

@@ -1,6 +1,8 @@
 const initialState = {
     listPageIsOpen: false,
     listPageContent: {},
+    curationPageIsOpen: false,
+    curationPageContent: {},
     headerList: [],
     myTypeList: [],
     newList: [],
@@ -22,6 +24,12 @@ function homePageReducer (state = initialState, action) {
             return {...state, listPageIsOpen: false}
         case "SET_LIST_PAGE_CONTENTS":
             return {...state, listPageContent: action.payload}
+        case "OPEN_CURATION_PAGE":
+            return {...state, curationPageIsOpen: true}
+        case "CLOSE_CURATION_PAGE":
+            return {...state, curationPageIsOpen: false}
+        case "SET_CURATION_PAGE_CONTENTS":
+            return {...state, curationPageContent: action.payload}
         default:
             return state
     }

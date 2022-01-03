@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { CSSTransition } from "react-transition-group";
 
 import Navbar from '../components/common/Navbar';
 import './Result.css';
@@ -8,24 +9,27 @@ import './Result.css';
 import SlideImages from '../components/common/SlideImages';
 import { refresh_result } from '../actions/userInfo';
 import MyResult from '../components/main/MyResult';
-import RecommendContent from '../components/recommend/RecommendContent';
+import CurationContent from '../components/survey/CurationContent';
+import CurationListModal from './CurationList';
 
 import ShareIcon from '../components/icon/Share';
 
 import { sampleShop } from '../data/samplePlaceDB';
 import { sampleTestResult } from '../data/sampleUserDB';
 import sampleImage from "../img/login_background.png";
+import { mainCuration, sampleCuration } from '../data/sampleCuration';
 
 import { getAuth } from 'firebase/auth';
 import { firebaseInit } from "../firebaseInit";
+import { useState } from 'react';
 
 firebaseInit();
 
 
 function Result(props) {
   const dispatch = useDispatch();
+  dispatch(refresh_result({sampleTestResult: sampleTestResult, mainCuration: mainCuration, sampleCuration: sampleCuration}));
   useEffect(() => {
-    dispatch(refresh_result(sampleTestResult));
     getAuth().onAuthStateChanged(function(user){
       if (user) {
         console.log("Result.js");
@@ -54,15 +58,20 @@ function Result(props) {
     })
   },[]);
   
+  const curationPageIsOpen = useSelector((state) => state.recommendPageInfo.curationPageIsOpen);
+
   return (
     <div className="resultPage">
-      <SlideImages page="result"/>
+      <CSSTransition in={curationPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <CurationListModal  />
+      </CSSTransition>
+      <SlideImages page="result" elem={{mainText: mainCuration.title, subText: mainCuration.subTitle, contents: mainCuration.contents}}/>
       <div className="shareButton">
         결과 공유하기
         <span className="shareIcon"><ShareIcon width={'1.2em'} color="#A3A3A3" /></span>
       </div>
       <MyResult />
-      <RecommendContent elem={sampleRecommendInfo} isSpecificType={false} isSample={true}/>
+      <CurationContent elem={{mainText: sampleCuration.title, subText: sampleCuration.subTitle, contents: sampleCuration.contents}} isSpecificType={false} isSample={true}/>
       <div className="explain">
         <div className="content">다른 지역의 내 취향 가게도 알고 싶다면?</div>
         <div className="edge">▲</div>
@@ -74,10 +83,3 @@ function Result(props) {
 
 export default Result;
 
-
-
-const sampleRecommendInfo = { 
-  mainText: `늘어진 수건형\n취향저격 가게 3곳`,
-  subText: '따뜻한 감성을 지닌 강남역 주변 카페',
-  imgSrc: sampleImage,
-  contents: [{...sampleShop, name: '치돈치돈'}, {...sampleShop, name: '바른돈가'}, {...sampleShop, name: '정돈'},]}

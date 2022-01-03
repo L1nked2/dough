@@ -22,3 +22,16 @@ export const setListPageContents = (contents) => {
         payload: contents
     };
 };
+
+export const openCurationPage = () => {
+    return {type: 'OPEN_CURATION_PAGE'};
+};
+export const closeCurationPage = () => {
+    return {type: 'CLOSE_CURATION_PAGE'};
+};
+export const setCurationPageContents = (contents) => {
+    return {
+        type: 'SET_CURATION_PAGE_CONTENTS',
+        payload: contents
+    };
+};
