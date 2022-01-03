@@ -148,22 +148,27 @@ async function getStationInfo(req) {
         const userId = await getUserId(req.body.userToken);
         let category = req.body.category;
         const tags = req.body.tags;
+        let categoryAll = false;
         if (category === "음식점") {
-            category = "0";
+            category = "_0";
         }
         else if (category === "카페") {
-            category = "1";
+            category = "_1";
         }
         else if (category === "술집") {
-            category = "2";
+            category = "_2";
+        }
+        else if (category === "") {
+            category = "";
+            categoryAll = true;
         }
         if (userId === "default") {
-            const stationInfo = await getInfoBase("station", `${stationId}_${category}`);
+            const stationInfo = await getInfoBase("station", `${stationId}${category}`);
             return { stationInfo: stationInfo };
         }
         else {
             const userInfo = await getInfoBase("user", userId);
-            const stationInfo = await getInfoBase("station", `${stationId}_${category}`);
+            const stationInfo = await getInfoBase("station", `${stationId}${category}`);
             return { stationInfo: stationInfo };
         }
     }
@@ -180,7 +185,7 @@ async function getStationInfo(req) {
  */
 async function getPlaceInfo(req) {
     try {
-        const stationId = `${req.body.stationId}_0`;
+        const stationId = `${req.body.stationId}`;
         const placeId = req.body.placeId;
         const stationData = await getInfoBase("station", stationId);
         const placeInfo = await getInfoBase("place", placeId);

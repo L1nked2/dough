@@ -47,13 +47,13 @@ app.post("/api/login", (req, res) => {
 app.get("/api/:infoType", (req, res) => {
     const type = req.params.infoType;
     if (type === "place") {
-        req.body.stationId = "00000001";
-        req.body.placeId = "00000001";
+        req.body.stationId = "2a2fb6a8-e995-515c-a24b-849030c8d8ea";
+        req.body.placeId = "002b7a00-95a7-52a1-8e81-6338fea1d6c2";
     }
     else if (type === "station") {
-        req.body.stationId = "00000001";
+        req.body.stationId = "2a2fb6a8-e995-515c-a24b-849030c8d8ea";
         req.body.userToken = "";
-        req.body.category = "음식점";
+        req.body.category = "";
         req.body.tags = [""];
     }
     else if (type === "user") {
