@@ -51,7 +51,7 @@ function EachMoreShop(props) {
   return (
     <div onClick={openPage} className="eachShop" key={shop.rank}>
       <div className="image">
-        <div id="image" style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}}/>
+        <div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/>
       </div>
       <div className="information">
         <div className="rankAndDistance">
@@ -64,8 +64,8 @@ function EachMoreShop(props) {
           <span id="menu">{shop.place_kind[0]}</span>
         </div>
         <div className="subimages">
-          <div id="subimage" style={{backgroundImage: `url(${elem.place_main_photo_list[1]})`}}/>
-          <div id="subimage" style={{backgroundImage: `url(${elem.place_main_photo_list[2]})`}}/>
+          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/>
+          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/>
           <div id="plusButton"><MoreIcon width={15}/></div>
         </div>
       </div>
