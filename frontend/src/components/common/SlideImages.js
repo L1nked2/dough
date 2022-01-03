@@ -51,20 +51,20 @@ function MainPageSlide (props) {
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
   const name = useSelector(state => state.homePageInfo.currCategory);
-  var slideContentList = null;
+  const [slideContentList, setSlideContentList] = useState(null)
   switch (name) {
     case 'food':
-      slideContentList = [...foodPlaceList];
+      setSlideContentList([...foodPlaceList]);
     case 'cafe':
-      slideContentList = [...cafePlaceList];
+      setSlideContentList([...cafePlaceList]);
     case 'drink':
-      slideContentList = [...drinkPlaceList];
+      setSlideContentList([...drinkPlaceList]);
   }
   if (slideContentList.length === 0) {
     return (<div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div>);
   }
   else if (slideContentList.length > 3) {
-    slideContentList = [...slideContentList.slice(0,3)]
+    setSlideContentList([...slideContentList.slice(0,3)]);
   }
   const openPage = (shop, rank) => {
     dispatch(openShopPage());
