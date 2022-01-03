@@ -82,3 +82,9 @@ export const tempLikeChange = () => {
         type: 'TEMP_LIKE_CHANGE'
     };
 };
+export const likeChange = (category, rank) => {
+    return {
+        type: 'LIKE_CHANGE',
+        payload: {category: category, rank: rank}
+    };
+};

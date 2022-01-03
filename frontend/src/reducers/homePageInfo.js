@@ -63,6 +63,27 @@ function homePageReducer (state = initialState, action) {
             return {...state, tempDrinkStateList: action.payload}
         case "TEMP_LIKE_CHANGE":
             return {...state, shopPageContent: {...state.shopPageContent, like:!state.shopPageContent.like}}
+        case "LIKE_CHANGE":
+            switch(action.payload.category){
+                case "food":
+                    var list = state.foodPlaceList.map((place, index) => {
+                        if (index+1 !== action.payload.rank) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, foodPlaceList: list}
+                case "cafe":
+                    var list = state.cafePlaceList.map((place, index) => {
+                        if (index+1 !== action.payload.rank) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, cafePlaceList: list}
+                case "drink":
+                    var list = state.drinkPlaceList.map((place, index) => {
+                        if (index+1 !== action.payload.rank) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, drinkPlaceList: list}
+            }
         default:
             return state
     }

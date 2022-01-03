@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import './Shop.css';
-import { closeShopPage, tempLikeChange, setShopPageContents } from '../actions/homePageInfo';
+import { closeShopPage, tempLikeChange, setShopPageContents, likeChange } from '../actions/homePageInfo';
 import { openListPage } from '../actions/recommendPageInfo';
-import { likeChange } from '../actions/myPlaceList';
 import CallModal from '../components/main/CallModal';
 import { CSSTransition } from 'react-transition-group';
 
@@ -47,15 +46,15 @@ function ShopModal() {
     const eachReview = useRef(null);
     const [reviewHeight, setReviewHeight] = useState(0);
     const [closeExpandButton, setCloseExpandButton] = useState(false);
-    function expandReviewHeight () {
-        if (reviewContent.current.scrollHeight >= (reviewHeight + eachReview.current.scrollHeight*1.0125*3)) {
-            setReviewHeight(reviewHeight + eachReview.current.scrollHeight*1.0125*3);
-        }
-        else {
-            setReviewHeight(reviewContent.current.scrollHeight);
-            setCloseExpandButton(true);
-        }
-    }
+    // function expandReviewHeight () {
+    //     if (reviewContent.current.scrollHeight >= (reviewHeight + eachReview.current.scrollHeight*1.0125*3)) {
+    //         setReviewHeight(reviewHeight + eachReview.current.scrollHeight*1.0125*3);
+    //     }
+    //     else {
+    //         setReviewHeight(reviewContent.current.scrollHeight);
+    //         setCloseExpandButton(true);
+    //     }
+    // }
     
     const menuContent = useRef(null);
     const eachMenu = useRef(null);
@@ -80,7 +79,7 @@ function ShopModal() {
         closePage();
     }
     useEffect (() => {
-        setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
+        // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");
         window.addEventListener("popstate",closePage);
@@ -233,7 +232,7 @@ function ShopModal() {
             <div className="subNavbar">
                 <div className="buttons">
                     <div className="likeButton" onClick={()=>{clickLike(shopPageContent.rank)}}>
-                        {shopPageContent.like
+                        {shopPageContent.place_likes
                         ? <HeartFilledIcon width={25} color={"#f17474"}/>
                         : <HeartIcon width={25} color={"#a3a3a3"}/>}
                         좋아요

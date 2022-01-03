@@ -28,7 +28,7 @@ function MoreShop(props) {
   }
   const renderShopList = shopList.map((shop, index) => {
     return (
-      <EachMoreShop shop={shop} rank={index + 1} key={index} />
+      <EachMoreShop shop={shop} rank={index + 4} key={index} />
     );
   });
   return (
@@ -44,7 +44,7 @@ function EachMoreShop(props) {
   const shop = props.shop;
   const openPage = () => {
     dispatch(openShopPage());
-    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    dispatch(setShopPageContents({...shop, rank: props.rank, tag: 'myPlaceList'}));
     document.body.style.overflow = 'hidden';
   }
 
