@@ -47,7 +47,24 @@ export default SlideImages;
 
 function MainPageSlide (props) {
   const dispatch = useDispatch();
-  const slideContentList = useSelector(state => state.myPlaceList).slice(0,3);
+  const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
+  const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
+  const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
+  var slideContentList = null;
+  switch (props.name) {
+    case 'food':
+      slideContentList = [...foodPlaceList];
+    case 'cafe':
+      slideContentList = [...cafePlaceList];
+    case 'drink':
+      slideContentList = [...drinkPlaceList];
+  }
+  if (slideContentList.length === 0) {
+    return (<div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div>);
+  }
+  else if (slideContentList.length > 3) {
+    slideContentList = [...slideContentList.slice(0,3)]
+  }
   const openPage = (shop) => {
     dispatch(openShopPage());
     document.body.style.overflow = 'hidden';
@@ -61,10 +78,10 @@ function MainPageSlide (props) {
             className={`mySwiper main ${props.name}`}>
       {slideContentList.map((elem, index) => {
         return (
-          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.imgSrc[0]})`}} className={`swiperSlide main`} key={index}>
+          <SwiperSlide onClick={()=>{openPage(elem)}} style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}} className={`swiperSlide main`} key={index}>
             <div>
-              <div style={{fontSize:"1.8em", marginBottom:40}}>{`${elem.rank}위`}</div>
-              <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.name}</div>
+              <div style={{fontSize:"1.8em", marginBottom:40}}>{`${index+1}위`}</div>
+              <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.place_name}</div>
             </div>
           </SwiperSlide>
         );
