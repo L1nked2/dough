@@ -67,7 +67,6 @@ function MyShop(props) {
     getAuth().onAuthStateChanged(function(user){
       if (user) {
         console.log("MyShop.js");
-        console.log(user);
         user.getIdToken(true).then(function(idToken) {
           const getPlaceList = async () => { 
             const res = await axios({
@@ -76,13 +75,17 @@ function MyShop(props) {
                 headers: {
                     "Content-Type": `application/json`
                 },
-                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: idToken, category: "음식점", tags: ["분식"]},
+                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: idToken, category: "음식점", tags: []},
             }).then(response => {
                 console.log(response);
+                dispatch(changeContent('food', response.data.stationInfo.place_list));
+                dispatch(changeContent('cafe', response.data.stationInfo.place_list));
+                dispatch(changeContent('drink', response.data.stationInfo.place_list));
                 return response.data;
             }).catch(err => {
                 console.log(err);
               });
+              
             }
           getPlaceList();
         }).catch(function(error) {
@@ -122,8 +125,8 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="음식"/>
         </CSSTransition>
-        <SlideImages page="main" name="restaurant"/>
-        <MoreShop name="음식점"/>
+        <SlideImages page="main" name="food"/>
+        <MoreShop name="food"/>
       </>}
 
       {/* cafe */}
@@ -142,7 +145,7 @@ function MyShop(props) {
           <MenuModal name="카페"/>
         </CSSTransition>
         <SlideImages page="main" name="cafe"/>
-        <MoreShop name="카페"/>
+        <MoreShop name="cafe"/>
       </>}
 
       {/* bar */}
@@ -160,8 +163,8 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="술" />
         </CSSTransition>
-        <SlideImages page="main"name="bar"/>
-        <MoreShop name="술집"/>
+        <SlideImages page="main"name="drink"/>
+        <MoreShop name="drink"/>
       </>}
     </div>
   );
