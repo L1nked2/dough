@@ -11,21 +11,21 @@ function MoreShop(props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const name = props.name;
-  const [shopList, setShopList] = useState(null);
+  const name = useSelector(state => state.homePageInfo.currCategory);
+  var shopList = null;
   switch (name) {
     case 'food':
-      setShopList([...foodPlaceList]);
+      shopList = [...foodPlaceList];
     case 'cafe':
-      setShopList([...cafePlaceList]);
+      shopList = [...cafePlaceList];
     case 'drink':
-      setShopList([...drinkPlaceList]);
+      shopList = [...drinkPlaceList];
   }
   if (!shopList) {
     return (<div></div>);
   }
   else if (shopList.length > 3) {
-    setShopList([...shopList.slice(3)])
+    shopList = [...shopList.slice(3)]
   }
   const renderShopList = shopList.map((shop, index) => {
     return (
