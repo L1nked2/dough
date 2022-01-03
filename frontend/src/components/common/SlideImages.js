@@ -50,20 +50,21 @@ function MainPageSlide (props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  var slideContentList = null;
-  switch (props.name) {
+  const name = useSelector(state => state.homePageInfo.currCategory);
+  const [slideContentList, setSlideContentList] = useState(null)
+  switch (name) {
     case 'food':
-      slideContentList = [...foodPlaceList];
+      setSlideContentList([...foodPlaceList]);
     case 'cafe':
-      slideContentList = [...cafePlaceList];
+      setSlideContentList([...cafePlaceList]);
     case 'drink':
-      slideContentList = [...drinkPlaceList];
+      setSlideContentList([...drinkPlaceList]);
   }
   if (slideContentList.length === 0) {
     return (<div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div>);
   }
   else if (slideContentList.length > 3) {
-    slideContentList = [...slideContentList.slice(0,3)]
+    setSlideContentList([...slideContentList.slice(0,3)]);
   }
   const openPage = (shop, rank) => {
     dispatch(openShopPage());
@@ -75,7 +76,7 @@ function MainPageSlide (props) {
     <Swiper pagination={false} loop={false}
             slidesPerView={3} slidesPerView={'auto'} 
             centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
-            className={`mySwiper main ${props.name}`}>
+            className={`mySwiper main ${name}`}>
       {slideContentList.map((elem, index) => {
         return (
           <SwiperSlide onClick={()=>{openPage(elem, index+1)}} style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}} className={`swiperSlide main`} key={index}>
