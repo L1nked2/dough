@@ -78,13 +78,13 @@ function MyShop(props) {
                 data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: idToken, category: "음식점", tags: []},
             }).then(response => {
                 console.log(response);
-                dispatch(changeContent('food', response.data.stationInfo.place_list));
-                dispatch(changeContent('cafe', response.data.stationInfo.place_list));
-                dispatch(changeContent('drink', response.data.stationInfo.place_list));
                 return response.data;
-            }).catch(err => {
+              }).catch(err => {
                 console.log(err);
               });
+              dispatch(changeContent('food', res.stationInfo.place_list));
+              dispatch(changeContent('cafe', res.stationInfo.place_list));
+              dispatch(changeContent('drink', res.stationInfo.place_list));
               
             }
           getPlaceList();

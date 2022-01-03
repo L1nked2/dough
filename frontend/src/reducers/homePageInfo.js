@@ -29,11 +29,11 @@ function homePageReducer (state = initialState, action) {
         case "CHANGE_CONTENT":
             switch(action.payload.category){
                 case "food":
-                    return {...state, foodPlaceList: action.payload.placeList}
+                    return {...state, foodPlaceList: action.payload.list}
                 case "cafe":
-                    return {...state, cafePlaceList: action.payload.placeList}
+                    return {...state, cafePlaceList: action.payload.list}
                 case "drink":
-                    return {...state, drinkPlaceList: action.payload.placeList}
+                    return {...state, drinkPlaceList: action.payload.list}
             }
         case "OPEN_SHOP_PAGE":
             return {...state, shopPageIsOpen: true}
