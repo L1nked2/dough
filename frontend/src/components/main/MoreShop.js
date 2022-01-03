@@ -28,7 +28,7 @@ function MoreShop(props) {
   }
   const renderShopList = shopList.map((shop, index) => {
     return (
-      <EachMoreShop shop={shop} key={index + 1} />
+      <EachMoreShop shop={shop} rank={index + 1} key={index} />
     );
   });
   return (
@@ -49,13 +49,13 @@ function EachMoreShop(props) {
   }
 
   return (
-    <div onClick={openPage} className="eachShop" key={shop.rank}>
+    <div onClick={openPage} className="eachShop" key={props.rank}>
       <div className="image">
         <div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/>
       </div>
       <div className="information">
         <div className="rankAndDistance">
-          <span id="rank">{`${shop.rank}위`}</span>
+          <span id="rank">{`${props.rank}위`}</span>
           <span id="icon"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/></span>
           <span id="distance">{`역에서 200m`}</span>
         </div>
