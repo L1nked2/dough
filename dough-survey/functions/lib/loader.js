@@ -138,7 +138,7 @@ async function getUserInfo(req) {
 }
 /**
  * getStationInfo
- *
+ * category switch block need to be fixed
  * @param  {Request} req
  * @return {Promise<any>}
  */
@@ -150,13 +150,13 @@ async function getStationInfo(req) {
         const tags = req.body.tags;
         let categoryAll = false;
         if (category === "음식점") {
-            category = "_0";
+            category = "";
         }
         else if (category === "카페") {
-            category = "_1";
+            category = "";
         }
         else if (category === "술집") {
-            category = "_2";
+            category = "";
         }
         else if (category === "") {
             category = "";
