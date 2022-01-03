@@ -10,6 +10,12 @@ export const changeContent = (category, list) => {
         payload: {category: category, list: list}
     };
 };
+export const changeCurrentCategory = (category) => {
+    return {
+        type: 'CHANGE_CURRENT_CATEGORY',
+        payload: category
+    };
+};
 
 export const openShopPage = () => {
     return {type: 'OPEN_SHOP_PAGE'};

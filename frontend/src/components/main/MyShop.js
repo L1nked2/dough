@@ -13,7 +13,7 @@ import MapIcon from '../icon/Map';
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { openLocationPage, openMenuModal, changeContent } from '../../actions/homePageInfo';
+import { openLocationPage, openMenuModal, changeContent, changeCurrentCategory } from '../../actions/homePageInfo';
 
 firebaseInit();
 
@@ -21,9 +21,12 @@ function MyShop(props) {
   const dispatch = useDispatch();
   /* Nav bar button controller */
   const [slideCategory, setSlideCategory] = useState([true, false, false]);
-  const changeRestaurant = () => {setSlideCategory([true, false, false]);}
-  const changeCafe = () => {setSlideCategory([false, true, false]);}
-  const changeBar = () => {setSlideCategory([false, false, true]);}
+  const changeRestaurant = () => {
+    dispatch(changeCurrentCategory('food')); setSlideCategory([true, false, false]);}
+  const changeCafe = () => {
+    dispatch(changeCurrentCategory('cafe')); setSlideCategory([false, true, false]);}
+  const changeBar = () => {
+    dispatch(changeCurrentCategory('drink')); setSlideCategory([false, false, true]);}
 
   /* Menu choice modal controller */
   const menuModalIsOpen = useSelector((state) => state.homePageInfo.menuModalIsOpen);

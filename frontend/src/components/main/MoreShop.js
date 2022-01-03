@@ -11,8 +11,9 @@ function MoreShop(props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
+  const name = useSelector(state => state.homePageInfo.currCategory);
   var shopList = null;
-  switch (props.name) {
+  switch (name) {
     case 'food':
       shopList = [...foodPlaceList];
     case 'cafe':
