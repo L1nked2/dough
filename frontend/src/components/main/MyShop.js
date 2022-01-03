@@ -13,7 +13,7 @@ import MapIcon from '../icon/Map';
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { openLocationPage, openMenuModal } from '../../actions/homePageInfo';
+import { openLocationPage, openMenuModal, changeContent } from '../../actions/homePageInfo';
 
 firebaseInit();
 
@@ -76,7 +76,7 @@ function MyShop(props) {
                 headers: {
                     "Content-Type": `application/json`
                 },
-                data: {stationId: "00000001", userToken: idToken, category: "음식점", tags: ["분식"]},
+                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: idToken, category: "음식점", tags: ["분식"]},
             }).then(response => {
                 console.log(response);
                 return response.data;

@@ -4,6 +4,12 @@ export const changeLocation = (name, line, range) => {
         payload: {name: name, line: line, range: range}
     };
 };
+export const changeContent = (category, list) => {
+    return {
+        type: 'CHANGE_CONTENT',
+        payload: {category: category, list: list}
+    };
+};
 
 export const openShopPage = () => {
     return {type: 'OPEN_SHOP_PAGE'};

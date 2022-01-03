@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { sumScore, changeScore, nextPage, previousPage, reset } from "../../actions/survey";
-import img1 from "../../img/restaurant/download.jpg";
-import img2 from "../../img/restaurant/download1.jpg";
-import img3 from "../../img/restaurant/download2.jpg";
+
+import { survey_preview, survey_loading, survey } from '../../data/imgPath';
+
 import { useState, useEffect } from "react";
 import { Progress } from "./Progress";
 import StarRating from './StarRating';
@@ -16,7 +16,7 @@ function Survey() {
   const scores = useSelector((state) => state.survey.scores);
   const page = useSelector((state) => state.survey.page);
   // const quizs = useSelector((state) => state.survey.quizs); // DB에서 제대로 된 이미지 링크 받은 후 redux 사용 시
-  const quizs = [img1, img2, img3, img1, img2, img3, img1, img2, img3]
+  const quizs = survey
   const dispatch = useDispatch();
   
   function goBack () {
@@ -48,37 +48,17 @@ function Survey() {
         return <Question key={index} isActive={page === index+1} imgSrc={imgSrc} dispatch={dispatch} scores={scores} 
                           zIndex={page+1} number={page} maxNumber={quizs.length}/>
       })}
-      <PostSurvey isActive={page === quizs.length+1} imgSrc={img1} dispatch={dispatch} zIndex={page+1} number={page} maxNumber={quizs.length}/>
+      <PostSurvey isActive={page === quizs.length+1} imgSrc={survey_loading} dispatch={dispatch} zIndex={page+1} number={page} maxNumber={quizs.length}/>
     </div>
   );
 }
 
 export default Survey;
 
-function isSurveyPage () {
-  return (window.location.href.split('/').length === 4 && window.location.href.split('/')[window.location.href.split('/').length - 1] === 'survey' )
-          ||
-         (window.location.href.split('/').length === 5 && window.location.href.split('/')[window.location.href.split('/').length - 2] === 'survey' 
-                                                       && window.location.href.split('/')[window.location.href.split('/').length - 1] === '' )
-}
 function PreSurvey(props) {
   const dispatch = props.dispatch;
-  const images = [img1, img2, img3];
-  var imgIndex = 0;
-  var timer = null;
-  function showRotate() {
-    imgIndex = (imgIndex + 1)%3;
-    document.getElementById("img_id").src = images[imgIndex];
-    timer = setTimeout(showRotate, 1500);
-  } 
-  useEffect(() => {
-    if (props.isActive && isSurveyPage()){
-      showRotate();
-    }
-  },[props.page]);
 
   function next() {
-    clearTimeout(timer);
     dispatch(nextPage());
   }
 
@@ -89,7 +69,7 @@ function PreSurvey(props) {
         <div className="subtitle">(소요시간 : 2분)</div>
       </div>
       <div className="contents2">
-        <img id="img_id" src={images[imgIndex]}></img>
+        <img id="img_id" src={survey_preview}></img>
       </div>
       <div className="contents3">
         <div>취향에 맞는 음식점을 찾기가 어려우신가요?</div>
@@ -97,7 +77,7 @@ function PreSurvey(props) {
       </div>
       <div className="contents4">
         <div className="start" onClick={next}>시작하기</div>
-        <Link to={'/home'} className="notYet" onClick={()=>{clearTimeout(timer)}}>나중에 하기</Link>
+        <Link to={'/home'} className="notYet" >나중에 하기</Link>
       </div>
     </div>
   );
@@ -143,7 +123,7 @@ function PostSurvey(props) {
     setTimeout(() => {
       dispatch(reset());
       history.replace('/survey/result');
-    }, 3000)
+    }, 5000)
   }
   return (
     <div className={`contents ${props.isActive ? 'mount' : 'unmount'} quiz`} style={{zindex: props.zIndex}}>

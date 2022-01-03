@@ -1,5 +1,10 @@
 const initialState = {
     currLocation: {name: "위치 선택", line: "none", range: "none"},
+    
+    foodPlaceList: [],
+    cafePlaceList: [],
+    drinkPlaceList: [],
+
     shopPageIsOpen: false,
     shopPageContent: {},
     locationPageIsOpen: false,
@@ -21,6 +26,15 @@ function homePageReducer (state = initialState, action) {
     switch(action.type){
         case "CHANGE_LOCATION":
             return {...state, currLocation: action.payload}
+        case "CHANGE_CONTENT":
+            switch(action.payload.category){
+                case "food":
+                    return {...state, foodPlaceList: action.payload.placeList}
+                case "cafe":
+                    return {...state, cafePlaceList: action.payload.placeList}
+                case "drink":
+                    return {...state, drinkPlaceList: action.payload.placeList}
+            }
         case "OPEN_SHOP_PAGE":
             return {...state, shopPageIsOpen: true}
         case "CLOSE_SHOP_PAGE":
