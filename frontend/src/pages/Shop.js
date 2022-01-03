@@ -199,11 +199,11 @@ function ShopModal() {
                             </div>
                         </div> */}
                     </div>
-                    {!closeExpandButton ? 
+                    {/* {!closeExpandButton ? 
                     <div onClick={()=>{expandReviewHeight()}} className="expandButton">
                         <ExpandIcon width={25} color={"rgba(0,0,0,0.36)"} />
                     </div> 
-                    : null}
+                    : null} */}
                 </SwiperSlide>
                 <SwiperSlide className={`gallery`}>
                     <div className="subHeader">
