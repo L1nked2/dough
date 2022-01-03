@@ -50,7 +50,7 @@ function MainPageSlide (props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const name = useSelector(state => state.homePageInfo.currCategory);
+  const name = props.name;
   const [slideContentList, setSlideContentList] = useState(null)
   switch (name) {
     case 'food':
@@ -60,7 +60,7 @@ function MainPageSlide (props) {
     case 'drink':
       setSlideContentList([...drinkPlaceList]);
   }
-  if (slideContentList.length === 0) {
+  if (!slideContentList) {
     return (<div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div>);
   }
   else if (slideContentList.length > 3) {

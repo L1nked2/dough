@@ -11,7 +11,7 @@ function MoreShop(props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const name = useSelector(state => state.homePageInfo.currCategory);
+  const name = props.name;
   const [shopList, setShopList] = useState(null);
   switch (name) {
     case 'food':
@@ -21,7 +21,7 @@ function MoreShop(props) {
     case 'drink':
       setShopList([...drinkPlaceList]);
   }
-  if (shopList.length === 0) {
+  if (!shopList) {
     return (<div></div>);
   }
   else if (shopList.length > 3) {
