@@ -10,6 +10,7 @@ import { closeListPage } from '../actions/recommendPageInfo'
 function RecommendListModal(props) {
     const dispatch = useDispatch();
     const listPageContent = useSelector(state => state.recommendPageInfo.listPageContent);
+    const shopPageIsOpen = useSelector(state => state.homePageInfo.shopPageIsOpen);
     
     const closePage = () => {
         document.body.style.overflow = 'unset';
@@ -17,10 +18,9 @@ function RecommendListModal(props) {
     }
     const goBack = () => {
         window.history.back();
-        closePage();
     }
     useEffect (() => {
-        window.history.pushState({page: "shop_modal"}, "shop_modal");
+        window.history.pushState({page: "list_modal"}, "list_modal");
         window.addEventListener("popstate",closePage);
         return () => {
             window.removeEventListener("popstate",closePage);

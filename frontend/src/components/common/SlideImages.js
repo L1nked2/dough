@@ -1,5 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Header from './Header';
+import ExpandIcon2 from "../icon/Expand2";
+import MapIcon from "../icon/Map";
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 import { openListPage, setListPageContents } from "../../actions/recommendPageInfo"
 
@@ -16,9 +19,6 @@ import SwiperCore, {
     Pagination
 } from 'swiper';
 
-import ShopModal from "../../pages/Shop";
-
-
 function SlideImages(props) {
     if (props.page === 'main') {
       return (<MainPageSlide name={props.name} />);
@@ -32,8 +32,8 @@ function SlideImages(props) {
     else if (props.page === 'recListPage') {
       return (<RecommendListPageImageSlide contents={props.contents} />);
     }
-    else if (props.page === 'shopPage') {
-      return (<ShopPageSlide />);
+    else if (props.page === 'result') {
+      return (<ResultPageImageSlide />);
     }
     return null;
   }
@@ -78,6 +78,20 @@ function RecommendPageMainSlide () {
     document.body.style.overflow = 'hidden';
     dispatch(setListPageContents(list));
   }
+  if (slideContentList.length === 0){
+    return (
+      <Swiper pagination={{clickable: true}} loop={true}
+              slidesPerView={3} slidesPerView={'auto'} 
+              centeredSlides={true} spaceBetween={0} 
+              className={`mySwiper recommend`}>
+        <SwiperSlide className={`swiperSlide recommend`}>
+          <div>
+            로딩중
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    )
+  }
   return (
     <Swiper pagination={{clickable: true}} loop={true}
             slidesPerView={3} slidesPerView={'auto'} 
@@ -108,6 +122,20 @@ function RecommendPageContentSlide (props) {
     dispatch(openShopPage());
     document.body.style.overflow = 'hidden';
     dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+  }
+  if (slideContentList.length === 0){
+    return (
+      <Swiper pagination={false} loop={false}
+              slidesPerView={3} slidesPerView={'auto'} 
+              centeredSlides={true} spaceBetween={0} 
+              className={`mySwiper recommend`}>
+        <SwiperSlide className={`swiperSlide recommend`}>
+          <div>
+            로딩중
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    )
   }
   return (
     <Swiper pagination={false} loop={false}
@@ -149,18 +177,62 @@ function RecommendListPageImageSlide (props) {
   );
 }
 
-function ShopPageSlide () {
+
+function ResultPageImageSlide (props) {
+  SwiperCore.use([Pagination]);
+  const testResult = useSelector((state) => state.userInfo.testResult);
+  const name = useSelector((state) => state.userInfo.name);
+  const slideContentList = [testResult.mainImg, testResult.subImg1, testResult.subImg2, testResult.subImg3];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sampleCuration = {
+    name: "컨템포",
+    station: "성수",
+    value1: 80,value2: 80,value3: 80,value4: 80,
+  }
   return (
-    <Swiper pagination={false} loop={false}
+    <Swiper pagination={{clickable: true}} loop={true}
             slidesPerView={3} slidesPerView={'auto'} 
-            centeredSlides={false} spaceBetween={15} // viewpoint에 따라 변경 예정
-            className={`mySwiper shopPage`}>
-          <SwiperSlide className={`swiperSlide shopPage`} >
-            <ShopModal />
+            centeredSlides={false} spaceBetween={0} // viewpoint에 따라 변경 예정
+            className={`mySwiper result`}>
+      {slideContentList.map((elem, index) => {
+        return (
+          <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide result`} key={index}>
+            {index === 0 ? 
+            <div>
+              <Header className="result" />
+              <div className="your">{name}님의 가게 취향은...</div>
+              <div className="title">{testResult.titleLong}</div>
+              <div className="tags">{testResult.tags}</div>
+              <div className="disc">{testResult.summary}</div>
+            </div>
+            : 
+            <div>
+              {isModalOpen ? 
+                <div className="modal">
+                  <div className="closeButton" onClick={() => {setIsModalOpen(false)}}>
+                    <ExpandIcon2 width={'1em'} color="#FFFFFF" />
+                  </div>
+                  <div className="content">
+                    <span className="station">
+                      <MapIcon width={"0.8em"} color="#FFFFFF" strokeWidth={0.01}/>
+                      <span id="station">{sampleCuration.station}</span>
+                    </span>
+                    <div></div>
+                  </div>
+                </div> 
+                :
+                <div className="modalButton" onClick={() => {setIsModalOpen(true)}}>
+                  <span style={{color: '#C1C1C1', fontFamily: 'SpoqaRegular'}}>예상 취향 가게 | </span>
+                  <span style={{color: '#FFFFFF', fontFamily: 'SpoqaRegular', paddingLeft: '0.3em', paddingRight: '1em'}}>가게 정보 보기</span>
+                  <ExpandIcon2 width={'1em'} color="#FFFFFF" />
+                </div>
+              }
+            </div>}
           </SwiperSlide>
-          <SwiperSlide className={`swiperSlide shopPage`} >
-            <ShopModal />
-          </SwiperSlide>
+        );
+      })}
     </Swiper>
   );
 }
+

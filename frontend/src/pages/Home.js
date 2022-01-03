@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Cookies } from 'react-cookie';
+
 import './Home.css';
 import Header from '../components/common/Header'
 import MyShop from '../components/main/MyShop'
@@ -18,17 +20,19 @@ function Home() {
   const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   const locationPageIsOpen = useSelector((state) => state.homePageInfo.locationPageIsOpen);
   const fullFoodList = useSelector((state) => state.homePageInfo.fullFoodList); 
+  const fullCafeList = useSelector((state) => state.homePageInfo.fullCafeList); 
   const fullDrinkList = useSelector((state) => state.homePageInfo.fullDrinkList); 
   const initializedMenuList = useSelector((state) => state.homePageInfo.initializedList); 
   const dispatch = useDispatch();
 
+  const cookie = new Cookies();
   useEffect(() => {
     dispatch(initializeList(sampleList));
     if (!initializedMenuList) {
-      dispatch(initialMenuState(fullFoodList, fullDrinkList))
+      dispatch(initialMenuState(fullFoodList, fullCafeList, fullDrinkList))
     }
     return null;
-  },[])
+  },[]);
   
   return (
     <div className="Home-page">

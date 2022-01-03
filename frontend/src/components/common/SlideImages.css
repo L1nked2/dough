@@ -3,9 +3,6 @@
   padding-bottom: calc(1.1055em + 4.2746em);
   background-color: rgba(0,0,0,0.03);
 }
-.mySwiper.main.cafe{
-  padding-top: 5.522em
-}
 .mySwiper.recContent {
   padding-top: 2.211em;
 }
@@ -14,9 +11,11 @@
   padding-right: 2.211em;
 }
 
-
+.mySwiper.result > .swiper-pagination > .swiper-pagination-bullet:first-child {
+  background: #A4A4A4;
+}
 .swiper-pagination-bullet {
-  background: rgba(0,0,0,0.36);
+  background: #E0E0E0;
   z-index: 40;
 }
 .swiper-pagination-bullet-active {
@@ -37,7 +36,6 @@
   display: flex;
   width: 100%;
   height: 100%;
-
 }
 .swiperSlide.main {
   font-family: "SpoqaBold";
@@ -94,4 +92,143 @@
   width: 60%;
   padding-bottom: 60%;
   cursor: pointer;
+}
+
+.swiperSlide.result {
+  width: 100%;
+  aspect-ratio: 0.5974;
+  padding: 0;
+  color: black;
+}
+.swiperSlide.result > div {
+  height: 100%;
+  width: 100%;
+}
+.swiperSlide.result > div .your {
+  display: flex;
+  display: -webkit-flex;
+  align-items: flex-end;
+  -webkit-box-align: end;
+  
+  height: calc(10.6544% - 3.158em);
+  padding-left: 16%;
+  padding-bottom: 2%;
+  font-size: 1.4em;
+  font-family: SpoqaRegular;
+  color: #595959;
+}
+.swiperSlide.result > div .title {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+  
+  height: 9%;
+  font-size: 2.6em;
+  color: #191919;
+}
+.swiperSlide.result > div .tags {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+  
+  position: absolute;
+  width: 100%;
+  top: 82%;
+  font-size: 1.4em;
+  color: #3FB8D5;
+}
+.swiperSlide.result > div .disc {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+  text-align: center;
+  line-height: 1.5em;
+  
+  position: absolute;
+  width: 100%;
+  top: 85.5%;
+  font-size: 1.6em;
+  font-family: SpoqaRegular;
+  color: #191919;
+  white-space: pre-wrap;
+}
+.swiperSlide.result > div .modalButton {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: flex-end;
+  -webkit-box-pack: flex-end;
+  
+  background-color: rgba(0,0,0,0.6);
+  font-size: 1.4em;
+  padding: 0.7em 1em;
+  margin: 1.5em 1.579em;
+  border-radius: 10em;
+  user-select: none;
+  cursor: pointer;
+}
+.swiperSlide.result > div .modal { 
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  font-size: 1.4em;
+  background-color: rgba(0,0,0,0.6);
+  height: 100%;
+}
+.swiperSlide.result > div .modal .content{ 
+  position: relative;
+  top: 30%;
+  width: 60%;
+
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-box-orient: vertical;
+  align-items: center;
+  -webkit-box-align: center;
+}
+.swiperSlide.result > div .modal .content .station{ 
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+
+  font-size: 1em;
+  color: white;
+  font-family: SpoqaRegular;
+}
+.swiperSlide.result > div .modal .content .station #station{ 
+  margin-left: 0.3em;
+}
+.swiperSlide.result > div .modal .closeButton {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-box-align: center;
+  justify-content: center;
+  -webkit-box-pack: center;
+  
+  position: absolute;
+  top: 1.5em;
+  right: 1.579em;
+  background-color: rgba(0,0,0,0.6);
+  height: 2.6395em;
+  width: 2.6395em;
+  border-radius: 10em;
+  cursor: pointer;
+  transform: rotate(180deg);
 }

@@ -10,6 +10,7 @@ import Oauth from './pages/Oauth' ;
 
 import './App.css';
 import Survey from './components/survey/Survey';
+import Result from './pages/Result' ;
 
 function App() {  
   return(
@@ -24,6 +25,7 @@ function App() {
             <Route exact path="/profile" component={Profile} />
 
             <Route exact path="/survey" component={Survey} />
+            <Route exact path="/survey/result" component={Result} />
 
             <Route path="/login/callback/kakao" component={Oauth} />
           </Switch>
