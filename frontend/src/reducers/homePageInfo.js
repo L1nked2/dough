@@ -62,7 +62,7 @@ function homePageReducer (state = initialState, action) {
         case "APPLY_DRINK_LIST":
             return {...state, tempDrinkStateList: action.payload}
         case "TEMP_LIKE_CHANGE":
-            return {...state, shopPageContent: {...state.shopPageContent, like:!state.shopPageContent.like}}
+            return {...state, shopPageContent: {...state.shopPageContent, place_likes:!state.shopPageContent.place_likes}}
         case "LIKE_CHANGE":
             switch(action.payload.category){
                 case "food":
