@@ -201,8 +201,8 @@ class DoughCrawler:
                     self.place_link_list.append(item['id'])
                 except AttributeError:
                     continue
-        if not os.path.isdir(f'{self.photo_dir_path}/{self.naver_search_query}'):
-            os.mkdir(f'{self.photo_dir_path}/{self.naver_search_query}')
+        if not os.path.isdir(f'{self.photo_dir_path}'):
+            os.mkdir(f'{self.photo_dir_path}')
         self.duplicate_prone_flag = True
 
         self.crawler_msg('naver_link_list_get done')
@@ -257,7 +257,7 @@ class DoughCrawler:
 
         # make directory for images
         place_uuid = place_db['place_uuid']
-        local_path = f'{self.photo_dir_path}/{self.naver_search_query}/{place_uuid}'
+        local_path = f'{self.photo_dir_path}/{place_uuid}'
         if not os.path.isdir(local_path):
             os.mkdir(local_path)
             os.mkdir(f'{local_path}/menu')
@@ -267,8 +267,8 @@ class DoughCrawler:
             os.mkdir(f'{local_path}/thumbnail_food')
 
         # download menu, provided images
-        self._download_photo(self.naver_search_query, place_db, 'menu')
-        self._download_photo(self.naver_search_query, place_db, 'provided')
+        self._download_photo(place_db, 'menu')
+        self._download_photo(place_db, 'provided')
         return True
 
     def _get_place_info_naver_photo(self, link, relations=''):
@@ -325,7 +325,7 @@ class DoughCrawler:
         self.current_place_db[f'place_{relations}_photo_list'] = img_links
 
         # download images
-        self._download_photo(self.naver_search_query, self.current_place_db, relations)
+        self._download_photo(self.current_place_db, relations)
         return
 
     def get_place_info_naver(self):
@@ -382,7 +382,7 @@ class DoughCrawler:
         self.crawler_msg('naver_info_get done')
         return
 
-    def _download_photo(self, search_query, place_db, img_type):
+    def _download_photo(self, place_db, img_type):
         if img_type is None:
             self.crawler_msg('type is empty')
             raise TypeError
@@ -391,7 +391,7 @@ class DoughCrawler:
         place_uuid = place_db['place_uuid']
 
         if img_type == 'provided' or img_type == 'food' or img_type == 'inside':
-            local_path_root = f'{self.photo_dir_path}/{search_query}/{place_uuid}'
+            local_path_root = f'{self.photo_dir_path}/{place_uuid}'
             if img_type == 'provided':
                 prefix = 'a'
             elif img_type == 'food':
@@ -399,7 +399,7 @@ class DoughCrawler:
             else:
                 prefix = 'i'
         elif img_type == 'menu':
-            local_path_root = f'{self.photo_dir_path}/{search_query}/{place_uuid}/{img_type}'
+            local_path_root = f'{self.photo_dir_path}/{place_uuid}/menu'
             prefix = ''
         else:
             self.crawler_msg(f'invalid image type given;{img_type}')
