@@ -12,3 +12,5 @@ dough-survey/functions/package.json
 dough-survey/storage.rules
 
 crawler/.idea
+ImageClassification/data/*
+

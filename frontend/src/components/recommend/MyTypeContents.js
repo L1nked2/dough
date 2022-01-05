@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from "react-transition-group";
 import './MyTypeContents.css';
 
@@ -11,7 +11,15 @@ import { useSelector } from 'react-redux';
 
 function MyTypeContents(props) {
     const contents = useSelector(state => state.recommendPageInfo.myTypeList);
-    const myType = contents[0].target;
+    const [myType, setMyType] = useState("");
+
+    useEffect(() => {
+        if (contents.length > 0) {
+            setMyType(contents.target)
+        }
+    },[contents])
+    
+    
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const question = useRef(null);

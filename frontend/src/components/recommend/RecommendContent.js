@@ -5,6 +5,7 @@ import SlideImages from '../common/SlideImages';
 
 import ShareIcon from '../icon/Share';
 import Chevron from '../icon/Chevron';
+import SampleIcon from '../icon/Sample';
 import { useDispatch } from 'react-redux';
 import { openListPage, setListPageContents } from '../../actions/recommendPageInfo';
 
@@ -15,6 +16,7 @@ function RecommendContent(props) {
     const index = props.index;
     const target = props.elem.target;
     const isSpecificType = props.isSpecificType;
+    const isSample = props.isSample;
     
     function openPage () {
         dispatch(openListPage());
@@ -44,6 +46,9 @@ function RecommendContent(props) {
             {isSpecificType && 
                 <div className="target">{`for ${target}`}</div>
             }
+            {isSample && 
+                <div className="sample"><span className="sampleIcon"><SampleIcon width="1em" color="#A4A4A4"/></span>맛보기</div>
+            }
             <div className="header">
                 <div className="mainTitle" onClick={openPage}>
                     {elem.mainText}
@@ -52,7 +57,7 @@ function RecommendContent(props) {
                 <div className="subTitle">{elem.subText}</div>
                 <div className="icon" id="shareButton"><ShareIcon width={20} color={"rgba(0,0,0,0.9)"} /></div>
             </div>
-            <SlideImages page="recContent" contents={elem.contents} />
+            <SlideImages page="recContent" contents={elem.contents} isSample={isSample} />
         </div>
     );
 }

@@ -1,16 +1,21 @@
 import React, {useState, useEffect } from 'react';
 import { CSSTransition } from "react-transition-group";
+import axios from 'axios';
+
+import { getAuth } from 'firebase/auth';
+import { firebaseInit } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
 import MoreShop from '../main/MoreShop';
 import MenuModal from '../common/MenuModal';
 
 import MapIcon from '../icon/Map';
-import sampleImage from "../../img/login_background.png";
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { openLocationPage, openMenuModal } from '../../actions/homePageInfo';
+
+firebaseInit();
 
 function MyShop(props) {
   const dispatch = useDispatch();
@@ -30,6 +35,7 @@ function MyShop(props) {
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
 
   const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
+  const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
   const stateDrink = useSelector((state) => state.homePageInfo.tempDrinkStateList);
 
   
@@ -57,12 +63,41 @@ function MyShop(props) {
     }
   }
 
+  useEffect(() => {
+    getAuth().onAuthStateChanged(function(user){
+      if (user) {
+        console.log("MyShop.js");
+        console.log(user);
+        user.getIdToken(true).then(function(idToken) {
+          const getPlaceList = async () => { 
+            const res = await axios({
+                method: 'POST',
+                url: 'https://dough-survey.web.app/api/station',
+                headers: {
+                    "Content-Type": `application/json`
+                },
+                data: {stationId: "00000001", userToken: idToken, category: "음식점", tags: ["분식"]},
+            }).then(response => {
+                console.log(response);
+                return response.data;
+            }).catch(err => {
+                console.log(err);
+              });
+            }
+          getPlaceList();
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    })
+  },[]);
+
   return (
     <div className="myShop">
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
         <span onClick={()=>{openPage(openLocationPage)}} className="locationButton">
-          <MapIcon width={"1.253em"} color={"rgba(0,0,0,0.36)"}/>
+          <MapIcon width={"1.253em"} color={"rgba(0,0,0,0.36)"} strokeWidth={0.01}/>
           <span id="location">{`${currLocation.name === "위치 선택" ? "" : "서울/"}${currLocation.name}`}</span>
         </span>
       </div>
@@ -93,6 +128,19 @@ function MyShop(props) {
 
       {/* cafe */}
       {slideCategory[1] && <>
+        <div className="menuChange">
+          { checkAnyActive(stateCafe)
+            ? <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
+                {`카페 | ${printActiveMenu(stateCafe)}`}<span>{`>`}</span>
+              </div>
+            : <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
+                카페 종류 바꾸기<span>{`>`}</span>
+              </div>
+          }
+        </div>
+        <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+          <MenuModal name="카페"/>
+        </CSSTransition>
         <SlideImages page="main" name="cafe"/>
         <MoreShop name="카페"/>
       </>}

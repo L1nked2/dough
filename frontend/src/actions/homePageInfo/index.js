@@ -24,11 +24,15 @@ export const closeMenuModal = () => {
     return {type: 'CLOSE_MENU_MODAL'};
 };
 
-export const initialMenuState = (foodList, drinkList) => {
-    const stateFoodTemp = []
-    const stateDrinkTemp = []
+export const initialMenuState = (foodList, CafeList, drinkList) => {
+    const stateFoodTemp = [];
+    const stateCafeTemp = [];
+    const stateDrinkTemp = [];
     for (const [index, menu] of foodList.entries()){
         stateFoodTemp.push({id: index, menu: menu, active:false})
+    }
+    for (const [index, menu] of CafeList.entries()){
+        stateCafeTemp.push({id: index, menu: menu, active:false})
     }
     for (const [index, menu] of drinkList.entries()){
         stateDrinkTemp.push({id: index, menu: menu, active:false})
@@ -37,6 +41,7 @@ export const initialMenuState = (foodList, drinkList) => {
         type: 'INITIAL_MENU_STATE',
         payload: {
             tempFoodStateList: stateFoodTemp,
+            tempCafeStateList: stateCafeTemp,
             tempDrinkStateList: stateDrinkTemp
         }
     };
@@ -51,6 +56,12 @@ export const setShopPageContents = (contents) => {
 export const applyFoodList = (list) => {
     return {
         type: 'APPLY_FOOD_LIST',
+        payload: list
+    };
+};
+export const applyCafeList = (list) => {
+    return {
+        type: 'APPLY_CAFE_LIST',
         payload: list
     };
 };

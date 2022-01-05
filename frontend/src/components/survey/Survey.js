@@ -20,7 +20,6 @@ function Survey() {
   const dispatch = useDispatch();
   
   function goBack () {
-    // dispatch(changeScore(page-1, 0));
     dispatch(previousPage());
   }
   useEffect (() => {
@@ -29,6 +28,14 @@ function Survey() {
         window.removeEventListener("popstate",goBack);
     }
   }, []);
+
+  let history = useHistory();
+  useEffect (() => {
+    if (page < 0) {
+      dispatch(reset());
+      history.go(-1);
+    }
+  }, [page])
 
   return (
     <div className="surveyStart">
@@ -48,6 +55,12 @@ function Survey() {
 
 export default Survey;
 
+function isSurveyPage () {
+  return (window.location.href.split('/').length === 4 && window.location.href.split('/')[window.location.href.split('/').length - 1] === 'survey' )
+          ||
+         (window.location.href.split('/').length === 5 && window.location.href.split('/')[window.location.href.split('/').length - 2] === 'survey' 
+                                                       && window.location.href.split('/')[window.location.href.split('/').length - 1] === '' )
+}
 function PreSurvey(props) {
   const dispatch = props.dispatch;
   const images = [img1, img2, img3];
@@ -59,7 +72,7 @@ function PreSurvey(props) {
     timer = setTimeout(showRotate, 1500);
   } 
   useEffect(() => {
-    if (props.isActive){
+    if (props.isActive && isSurveyPage()){
       showRotate();
     }
   },[props.page]);
@@ -84,7 +97,7 @@ function PreSurvey(props) {
       </div>
       <div className="contents4">
         <div className="start" onClick={next}>시작하기</div>
-        <Link to={'/home'} className="notYet">나중에 하기</Link>
+        <Link to={'/home'} className="notYet" onClick={()=>{clearTimeout(timer)}}>나중에 하기</Link>
       </div>
     </div>
   );
@@ -97,6 +110,7 @@ function Question(props) {
     dispatch(changeScore(props.number-1, score));
     dispatch(nextPage());
   }
+  
   return (
     <div className={`contents ${props.isActive ? 'mount' : 'unmount'} quiz`} style={{zindex: props.zIndex}}>
       <div className="contents5" >
@@ -127,7 +141,8 @@ function PostSurvey(props) {
     }
     // axios post scores
     setTimeout(() => {
-      history.push('/home');
+      dispatch(reset());
+      history.replace('/survey/result');
     }, 3000)
   }
   return (

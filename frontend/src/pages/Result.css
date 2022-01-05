@@ -1,0 +1,56 @@
+.resultPage {
+    width: inherit;
+    padding-bottom: 50px;
+}
+
+.resultPage .shareButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    position: relative;
+    margin: 1em 1.579em;
+    margin-bottom: 4em;
+    padding: 1em 0;
+    font-size: 1.4em;
+    color: #191919;
+    border: 1px solid #E0E0E0;
+    border-radius: 0.7em;
+    user-select: none;
+    cursor: pointer;
+}
+.resultPage .shareButton .shareIcon {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    position: absolute;
+    right: 1em;
+}
+.resultPage .explain .content{
+    display: inline-block;
+    margin-left: 2.01em;
+    padding: 1em 1.5em;
+    font-size: 1.1em;
+    font-family: SpoqaRegular;
+    color: rgba(0,0,0,0.9);
+    border-radius: 1em;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.2);
+    z-index: 40;
+}
+.resultPage .explain .edge{
+    position: relative;
+    left: 11.5%;
+    top: -0.6em;
+    color: white;
+    text-shadow: 0 -5px 7px rgba(0,0,0,0.2);
+    transform: rotate(180deg);
+    width: 1em;
+    z-index: 10;
+}

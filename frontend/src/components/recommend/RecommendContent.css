@@ -13,6 +13,30 @@
     color: rgba(0, 0, 0, 0.36);
     font-family: SpoqaRegular;
 }
+.recommendContent .sample {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 5px;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.36);
+    font-family: SpoqaRegular;
+}
+.recommendContent .sample .sampleIcon {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    margin-bottom: 0.1em;
+    margin-right: 0.5em;
+    width: 1.2em;
+}
 .recommendContent .header {
     padding-left: 30px;
     padding-right: 30px;

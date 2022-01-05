@@ -45,6 +45,7 @@ export default function survey(state = initialState, action) {
     case "RESET":
       return {
         ...state,
+        scores: [0,0,0,0,0,0,0,0,0],
         score: 0,
         page: 0,
       };

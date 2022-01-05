@@ -1,11 +1,6 @@
 const initialState = {
-    testResult: {
-        title: '골목길 이자카야',
-        value1: 80,
-        value2: 30,
-        value3: 60,
-        value4: 40
-    },
+    testResult: {},
+    name: '구름',
     myType: '주택가 레스토랑',
 }
 

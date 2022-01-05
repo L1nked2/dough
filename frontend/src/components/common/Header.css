@@ -19,9 +19,9 @@
 
 .mainHeader .mainLogo {
     width: 3.5em;
+    height: 100%;
     padding-left: 2.21em;
     padding-right: 2.21em;
-    padding-top: 1.5em;
 
     cursor: pointer;
 }
