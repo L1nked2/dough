@@ -41,7 +41,11 @@ function MyShop(props) {
   const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
   const stateDrink = useSelector((state) => state.homePageInfo.tempDrinkStateList);
 
-  
+  const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
+  const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
+  const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
+  const name = useSelector(state => state.homePageInfo.currCategory);
+
   function checkAnyActive (list) {
     let anyActive = false;
     for (var i=0; i < list.length; i++) {
@@ -67,10 +71,10 @@ function MyShop(props) {
   }
 
   useEffect(() => {
-    getAuth().onAuthStateChanged(function(user){
-      if (user) {
-        console.log("MyShop.js");
-        user.getIdToken(true).then(function(idToken) {
+    // getAuth().onAuthStateChanged(function(user){
+    //   if (user) {
+    //     console.log("MyShop.js");
+    //     user.getIdToken(true).then(function(idToken) {
           const getPlaceList = async () => { 
             const res = await axios({
                 method: 'POST',
@@ -78,7 +82,7 @@ function MyShop(props) {
                 headers: {
                     "Content-Type": `application/json`
                 },
-                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: idToken, category: "음식점", tags: []},
+                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', category: "음식점", tags: []},
             }).then(response => {
                 console.log(response);
                 return response.data;
@@ -86,16 +90,16 @@ function MyShop(props) {
                 console.log(err);
               });
               dispatch(changeContent('food', indexing(res.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
-              dispatch(changeContent('cafe', indexing(res.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
-              dispatch(changeContent('drink', indexing(res.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
+              dispatch(changeContent('cafe', indexing(res.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
+              dispatch(changeContent('drink', indexing(res.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
               
             }
           getPlaceList();
-        }).catch(function(error) {
-          console.log(error);
-        });
-      }
-    })
+    //     }).catch(function(error) {
+    //       console.log(error);
+    //     });
+    //   }
+    // })
   },[]);
 
   return (
@@ -128,8 +132,11 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="음식"/>
         </CSSTransition>
-        <SlideImages page="main" name="food"/>
-        <MoreShop name="food"/>
+        {foodPlaceList.length === 0 ? <div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div> : <>
+          <SlideImages page="main" name="food" slideContentList={foodPlaceList.slice(0,3)}/>
+          {foodPlaceList.length > 3 && <MoreShop name="food" content={foodPlaceList.slice(3)}/>}
+          </>
+        }
       </>}
 
       {/* cafe */}
@@ -147,8 +154,11 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="카페"/>
         </CSSTransition>
-        <SlideImages page="main" name="cafe"/>
-        <MoreShop name="cafe"/>
+        {cafePlaceList.length === 0 ? <div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div> : <>
+          <SlideImages page="main" name="cafe" slideContentList={cafePlaceList.slice(0,3)}/>
+          {cafePlaceList.length > 3 && <MoreShop name="cafe" content={cafePlaceList.slice(3)}/>}
+          </>
+        }
       </>}
 
       {/* bar */}
@@ -166,8 +176,11 @@ function MyShop(props) {
         <CSSTransition in={menuModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
           <MenuModal name="술" />
         </CSSTransition>
-        <SlideImages page="main"name="drink"/>
-        <MoreShop name="drink"/>
+        {drinkPlaceList.length === 0 ? <div style={{height: '30vh', backgroundColor: '#F8F8F8'}}></div> : <>
+          <SlideImages page="main" name="drink" slideContentList={drinkPlaceList.slice(0,3)}/>
+          {drinkPlaceList.length > 3 && <MoreShop name="drink" content={drinkPlaceList.slice(3)}/>}
+          </>
+        }
       </>}
     </div>
   );

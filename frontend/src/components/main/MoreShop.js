@@ -8,25 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 
 function MoreShop(props) {  
-  const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
-  const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
-  const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const name = useSelector(state => state.homePageInfo.currCategory);
-  var shopList = null;
-  switch (name) {
-    case 'food':
-      shopList = [...foodPlaceList];
-    case 'cafe':
-      shopList = [...cafePlaceList];
-    case 'drink':
-      shopList = [...drinkPlaceList];
-  }
-  if (!shopList) {
-    return (<div></div>);
-  }
-  else if (shopList.length > 3) {
-    shopList = [...shopList.slice(3)]
-  }
+  const shopList = props.content;
   const renderShopList = shopList.map((shop, index) => {
     return (
       <EachMoreShop shop={shop} rank={index + 4} key={index} />
