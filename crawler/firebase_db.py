@@ -17,6 +17,7 @@ from firebase_admin import firestore
 from google.cloud import storage
 import os 
 import dill
+from numpy.lib.function_base import place
 
 from firebase_document import PlaceDocument, StationDocument
 
@@ -70,9 +71,36 @@ class DB_and_CDN:
         self._bucket_root_url = bucket_root_url
         self._cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
 
+        # info about station_db
+        self._MAX_NUM_PLACES_PER_STATION_AND_CATEGORY = 300 # e.g. at most 300 places for "강남역 맛집"
+        self._MAX_NUM_PLACES_PER_STATION_DOC = 50 # for one station document, at most 50 places in place_list
+        self._NUM_STATION_DOCS_PER_STATION_AND_CATEGORY = \
+            int (self._MAX_NUM_PLACES_PER_STATION_AND_CATEGORY / self._MAX_NUM_PLACES_PER_STATION_DOC )
+            # e.g. 300/50 = 6 documents for "강남역 맛집", 강남역uuid_rest_0 , ... 강남역uuid_rest_5
 
+
+    """
+    Each station's `place_list` will be
+        divided into `num_station_docs_per_station_category = 6` * 3(rest/cafe/bar) documents, each documents having at most 50 elements in place_list
+    station_db
+      |_ uuid 
+    into
+    station_db
+      |_ uuid_rest_0
+      ...
+      |_ uuid_rest_5
+      |_ uuid_cafe_0
+      ...
+      |_ uuid_cafe_5
+      |_ uuid_bar_0
+      ...
+      |_ uuid_bar_5
+    """
     def upload_station(self, doc : StationDocument):
-        self._db_station_collection.document(doc.get_uuid()).set(doc.into_dict())
+        for category in ["rest", "cafe", "bar"]:
+            for idx in range(self._NUM_STATION_DOCS_PER_STATION_AND_CATEGORY):
+                doc_name = f"{doc.get_uuid()}_{category}_{idx}" # e.g. 264a887-4b2b_rest_2
+                self._db_station_collection.document(doc_name).set(doc.into_dict())
     
 
     """
@@ -124,6 +152,7 @@ class DB_and_CDN:
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
     def _upload_photos(self, place_doc : PlaceDocument, photo_dir_path : str):
+        assert False , "Do not call this function until classifier is done, because CDN upload needed to be carefully done"
         raise NotImplementedError
         # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/" 
         photos_of_current_place_path = os.path.join(photo_dir_path, self._uuid)
@@ -186,14 +215,38 @@ class DB_and_CDN:
     because (1) it is likely that only single user will write at a time
     (2) happening write during this function does not matter that much 
     """
+    """
+    place_list will be divided into 6 * 3(rest/cafe/bar) documents, each documents having at most 50 elements in place_list
+                                                                                |_ 50 elements if place_document has only naver links, but 25 if place_document has both naver & cdn links
+    station_db
+      |_ uuid 
+    into
+    station_db
+      |_ uuid_rest_0
+      ...
+      |_ uuid_rest_5
+      |_ uuid_cafe_0
+      ...
+      |_ uuid_cafe_5
+      |_ uuid_bar_0
+      ...
+      |_ uuid_bar_5
+    """
     def update_station_db(self, station_id_names : list[tuple[str, str]]):
         for station_uuid, station_name in station_id_names:
-            docs_with_parent_as_current_station = self._db_place_collection. \
-                where('parent_station_list', 'array_contains', station_name).stream()
-            place_docs = [doc.to_dict() for doc in docs_with_parent_as_current_station]
-            #for i in range(10):
-            #    place_docs.pop()
-            self._db_station_collection.document(station_uuid).update({'place_list' : place_docs})
+            for category_kor, category_eng in [("음식점", "rest"), ("카페", "cafe"), ("술집", "bar")]:
+
+                docs_with_parent_as_current_station = self._db_place_collection \
+                    .where('parent_station_list', 'array_contains', station_name) \
+                    .where('place_category', '==', category_kor) \
+                    .stream()
+                place_docs = [doc.to_dict() for doc in docs_with_parent_as_current_station]
+
+                for idx in range(self._NUM_STATION_DOCS_PER_STATION_AND_CATEGORY):
+                    divided_place_docs = place_docs[self._MAX_NUM_PLACES_PER_STATION_DOC * idx : self._MAX_NUM_PLACES_PER_STATION_DOC * (idx+1)]
+                    assert len(divided_place_docs) <= self._MAX_NUM_PLACES_PER_STATION_DOC
+                    station_doc_name = f"{station_uuid}_{category_eng}_{idx}" # e.g. 264a887-4b2b_rest_2
+                    self._db_station_collection.document(station_doc_name).update({'place_list' : divided_place_docs})
 
 
 
