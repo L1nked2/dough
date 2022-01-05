@@ -412,6 +412,8 @@ class DoughCrawler:
                 with open(file_path, 'wb+') as f:
                     response = requests.get(url)
                     f.write(response.content)
+            img_url_array[index] = (url, file_path) 
+
         return
 
     def save(self, name=None):

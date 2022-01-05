@@ -2,7 +2,7 @@ from dough_crawler import crawl
 from firebase_db import convert_documents_and_upload_to_db
 
 if __name__ == "__main__":
-    DB_PATH = "./old_raw_db"
+    DB_PATH = "./raw_db" # "./old_raw_db"
     PHOTO_DIR_PATH = "./temp_img"
     LOG_DIR_PATH = "./log"
     CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
@@ -10,8 +10,8 @@ if __name__ == "__main__":
     SEARCH_KEYWORD = ['맛집', '카페', '술집']
     CRAWLER_OPTIONS = dict(log=True, msg=True)
 
-    DO_CRAWL = False    
-    DO_UPLOAD = True
+    DO_CRAWL = True   
+    DO_UPLOAD = False
 
     """
     USE_OLD_DB
