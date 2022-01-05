@@ -190,8 +190,10 @@ class DB_and_CDN:
         for station_uuid, station_name in station_id_names:
             docs_with_parent_as_current_station = self._db_place_collection. \
                 where('parent_station_list', 'array_contains', station_name).stream()
-            place_uuids = [doc.id for doc in docs_with_parent_as_current_station]
-            self._db_station_collection.document(station_uuid).update({'place_list' : place_uuids})
+            place_docs = [doc.to_dict() for doc in docs_with_parent_as_current_station]
+            #for i in range(10):
+            #    place_docs.pop()
+            self._db_station_collection.document(station_uuid).update({'place_list' : place_docs})
 
 
 

@@ -3,7 +3,7 @@ import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
 import {Request} from "express";
-import {v5} from "uuid"
+import {v5} from "uuid";
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
