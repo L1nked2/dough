@@ -17,7 +17,7 @@ from firebase_admin import firestore
 from google.cloud import storage
 import os 
 import dill
-from numpy.lib.function_base import place
+import requests
 
 from firebase_document import PlaceDocument, StationDocument
 
@@ -111,8 +111,7 @@ class DB_and_CDN:
     (2) if the uuid of Document already exists in the collection,
         do not upload the document but just update parent_station info in DB
     """
-    def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument,
-        photo_dir_path : str):
+    def upload_place(self, place_doc : PlaceDocument, current_parent_station : StationDocument):
         assert place_doc.has_converted, "place document must be converted before uploaded to db"
 
         same_place_docs = list(self._db_place_collection.
@@ -127,8 +126,9 @@ class DB_and_CDN:
             DB_and_CDN._add_parent_station(self._db_transaction, 
                 place_doc_ref, current_parent_station)
         else: # no document for current place on placedb -> create new one & upload photos
+            self._upload_photos_and_replace_link(place_doc)
             self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
-            # self._upload_photos(place_doc, photo_dir_path)
+            
 
     """
     transaction of
@@ -151,58 +151,54 @@ class DB_and_CDN:
     """
     for Naver links to photos, upload it on CDN & store CDN link to DB
     """
-    def _upload_photos(self, place_doc : PlaceDocument, photo_dir_path : str):
-        assert False , "Do not call this function until classifier is done, because CDN upload needed to be carefully done"
-        raise NotImplementedError
-        # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/" 
-        photos_of_current_place_path = os.path.join(photo_dir_path, self._uuid)
-        place_id = place_doc._uuid
-
-        """
-        Explanation:
-            photo links in [food_photo_list, inside_photo_list, provided_photo_list, menu_photo_list]
-            were stored in order to download the photo from Naver before uploading to CDN.
-            But I(안해찬) has found out that it is not necessary,
-            as we already have photos at local inside `photo_dir_path`.
-
-            Therefore, for food/inside/provided/menu/main links in `PlaceDocument` class 
-            are actually useless.
-            Currently, they're use to get the number of photos of each kind.
-        """
+    def _upload_photos_and_replace_link(self, place_doc : PlaceDocument):
         
-        # # food, inside, provided
-        # for entry in os.listdir(photos_of_current_place_path):
-        #     file_path = os.path.join(photos_of_current_place_path, entry)
-        #     if not os.path.isfile(file_path):
-        #         continue
-            
-        #     if entry.endswith(".jpg") and (entry.startswith("f") or
-        #     entry.startswith("i") or entry.startswith("a")):
-        #         self._upload_photo(place_id, file_path)
+        place_id = place_doc._uuid
+        """
+        input : (naver_link, local_path)
+        outout : (naver_link, CDN_link)
+         |_ will be changed later
+        """
+        place_doc._main_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
+            for naver_link, local_path in place_doc._main_photo_list]
+        place_doc._provided_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
+            for naver_link, local_path in place_doc._provided_photo_list]
+        place_doc._food_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
+            for naver_link, local_path in place_doc._food_photo_list]
+        place_doc._inside_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
+            for naver_link, local_path in place_doc._inside_photo_list]
+        place_doc._menu_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
+            for naver_link, local_path in place_doc._menu_photo_list]
 
-        # # main
-        # for entry in os.listdir(os.path.join(photos_of_current_place_path, "/"))
-        # # menu
+        print(place_doc._menu_photo_list)
 
+    """
+    upload photo with either local_path or naver_link and return the link of CDN
+    # input : 00b7a056-d99d-b47e, "https:// ..." , "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/f2.jpg"
+    # output : CDN link
+    """
+    def _upload_photo_and_return_CDN_link(self, place_id : str, naver_link : str, 
+        photo_local_path : str):
+        # 0. path to store on CDN
+        photo_file_name = photo_local_path.split("/")[-1] # e.g. f2.jpg
+        assert photo_file_name.endswith(".jpg")
+        path_to_store_on_CDN = f'restaurant_images/{place_id}/{photo_file_name}'
 
-    # , 00b7a056-d99d-b47e, "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/f2.jpg" 
-    def _upload_photo(self, place_id : str, photo_path : str):
-        raise NotImplementedError
-        # path_to_load_from_local = photos_of_current_place_path
-        # if photo_kind == "food":
-        #     path_to_load_from_local += f"f{photo_idx}.jpg"
-        # elif photo_kind == "inside":
-        #     path_to_load_from_local += f"i{photo_idx}.jpg"
-        # elif photo_kind == "provided":
-        #     path_to_load_from_local += f"a{photo_idx}.jpg"
-        # elif photo_kind == "menu":
-        #     path_to_load_from_local += f"menu/{photo_idx}.jpg"
-        # elif photo_kind == "main":
-        #     if photo_idx == 0:
-        #         path_to_load_from_local += f""
+        # try to open the file on local path
+        # if it fails, use naver_link to download the photo
+        filename_to_upload = photo_local_path
+        if not os.path.exists(photo_local_path):
+            with open(filename_to_upload, 'wb+') as f:
+                response = requests.get(naver_link)
+                f.write(response.content)
 
-        # path_to_store_on_CDN = \
-        #     f'restaurant_images/{place_id}/{photo_kind}_{photo_idx}.jpg'
+        # upload the photo on CDN and return CDN link
+        bucket = self._cdn.get_bucket(self._bucket_root_url)
+        blob = bucket.blob(path_to_store_on_CDN)
+        blob.upload_from_filename(filename_to_upload)
+
+        CDN_link = self._cdn_root_url + path_to_store_on_CDN
+        return CDN_link
 
 
     """
@@ -324,6 +320,6 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
             # do not upload on CDN          
             if place_docu.has_photo_folder(photo_dir_path):
                 place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
-                db_cdn.upload_place(place_docu, station_docu, photo_dir_path)
+                db_cdn.upload_place(place_docu, station_docu)
 
     db_cdn.update_station_db(station_id_names)
