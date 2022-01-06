@@ -79,6 +79,11 @@ class PlaceDocument:
 
     def drop_local_path (photo_list : list[Tuple[str, str]]) -> list[str]:
       return [naver_link for (naver_link, local_path) in photo_list]
+    """
+    # need to use this to upload CDN link to DB
+    def drop_naver_link (photo_list : list[Tuple[str, str]]) -> list[str]:
+      return [cdn_link for (naver_link, cdn_link) in photo_list]
+    """
     place_data_dict['place_food_photo_list'] = drop_local_path(self._food_photo_list)
     place_data_dict['place_inside_photo_list'] = drop_local_path(self._inside_photo_list)
     place_data_dict['place_menu_photo_list'] = drop_local_path(self._menu_photo_list)
