@@ -16,6 +16,7 @@ Functions
 """
 
 from functools import total_ordering
+from typing import Tuple
 import numpy as np
 from numpy.lib.function_base import place 
 import pandas as pd
@@ -37,6 +38,8 @@ class PlaceDocument:
     self._likes = place_data_dict['place_likes']
     self._recent_views = place_data_dict['place_recent_views']
 
+    # photo_list : list[Tuple[str, str]] ... list of (naver_link, local_path),
+    # e.g. [('https://ldb-phinf.pstatic.net/20180705_282/1530759989688zRQlF_JPEG/4nh2bHk85UfvJqrIbWv22dA5.jpg', './temp_img/8cba5d13-d5d3-5b78-9fd1-f865ac3e8e61/menu/0.jpg'), ...]
     self._main_photo_list = place_data_dict['place_main_photo_list']
     self._provided_photo_list = place_data_dict['place_provided_photo_list']
     self._food_photo_list = place_data_dict['place_food_photo_list']
@@ -74,11 +77,18 @@ class PlaceDocument:
     place_data_dict['place_likes'] = self._likes
     place_data_dict['place_recent_views'] = self._recent_views
 
-    place_data_dict['place_food_photo_list'] = self._food_photo_list
-    place_data_dict['place_inside_photo_list'] = self._inside_photo_list
-    place_data_dict['place_menu_photo_list'] = self._menu_photo_list
-    place_data_dict['place_main_photo_list'] = self._main_photo_list 
-    place_data_dict['place_provided_photo_list'] = self._provided_photo_list
+    def drop_local_path (photo_list : list[Tuple[str, str]]) -> list[str]:
+      return [naver_link for (naver_link, local_path) in photo_list]
+    """
+    # need to use this to upload CDN link to DB
+    def drop_naver_link (photo_list : list[Tuple[str, str]]) -> list[str]:
+      return [cdn_link for (naver_link, cdn_link) in photo_list]
+    """
+    place_data_dict['place_food_photo_list'] = drop_local_path(self._food_photo_list)
+    place_data_dict['place_inside_photo_list'] = drop_local_path(self._inside_photo_list)
+    place_data_dict['place_menu_photo_list'] = drop_local_path(self._menu_photo_list)
+    place_data_dict['place_main_photo_list'] = drop_local_path(self._main_photo_list)
+    place_data_dict['place_provided_photo_list'] = drop_local_path(self._provided_photo_list)
 
     place_data_dict['place_road_address'] = self._road_address
     place_data_dict['place_legacy_address'] = self._legacy_address
