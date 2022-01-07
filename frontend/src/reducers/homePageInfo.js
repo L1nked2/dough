@@ -10,6 +10,8 @@ const initialState = {
     shopPageContent: {},
     locationPageIsOpen: false,
     menuModalIsOpen: false,
+    slideShowPageIsOpen: false,
+
     fullFoodList:  ['분식', '곱창', '닭발', '국밥', '백반', '돼지고기', '돈카츠', '닭갈비', '소고기', 
                     '일본가정식', '일본카레', '오믈렛', '회', '스시', '샐러드', '샌드위치', '브런치',
                     '수제버거', '파스타', '피자', '스테이크', '베트남', '멕시코', '인도', '태국', '양꼬치', 
@@ -50,6 +52,10 @@ function homePageReducer (state = initialState, action) {
             return {...state, menuModalIsOpen: true}
         case "CLOSE_MENU_MODAL":
             return {...state, menuModalIsOpen: false}
+        case "OPEN_SLIDESHOW_PAGE":
+            return {...state, slideShowPageIsOpen: true}
+        case "CLOSE_SLIDESHOW_PAGE":
+            return {...state, slideShowPageIsOpen: false}
         case "INITIAL_MENU_STATE":
             return {...state, 
                     tempFoodStateList: action.payload.tempFoodStateList, 

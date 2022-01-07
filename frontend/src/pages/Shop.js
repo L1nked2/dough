@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import './Shop.css';
-import { closeShopPage, tempLikeChange, setShopPageContents, likeChange } from '../actions/homePageInfo';
+import { closeShopPage, tempLikeChange, setShopPageContents, likeChange, openSlideshowPage } from '../actions/homePageInfo';
 import { openListPage } from '../actions/recommendPageInfo';
 import CallModal from '../components/main/CallModal';
 import { CSSTransition } from 'react-transition-group';
@@ -29,9 +29,11 @@ import "swiper/components/pagination/pagination.min.css";
 import SwiperCore, {
     Navigation
 } from 'swiper';
+import ImageSlideShow from '../components/main/ImageSlideShow';
 
 function ShopModal() {
-
+    SwiperCore.use([Navigation]);
+    
     const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
     const dispatch = useDispatch();
 
@@ -94,8 +96,6 @@ function ShopModal() {
         document.body.style.overflow = 'hidden';
     }
 
-    SwiperCore.use([Navigation]);
-
     const [galleryType, setGalleryType] = useState("store");
     const [gallery, setGallery] = useState(shopPageContent.place_provided_photo_list);
     useEffect(() => {
@@ -105,7 +105,23 @@ function ShopModal() {
         else if (galleryType === "food"){setGallery(shopPageContent.place_food_photo_list);}
     }, [galleryType]);
 
-    return (
+    const isPhotoOpen = useSelector(state => state.homePageInfo.slideShowPageIsOpen);
+    const [photoSlide, setPhotoSlide] = useState(null);
+    const [photoSlideTitle, setPhotoSlideTitle] = useState("제목없음");
+    const [photoSlideIndex, setPhotoSlideIndex] = useState(0);
+    function slideOpen (content, title, index) {
+        setPhotoSlide(content);
+        if (title==='store'){setPhotoSlideTitle("가게");}
+        else if (title==='inside'){setPhotoSlideTitle("내부");}
+        else if (title==='food'){setPhotoSlideTitle("음식");}
+        else {setPhotoSlideTitle(title);}
+        setPhotoSlideIndex(index);
+        dispatch(openSlideshowPage())
+    }
+    return (<>
+        <CSSTransition in={isPhotoOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+            <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} />
+        </CSSTransition>
         <div className="shopPage" id="shopPage">
             <CSSTransition in={isCallModalOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
                 <CallModal setIsCallModalOpen={setIsCallModalOpen} callNum={shopPageContent.place_telephone}/>
@@ -149,8 +165,13 @@ function ShopModal() {
                         <div className="eachInformation">
                             <div className="icon"><ClockIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
                             <div className="contents">
-                                <div style={{color: "rgba(0,0,0,0.9)"}}>{`(영업 시간) 11:00 - 22:00`}</div>
-                                <div style={{color: "rgba(0,0,0,0.9)"}}>{`(쉬는 시간) 14:00 - 17:00`}</div>
+                                {shopPageContent.place_operating_time.map((time, index) => {
+                                    if (!time.isDayOff) {
+                                        return (
+                                            <div key={index} style={{color: "rgba(0,0,0,0.9)"}}>{`(${time.description}${time.type}) ${time.startTime} - ${time.endTime}`}</div> // 나중에
+                                        );
+                                    }
+                                })}
                                 <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : 월, 화`}</div>
                             </div>
                         </div>
@@ -159,6 +180,11 @@ function ShopModal() {
                     <div className='callButton' onClick={openCallModal}>
                         <div className='button'><CallIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"}/></div>
                         <div className='call'>전화하기</div>
+                    </div>
+                    <div className="menuImg" onClick={()=>{slideOpen(shopPageContent.place_menu_photo_list, 
+                                                                    `${shopPageContent.place_name} 메뉴판`, 0)}}
+                         style={{backgroundImage:`url(${shopPageContent.place_menu_photo_list[0]})`}}>
+                        <div>{`메뉴판 (${shopPageContent.place_menu_photo_list.length})`}</div>
                     </div>
                     <div className="information">
                         <div className="eachInformation">
@@ -210,7 +236,7 @@ function ShopModal() {
                         <div className="backButton slideBackButton">
                             <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
                         </div>
-                        {`${shopPageContent.place_name} 사진(${gallery.length})`}
+                        {`${shopPageContent.place_name} 사진(${shopPageContent.place_provided_photo_list.length + shopPageContent.place_inside_photo_list.length + shopPageContent.place_food_photo_list.length})`}
                     </div>
                     <nav className="galleryType">
                         <div onClick={()=>{setGalleryType('store')}} className={galleryType==='store'?'active':''}>{`가게(${shopPageContent.place_provided_photo_list.length})`}</div>
@@ -221,8 +247,8 @@ function ShopModal() {
                         {gallery.map((imgSrc, index) => {
                             if (index % 2 === 0) {
                                 return (<div className="twoPictures" key={index}>
-                                    <img src={gallery[index]} alt={index} />
-                                    {gallery.length!==index+1?<img src={gallery[index+1]} alt={index+1} />:null}
+                                    <img src={gallery[index]} alt={index} onClick={()=>{slideOpen(gallery, galleryType, index)}}/>
+                                    {gallery.length!==index+1?<img src={gallery[index+1]} alt={index+1} onClick={()=>{slideOpen(gallery, galleryType, index+1)}}/>:null}
                                 </div>);
                             }
                         })}
@@ -240,79 +266,8 @@ function ShopModal() {
                     <div className="shareButton"><ShareIcon width={22} color={"#a3a3a3"}/>공유</div>
                 </div>
             </div> 
-        </div>
+        </div></>
     );
 }
 
 export default ShopModal;
-
-
-const sampleShop = {
-    name: "임실치돈",
-    category: "음식점",
-    menuCategory: "돈가스",
-    like: false,
-    price: "1 ~ 2만원",
-    distance: "역에서 200m",
-    firstImgSrc: "https://image.beansdrawer.com/short-hair/mackerel/n00-08.jpg",
-    secondImgSrc: "https://image.beansdrawer.com/short-hair/mackerel/n00-08.jpg",
-    thirdImgSrc: "https://image.beansdrawer.com/short-hair/mackerel/n00-08.jpg",
-    fourthImgSrc: "https://image.beansdrawer.com/short-hair/mackerel/n00-08.jpg",
-    roadAddress: "서울특별시 강남구 강남대로 110길 26",
-    lotAddress: "서울시 강남구 역삼동 811-4",
-    businessHours: "11:00-22:00",
-    breakTime: "14:00-17:00",
-    holiday: "월, 화",
-    menuList: [
-        ["등심 돈카츠", "13,000"],
-        ["안심 돈카츠", "14,000"],
-        ["멘치카츠", "17,000"],
-        ["스페셜 등심 돈카츠", "16,000"],
-        ["프리미엄 부타 돈카츠", "25,000"]
-    ],
-    naverLink: "https://m.map.naver.com/",
-    reviews: [
-        {title: "강남역 돈까스 맛집 추천, 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "신논현 돈까스 찐맛집 : 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "수요미식회 돈까스로 유명한 곳,...",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "강남역 돈까스 맛집 추천, 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "신논현 돈까스 찐맛집 : 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "수요미식회 돈까스로 유명한 곳,...",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-         {title: "강남역 돈까스 맛집 추천, 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집 안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "신논현 돈까스 찐맛집 : 정돈",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-        {title: "수요미식회 돈까스로 유명한 곳,...",
-         content: "안녕하세요:) 돈까스는 저의 소울 푸드입니다.. 강남역 갈\
-         떄마다 항상 웨이팅으로 가득했던 정돈이 드디어 무리 맛집",
-         link: "https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=alswl9476&logNo=221740267533"},
-    ]
-}

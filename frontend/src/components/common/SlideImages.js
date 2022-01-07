@@ -19,6 +19,7 @@ import "./SlideImages.css";
 import SwiperCore, {
     Pagination
 } from 'swiper';
+import { useRef } from "react";
 
 function SlideImages(props) {
     if (props.page === 'main') {
@@ -39,6 +40,9 @@ function SlideImages(props) {
     else if (props.page === 'result') {
       return (<ResultPageImageSlide elem={props.elem} />);
     }
+    else if (props.page === 'slideShow') {
+      return (<SlideShowImageSlide list={props.list} setSlideIndex={props.setSlideIndex} index={props.index}/>);
+    }
     return null;
   }
 
@@ -46,7 +50,6 @@ export default SlideImages;
 
 
 function MainPageSlide (props) {
-  console.log(props)
   const slideContentList = props.slideContentList;
   const dispatch = useDispatch();
   const openPage = (shop, rank) => {
@@ -301,3 +304,19 @@ function ResultPageImageSlide (props) {
   );
 }
 
+
+function SlideShowImageSlide (props) {
+  const slideContentList = props.list;
+  return (
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={false} spaceBetween={0} initialSlide={props.index}
+            className={`mySwiper slideShow`} onSlideChange={(swiper) => props.setSlideIndex(swiper.activeIndex)}>
+      {slideContentList.map((elem, index) => {
+        return (
+          <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide slideShow`} key={index}/>
+        );
+      })}
+    </Swiper>
+  );
+}

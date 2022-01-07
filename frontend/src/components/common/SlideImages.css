@@ -285,3 +285,12 @@
   cursor: pointer;
   transform: rotate(180deg);
 }
+
+.swiperSlide.slideShow {
+  width: 100%;
+  height: calc(100vh - 61px - 6em);
+  padding: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

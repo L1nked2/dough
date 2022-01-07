@@ -213,7 +213,34 @@
     padding: 0.5em 0;
     cursor: pointer;
 }
+.shopPage .menuImg {
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-end;
+    -webkit-box-align: end;
+    justify-content: flex-end;
+    -webkit-box-pack: end;
 
+    margin: 1em 2.211em;
+    height: 5em;
+    background-repeat: none;
+    background-position: center;
+    background-size: cover;
+}
+.shopPage .menuImg > div {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    font-size: 1.2em;
+    color: white;
+    background-color: rgba(0,0,0,0.36);
+    height: 2em;
+    padding: 0 1em;
+}
 .shopPage .information .eachInformation .contents .eachMenu{
     display: inline-flex;
     display: -webkit-inline-flex;

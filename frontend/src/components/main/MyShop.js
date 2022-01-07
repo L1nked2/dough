@@ -85,16 +85,18 @@ function MyShop(props) {
                 data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', category: "음식점", tags: []},
             }).then(response => {
                 console.log(response);
+                dispatch(changeContent('food', indexing(response.data.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
+                dispatch(changeContent('cafe', indexing(response.data.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
+                dispatch(changeContent('drink', indexing(response.data.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
                 return response.data;
               }).catch(err => {
                 console.log(err);
               });
-              dispatch(changeContent('food', indexing(res.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
-              dispatch(changeContent('cafe', indexing(res.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
-              dispatch(changeContent('drink', indexing(res.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
               
             }
-          getPlaceList();
+          if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
+            getPlaceList();
+          }
     //     }).catch(function(error) {
     //       console.log(error);
     //     });

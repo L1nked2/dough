@@ -35,6 +35,12 @@ export const openMenuModal = () => {
 export const closeMenuModal = () => {
     return {type: 'CLOSE_MENU_MODAL'};
 };
+export const openSlideshowPage = () => {
+    return {type: 'OPEN_SLIDESHOW_PAGE'};
+};
+export const closeSlideshowPage = () => {
+    return {type: 'CLOSE_SLIDESHOW_PAGE'};
+};
 
 export const initialMenuState = (foodList, CafeList, drinkList) => {
     const stateFoodTemp = [];
