@@ -27,25 +27,7 @@ function MyShop(props) {
     dispatch(changeCurrentCategory('cafe')); setSlideCategory([false, true, false]);}
   const changeBar = () => {
     dispatch(changeCurrentCategory('drink')); setSlideCategory([false, false, true]);}
-
-  /* Menu choice modal controller */
-  const menuModalIsOpen = useSelector((state) => state.homePageInfo.menuModalIsOpen);
-  const openPage = (openFunc) => {
-    dispatch(openFunc())
-    document.body.style.overflow = 'hidden';
-  };
-
-  const currLocation = useSelector((state) => state.homePageInfo.currLocation);
-
-  const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
-  const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
-  const stateDrink = useSelector((state) => state.homePageInfo.tempDrinkStateList);
-
-  const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
-  const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
-  const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const name = useSelector(state => state.homePageInfo.currCategory);
-
+    
   function checkAnyActive (list) {
     let anyActive = false;
     for (var i=0; i < list.length; i++) {
@@ -69,6 +51,24 @@ function MyShop(props) {
       return `${stateTemp[0]} 외 +${stateTemp.length - 1}`
     }
   }
+  /* Menu choice modal controller */
+  const menuModalIsOpen = useSelector((state) => state.homePageInfo.menuModalIsOpen);
+  const openPage = (openFunc) => {
+    dispatch(openFunc())
+    document.body.style.overflow = 'hidden';
+  };
+
+  const currLocation = useSelector((state) => state.homePageInfo.currLocation);
+
+  const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
+  const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
+  const stateDrink = useSelector((state) => state.homePageInfo.tempDrinkStateList);
+
+  const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
+  const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
+  const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
+  const testResult = useSelector((state) => state.userInfo.testResult.sampleTestResult);
+
 
   useEffect(() => {
     // getAuth().onAuthStateChanged(function(user){
@@ -104,6 +104,29 @@ function MyShop(props) {
     // })
   },[]);
 
+  // 취향 테스트 결과 없는 경우
+  // if (!testResult) {
+  //   return(
+  //     <div className="myShop">
+  //       <div className="myShopHeader">
+  //         <span id="myShop">내 취향 가게</span>
+  //       </div>
+  //       <nav className="shopCategory">
+  //         <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
+  //         <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
+  //         <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
+  //       </nav>
+  //       <div className="noResult">
+  //         <div>아직 약속장소 취향 테스트를</div>
+  //         <div>하지 않았습니다.</div>
+  //         <div>내 취향에 맞는 가게가 궁금하다면,</div>
+  //         <div>아래 버튼을 눌러주세요 :)</div>
+  //         <span>취향테스트 시작하기</span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  
   return (
     <div className="myShop">
       <div className="myShopHeader">
