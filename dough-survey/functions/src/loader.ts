@@ -3,7 +3,6 @@ import {getFirestore, doc, getDoc} from "@firebase/firestore";
 import * as firebaseAdmin from "firebase-admin";
 import {Request} from "express";
 import {user} from "firebase-functions/v1/auth";
-// import haversine from "haversine";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",

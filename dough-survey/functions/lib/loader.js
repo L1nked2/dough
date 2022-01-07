@@ -23,7 +23,6 @@ exports.getInfo = void 0;
 const app_1 = require("@firebase/app");
 const firestore_1 = require("@firebase/firestore");
 const firebaseAdmin = __importStar(require("firebase-admin"));
-// import haversine from "haversine";
 const firebaseConfig = {
     apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",
     authDomain: "dough-survey.web.app",

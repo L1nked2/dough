@@ -1,10 +1,8 @@
 import * as functions from "firebase-functions";
-// import firebaseAdmin from "firebase-admin";
 import express = require("express");
 import {kakaoLogin} from "./login";
 import {getInfo} from "./loader";
 import cors from "cors";
-// import bodyParser = require("body-parser");
 const app = express();
 app.use(cors());
 app.use(express.json());

@@ -1,9 +1,10 @@
-// import {initializeApp} from "firebase-admin/app";
+/* eslint-disable camelcase */
+import {initializeApp} from "@firebase/app";
 import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
 import {Request} from "express";
-import {v5} from "uuid";
+import {getFirestore, doc, setDoc} from "@firebase/firestore";
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -22,8 +23,10 @@ const firebaseConfig = {
 };
 
 // // Initialize Firebase
-// const fireBaseApp = initializeApp(firebaseConfig);
 firebaseAdmin.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
+const db = firebaseAdmin.firestore();
 
 // Initialize kakao api server uri
 const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
@@ -52,18 +55,52 @@ function requestMe(kakaoAccessToken: string) {
 }
 
 /**
+ * createUserDoc
+ *
+ * @param {string} userId
+ * @param {string} gender
+ * @param {string} age_range
+ * @return {promise<boolean>}
+ */
+async function createUserDoc(
+    userId: string, gender: string, age_range: string): Promise<boolean> {
+  console.log(`Creating user doc, id: ${userId}`);
+  try {
+    const docData = {
+      user_cluster_a: -1,
+      user_cluster_b: -1,
+      user_like_list: [],
+      user_last_tags: [],
+      user_gender: "",
+      user_age_range: "",
+    };
+    docData.user_gender = gender;
+    docData.user_age_range = age_range;
+    const documentRef = db.doc(`user_db/${userId}`);
+    documentRef.set(docData);
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+/**
  * updateOrCreateUser - Update Firebase user with the give email, create if
  * none exists.
  *
- * @param  {string} userId        user id per app
- * @param  {string} email         user's email address
- * @param  {string} displayName   user
- * @param  {string} photoURL      profile photo url
+ * @param {string} userId        user id per app
+ * @param {string} email         user's email address
+ * @param {string} displayName   user
+ * @param {string} photoURL      profile photo url
+ * @param {string} gender
+ * @param {string} age_range
  * @return {Prommise<UserRecord>} Firebase user record in a promise
  */
 function updateOrCreateUser(
-    userId: string, email: string, displayName: string, photoURL: string) {
-  console.log("updating or creating a firebase user");
+    userId: string, email: string, displayName: string, photoURL: string,
+    gender: string, age_range: string) {
   const updateParams: any = {
     provider: "KAKAO",
     displayName: displayName,
@@ -78,14 +115,15 @@ function updateOrCreateUser(
   if (photoURL) {
     updateParams["photoURL"] = photoURL;
   }
-  console.log(updateParams);
   return firebaseAdmin.auth().updateUser(userId, updateParams)
       .catch((error) => {
         if (error.code === "auth/user-not-found") {
+          console.log(`creating a firebase user: ${userId}`);
           updateParams["uid"] = userId;
           if (email) {
             updateParams["email"] = email;
           }
+          createUserDoc(userId, gender, age_range);
           return firebaseAdmin.auth().createUser(updateParams);
         }
         throw error;
@@ -100,24 +138,34 @@ function updateOrCreateUser(
  */
 function createFirebaseToken(kakaoAccessToken: string) {
   return requestMe(kakaoAccessToken).then((response: any) => {
-    const kakaoID = `kakao:${response.data.id}`;
-    // const kakaoPr = response.data.properties;
-    const kakaoAc = response.data.kakao_account;
-    if (!kakaoID) {
+    console.log(`Kakao token Verified: ${kakaoAccessToken}`);
+    const kakaoMe = response.data;
+    const kakaoId = `kakao:${kakaoMe.id}`;
+    const kakaoAccount = kakaoMe.kakao_account;
+    const kakaoGender = kakaoMe.gender;
+    const kakaoAge = kakaoMe.age_range;
+    if (!kakaoId) {
       return response.send(
           {message: "There was no user with the given access token."});
     }
     let nickname = null;
     let profileImage = null;
     let email = null;
-    console.log(`Kakao token Verified: ${kakaoAccessToken}`);
-    console.log(`kakao_id:${kakaoID}`);
-    if (kakaoAc) {
-      nickname = kakaoAc.profile.nickname;
-      profileImage = kakaoAc.profile.profile_image_url;
-      email = kakaoAc.email;
+    let age_range = "0";
+    let gender = "none";
+    if (kakaoAccount) {
+      nickname = kakaoAccount.profile.nickname;
+      profileImage = kakaoAccount.profile.profile_image_url;
+      email = kakaoAccount.email;
     }
-    return updateOrCreateUser(kakaoID, email, nickname, profileImage);
+    if (kakaoGender) {
+      gender = kakaoGender;
+    }
+    if (kakaoAge) {
+      age_range = kakaoAge;
+    }
+    return updateOrCreateUser(
+        kakaoId, email, nickname, profileImage, gender, age_range);
   }).then((userRecord) => {
     const userId = userRecord.uid;
     console.log(`creating a custom firebase token based on uid ${userId}`);
@@ -160,7 +208,6 @@ async function getKakaoToken(kakaoCode: string) {
  */
 async function kakaoLogin(req: Request) {
   const code = req.body.code;
-  console.log(`kakao code: ${code}`);
   const kakaoToken = await getKakaoToken(code);
   const firebaseToken = await createFirebaseToken(kakaoToken);
   console.log(`Returning firebase token to user: ${firebaseToken}`);

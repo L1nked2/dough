@@ -24,12 +24,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
-// import firebaseAdmin from "firebase-admin";
 const express = require("express");
 const login_1 = require("./login");
 const loader_1 = require("./loader");
 const cors_1 = __importDefault(require("cors"));
-// import bodyParser = require("body-parser");
 const app = express();
 app.use((0, cors_1.default)());
 app.use(express.json());
