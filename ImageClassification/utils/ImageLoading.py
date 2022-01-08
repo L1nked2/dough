@@ -92,6 +92,7 @@ class DoughDataset(data.Dataset):
         self.transform = transform
         self.args = args
         self.colors = dic['color']
+
     def __len__(self):
         return len(self.path_list)
 

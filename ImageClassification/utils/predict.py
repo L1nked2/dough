@@ -35,20 +35,12 @@ def vote(dic):
                 ones = 1
                 answer['answer'].append(a)
 
-
-
     right = 0
     size = len(answer['pred'])
 
     for p, a in zip(answer['pred'], answer['answer']): right += (p == a)
 
-<<<<<<< HEAD
     return answer, right/size
-=======
-    print(f'\npredict accuracy is {right / size * 100}%')
-
-    return answer
->>>>>>> parent of ec2ff33... 0108 Test Accuracy 60%
 
 def predict(args):
 
@@ -64,10 +56,10 @@ def predict(args):
 
     test_dataloader = PASS.pass_test_dataloader()
 
+    names = []
+    preds = []
+    reals = []
     with torch.no_grad():
-        names = []
-        preds = []
-        reals = [] # if real
         print('\n------------predicting---------------')
 
         for name, Xs, ys, cs in tqdm(test_dataloader): # for name, Xs, ys in tqdm(predict_dataloader):
@@ -95,15 +87,11 @@ def predict(args):
         'answer' : reals # if real
     }
 
-<<<<<<< HEAD
     prediction, correct = vote(answers)
 
     print(f'\npredict accuracy is {correct * 100}%')
-=======
-    prediction = vote(answers)
->>>>>>> parent of ec2ff33... 0108 Test Accuracy 60%
 
-    print(len(prediction['Name']), len(prediction['pred']), len(prediction['answer']))
+    # print(len(prediction['Name']), len(prediction['pred']), len(prediction['answer']))
     prediction_df = pd.DataFrame(prediction)
     prediction_df.to_csv('./predict.csv', index=False)
 

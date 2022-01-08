@@ -4,6 +4,7 @@ sys.path.append('.')
 
 import ImageClassification.utils.ImageLoading as ImageLoading
 from ImageClassification.model.I2L import I2L
+from ImageClassification.utils.predict import vote
 
 import torch.nn as nn
 import torch.optim as optim
@@ -63,17 +64,20 @@ def val_loop(dataloader, model, loss_fn, args):
     num_batches = len(dataloader)
     val_loss, correct = 0, 0
 
+    names = []
+    preds = []
+    reals = []
+
     with torch.no_grad():
-        for _, X, y, c in dataloader:
+        for name, Xs, ys, cs in dataloader:
             if args.GPU:
                 device = torch.device('cuda')
-                X = X.to(device)
-                y = y.to(device)
-                c = c.to(device)
+                Xs = Xs.to(device)
+                ys = ys.to(device)
+                cs = cs.to(device)
 
-            pred = model(X, c)
+            pred = model(Xs, cs)
             # print(pred.argmax(1).cpu().numpy(), y.argmax(1).cpu().numpy())
-<<<<<<< HEAD
             val_loss += loss_fn(pred, ys).item()
             correct += (pred.argmax(1) == ys.argmax(1)).type(torch.float).sum().item()
 
@@ -92,14 +96,6 @@ def val_loop(dataloader, model, loss_fn, args):
 
     val_loss /= num_batches
     print(f"Val Error: \n Accuracy: {(100*correct):>0.2f}%, Avg loss: {val_loss:>8f} \n")
-=======
-            val_loss += loss_fn(pred, y).item()
-            correct += (pred.argmax(1) == y.argmax(1)).type(torch.float).sum().item()
-
-    val_loss /= num_batches
-    correct /= size
-    print(f"Val Error: \n Accuracy: {(100*correct):>0.5f}%, Avg loss: {val_loss:>8f} \n")
->>>>>>> parent of ec2ff33... 0108 Test Accuracy 60%
 
     return correct, val_loss
 
@@ -124,7 +120,7 @@ def train(args):
     criterion = nn.MSELoss()
     # optimizer = optim.AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate, weight_decay=weight_decay)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=3, gamma=0.5)
+    scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=5, gamma=0.5)
 
     history = {'accuracy':[], 'train_loss': [], 'test_loss':[]}
     for t in range(EPOCHS):
@@ -140,8 +136,7 @@ def train(args):
         history['train_loss'].append(train_loss)
         history['accuracy'].append(correct)
         history['test_loss'].append(val_loss)
-        # print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', correct)
-        # print(max(history['accuracy']))
+
         if correct >= max(history['accuracy']):
             torch.save(model, './I2L_net.pt')
 
