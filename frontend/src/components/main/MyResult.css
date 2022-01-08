@@ -1,0 +1,55 @@
+.resultHeader {
+    text-align: center;
+    padding-top: 1.638em; /* 40px */
+    padding-bottom: 0.819em; /* 20px */
+    font-size: 1.8em;
+    color: #000000a6;
+    font-family: "SpoqaMedium";
+}
+
+.resultContainer {
+    display: flex;
+    padding-left: 5%;
+    padding-right: 5%;
+    text-align: center;
+    font-family: SpoqaRegular;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.65);
+    margin-bottom: 5.359em; /* 80px */
+}
+.resultContainer .leftWord {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.134em; /* 2px */
+    justify-content: space-between;
+}
+.resultContainer .centerLine {
+    flex: 5;
+}
+.resultContainer .rightWord {
+    flex: 2;
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    margin-top: 0.134em; /* 2px */
+    justify-content: space-between;
+}
+.resultContainer .centerLine .line{
+    position: relative;
+    margin-top: 0.67em; /* 10px */
+    height: 0.335em;
+    border: 0;
+    border-radius: 0.335em;
+    background-image: linear-gradient(90deg, rgba(0,0,0,0.1), rgba(0,0,0,0.36));
+}
+.resultContainer .centerLine .circle{
+    position: relative;
+    top: -0.469em;
+    height: 0.67em;
+    width: 0.67em;
+    border: 0;
+    border-radius: 0.67em;
+    background-color: #3FB8D5;
+    z-index: 2;
+}

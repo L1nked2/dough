@@ -1,0 +1,27 @@
+.mainHeader {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-start;
+    -webkit-box-pack: start;
+    align-items: center;
+    -webkit-box-align: center;
+
+    width: inherit;
+    height: 4.421em;
+    background-color: white;
+}
+.mainHeader.recommend {
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 10;
+}
+
+.mainHeader .mainLogo {
+    width: 3.5em;
+    padding-left: 2.21em;
+    padding-right: 2.21em;
+    padding-top: 1.5em;
+
+    cursor: pointer;
+}

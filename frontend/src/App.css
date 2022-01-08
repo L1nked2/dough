@@ -1,0 +1,84 @@
+.viewPage{
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.06);
+  font-size: 13.5714px;
+  line-height: 1.75em;
+}
+
+.layout {
+  margin: 0;
+  display: flex;
+  display: -webkit-flex;
+  width: 528px;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: white;
+  font-family: "SpoqaMedium";
+  -webkit-tap-highlight-color : rgba(0, 0, 0, 0);
+}
+
+/* button, html [type="button"] {
+  -webkit-appearance: none;   
+} */
+
+@media (max-width: 528px){
+  .layout {
+      width: 100%;
+  }
+}
+@media (orientation: portrait) and (max-width: 768px){
+  .layout {
+      width: 100%;
+  }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+@media (max-width: 528px){
+  .viewPage {
+      font-size: 12px;
+  }
+}
+@media (max-width: 436px){
+  .viewPage {
+      font-size: 11px;
+  }
+}
+@media (max-width: 400px){
+  .viewPage {
+      font-size: 10px;
+  }
+}
+@media (max-width: 356px){
+  .viewPage {
+      font-size: 9px;
+  }
+}
+@media (max-width: 320px){
+  .viewPage {
+      font-size: 8px;
+  }
+}
+@font-face {
+  font-family: "SpoqaBold";
+  src: url("./fonts/SpoqaHanSansNeo-Bold.ttf");
+}
+@font-face {
+  font-family: "SpoqaLight";
+  src: url("./fonts/SpoqaHanSansNeo-Light.ttf");
+}
+@font-face {
+  font-family: "SpoqaMedium";
+  src: url("./fonts/SpoqaHanSansNeo-Medium.ttf");
+}
+@font-face {
+  font-family: "SpoqaRegular";
+  src: url("./fonts/SpoqaHanSansNeo-Regular.ttf");
+}
+@font-face {
+  font-family: "SpoqaThin";
+  src: url("./fonts/SpoqaHanSansNeo-Thin.ttf");
+}

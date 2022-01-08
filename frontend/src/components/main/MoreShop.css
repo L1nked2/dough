@@ -1,0 +1,108 @@
+.moreShopHeader {
+    font-size: 1.8em;
+    color: rgba(0, 0, 0, 0.65);
+    padding-left: 1.15em;
+    vertical-align: bottom;
+    margin-top: 1em; /* 30px */
+    margin-bottom: 0.5em; /* 30px */
+}
+
+.nullList {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.03);
+    height: 15vh;
+}
+
+.eachShop {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    margin-left: 2.211em;
+    margin-right: 2.211em;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.03);
+    padding-top: 2.211em;
+    padding-bottom: 2.211em;
+}
+.eachShop .image {
+    display: inline-block;
+    width: 38%;
+    padding-right: 2.211em;
+}
+.eachShop .image #image {
+    width: 100%;
+    aspect-ratio: 1;
+    background-size: cover;
+    border-radius: 0.737em;
+}
+
+.eachShop .information{
+    width: 62%;
+    display: flex;
+    flex-direction: column;
+}
+
+.eachShop .information .rankAndDistance {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    color: rgba(0, 0, 0, 0.65);
+    font-family: SpoqaRegular;
+    font-size: 1.1em;
+    margin-bottom: 0.536em;
+}
+.eachShop .information .rankAndDistance #rank{
+    margin-right: 1.5em;
+}
+.eachShop .information .rankAndDistance #icon{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    padding-bottom: 0.2em;
+}
+.eachShop .information .rankAndDistance #distance{
+    margin-left: 0.2em;
+}
+
+.eachShop .information .nameAndMenu {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    margin-bottom: 0.59em;
+}
+.eachShop .information .nameAndMenu #name {
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 1.8em;
+}
+.eachShop .information .nameAndMenu #menu {
+    margin-left: 1em;
+    color: rgba(0, 0, 0, 0.36);
+    font-size: 1.1em;
+}
+
+
+
+.eachShop .information .subimages {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.eachShop .information .subimages > #subimage{
+    margin-right: 0.737em;
+    margin-top: 0.3685em;
+    width: calc(100%/62*38 - 2.211em - 2.438em - 0.3685em);
+    aspect-ratio: 1;
+    background-size: cover;
+    border-radius: 5px;
+}
+
+.eachShop .information .subimages #plusButton{
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}
+

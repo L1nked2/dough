@@ -1,0 +1,361 @@
+.shopPage {
+    position: fixed;
+    width: inherit;
+    top: 0;
+    height: 100%;
+    background-color: white;
+    z-index: 40;
+    font-family: "SpoqaRegular";
+    
+}
+.shopPage .shopSwiper {
+    height: calc(100% - 50px);
+}
+.shopPage .shopSwiper .mainContent {
+    overflow-y: scroll;
+}
+.shopPage .shopSwiper .gallery {
+    overflow-y: scroll;
+}
+
+.shopPage .subHeader {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background-color: white;
+    z-index: 60;
+    font-size: 1.4em;
+}
+.shopPage .subHeader .backButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.shopPage .shopSwiper .mainContent > .name {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    width: 100%;
+    font-size: 2.6em;
+    padding-top: 0.567em; /* 20px */
+    padding-bottom: 1em;
+    font-family: "SpoqaMedium";
+}
+
+.shopPage .simpleInfo {
+    display: flex;
+    display: -webkit-flex;
+
+    width: 100%;
+    font-size: 1.2em;
+    color: rgba(0,0,0,0.65);
+}
+.shopPage .simpleInfo .price{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    
+    width: 50%;
+    position: relative;
+}
+.shopPage .simpleInfo .price .temp{
+    display: flex;
+    display: -webkit-flex;
+    
+    position: absolute;
+    right: 1.8425em;
+    gap: 0.184em;
+}
+.shopPage .simpleInfo .location{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    width: 50%;
+    padding-left: 0.307em;
+    gap: 0.184em;
+}
+
+.shopPage .fourPictures {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    
+    padding-top: 1em;
+    padding-bottom: 2.211em;
+    gap: 0.737em;
+}
+.shopPage .pictures {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    
+    padding-top: 1.35em;
+    gap: 0.737em;
+}
+.shopPage .twoPictures {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+
+    gap: 0.737em;
+}
+.shopPage .twoPictures > img {
+    width: calc(50% - 0.3685em);
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.shopPage .information {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+
+    gap: 2.457em;
+    padding-left: 1.8425em; /* 30px */
+    padding-right: 1.8425em;
+    font-size: 1.2em;
+}
+.shopPage .callButton{
+    position: sticky;
+    position: -webkit-sticky;
+    bottom: 10px;
+
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    gap: 0.8em;
+
+    background-color: white;
+    padding: 1em 0;
+    margin: 1em 1.8425em 2.457em 1.8425em;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 0.7em;
+
+    cursor: pointer;
+}
+.shopPage .callButton .button{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+}
+.shopPage .callButton .call{
+    font-size: 1.4em;
+    color: rgba(0,0,0,0.9);
+}
+.shopPage .information .eachInformation {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+
+    gap: 1.474em;
+}
+.shopPage .information .eachInformation .icon{
+    display: flex;
+    display: -webkit-flex;
+
+    width: calc(11% - 1.474em);
+    padding-top: 0.221em;
+    justify-content: center;
+    align-items: start;
+}
+.shopPage .information .eachInformation .icon.naver{
+    padding-top: 0px;
+}
+.shopPage .information .eachInformation .contents{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+
+    width: 90%;
+}
+.shopPage .information .eachInformation .contents .menuList{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+.shopPage .information .eachInformation .contents .expandButton{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    padding: 0.5em 0;
+    cursor: pointer;
+}
+
+.shopPage .information .eachInformation .contents .eachMenu{
+    display: inline-flex;
+    display: -webkit-inline-flex;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+
+    position: relative;
+}
+.shopPage .information .eachInformation .contents .eachMenu .name{
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;    
+}
+.shopPage .information .eachInformation .contents .eachMenu .line{
+    flex-grow: 1;
+    -webkit-box-flex: 1;
+    flex-shrink: 1;
+    -webkit-flex-shrink: 1;
+
+    margin-left: 1em;
+    margin-right: 1em;
+    height: auto;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.18) 80%, rgba(255,255,255,0) 20%);
+    background-position: center right;
+    background-size: 1.1055em 0.0737em;
+    background-repeat: repeat-x;
+}
+.shopPage .information .eachInformation .contents .eachMenu .price{
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+
+    margin-left: auto;
+}
+.shopPage .information .eachInformation .contents.reviews{
+    overflow-y: hidden;
+}
+.shopPage .information .eachInformation .contents .eachReview{
+    padding-top: 1.474em;
+    padding-bottom: 1.474em;
+    margin-right: 11.11%;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    cursor: pointer;
+    text-decoration: none;
+    color: rgba(0,0,0,0.9);
+}
+.shopPage .information .eachInformation .contents .eachReview .title{
+    margin-bottom: 0.737em;
+}
+.shopPage .information .eachInformation .contents .eachReview .content{
+    height: 3em;
+    overflow-y: hidden;
+    font-size: 0.917em;
+    color: rgba(0,0,0,0.65);
+}
+
+.shopPage .shopSwiper .mainContent > .expandButton{
+    display: flex;
+    display: -webkit-flex;
+
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0,0,0,0.03);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.shopPage .shopSwiper .gallery .galleryType {
+    width: inherit;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 2.211em;
+    margin-top: 5em;
+}
+.shopPage .shopSwiper .gallery .galleryType > div {
+    text-align: center;    
+    border: 1px solid rgba(0,0,0,0.18);
+    border-radius: 1em;
+    padding: 0.2em 1.75em 0.1em 1.75em;
+    margin-right: 1em;
+    
+    font-size: 1.1em;
+    font-family: "SpoqaRegular";
+    color: rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    user-select: none;
+}
+.shopPage .shopSwiper .gallery .galleryType > .active {
+    border: 1px solid #3FB8D5;
+    font-family: "SpoqaMedium";
+    color: #3FB8D5;
+}
+
+.shopPage .subNavbar {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    position: sticky;
+    position: -webkit-sticky;
+    bottom: 0;
+    width: inherit;
+    height: 50px;
+    background-color: white;
+
+    font-size: 1.4em;
+    color: rgba(0,0,0,0.36);
+    border-top: 1px solid #D1D1D1;
+}
+.shopPage .subNavbar .buttons{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: relative;
+    width: 60%;
+    height: inherit;
+    user-select: none;
+}
+.shopPage .subNavbar .buttons .likeButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: absolute;
+    left: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+.shopPage .subNavbar .buttons .shareButton {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    
+    position: absolute;
+    right: 0%;
+    gap: 0.7em;
+    cursor: pointer;
+    margin-bottom: 2px;
+}

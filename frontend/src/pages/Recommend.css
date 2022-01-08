@@ -1,0 +1,60 @@
+.recommendPage {
+    width: inherit;
+    font-size: 13.5714px;
+    padding-bottom: 50px;
+}
+
+
+.recommendCategory {
+    width: inherit;
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+}
+.recommendCategory > div {
+    text-align: center;
+    float: left;
+    width: 33.333%;
+    padding-top: 13px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+
+    font-size: 1.4em;
+    font-family: SpoqaRegular;
+    color: rgba(0,0,0,0.36);
+    cursor: pointer;
+    user-select: none;
+}
+.recommendCategory .active {
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3FB8D5;
+    color: rgba(0,0,0,0.65);
+}
+
+
+@media (max-width: 528px){
+    .recommendPage {
+        font-size: 12px;
+    }
+}
+@media (max-width: 436px){
+    .recommendPage {
+        font-size: 11px;
+    }
+}
+@media (max-width: 400px){
+    .recommendPage {
+        font-size: 10px;
+    }
+}
+@media (max-width: 356px){
+    .recommendPage {
+        font-size: 9px;
+    }
+}
+@media (max-width: 320px){
+    .recommendPage {
+        font-size: 8px;
+    }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "operationName": "getSasImages",
+    "variables": {
+      "input": {
+        "businessId": "",
+        "businessType": "restaurant",
+        "display": 10,
+        "relations": [],
+        "start": 0
+      }
+    },
+    "query": "query getSasImages($input: SasImagesInput) {\n  sasImages(input: $input) {\n    relation\n    total\n    items {\n      rank\n      title\n      imgUrl\n      originalUrl\n      text\n      link\n      section\n      subsection\n      width\n      height\n      date\n      __typename\n    }\n    __typename\n  }\n}\n"
+  }
+]

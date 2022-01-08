@@ -1,0 +1,116 @@
+.shopInList {
+    padding-top: 1.843em;
+    padding-bottom: 5em;
+}
+
+.shopInList .header {
+    display: flex;
+    display: -webkit-flex;
+
+    padding: 0 2.211em;
+}
+
+.shopInList .header .info{
+    width: 80%;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+}
+.shopInList .header .info .nameAndButton{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    gap: 1.5em;
+    padding-bottom: 0.8em;
+}
+.shopInList .header .info .nameAndButton .name{
+    color: rgba(0, 0, 0, 0.9);
+    font-family: SpoqaMedium;
+    font-size: 1.8em;
+}
+.shopInList .header .info .nameAndButton .moreButton{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    height: auto;
+    margin-bottom: 0.1em;
+    cursor: pointer;
+}
+.shopInList .header .info .severalInfoSet{
+    display: flex;
+    display: -webkit-flex;
+    gap: 1.2em;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.65);
+}
+.shopInList .header .info .severalInfo{
+    display: flex;
+    display: -webkit-flex;
+    gap: 0.3em;
+}
+.shopInList .header .info .severalInfo .button{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    margin-bottom: 0.1em;
+}
+.shopInList .header .buttons{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    width: 20%;
+    height: auto;
+}
+.shopInList .header .buttons .button{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    -webkit-box-pack: end;
+    width: 50%;
+    cursor: pointer;
+}
+
+.shopInList .images {
+    padding: 1em 0;
+    z-index: 100;
+}
+
+.shopInList .description {    
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    
+    padding: 0.5em 2.211em;
+    transition: background-color 0.4s ease;
+    outline: none;
+}
+.shopInList .description .simple{
+    font-size: 1.2em;
+    color: rgba(0, 0, 0, 0.65);
+}
+.shopInList .description .simple .more{
+    color: rgba(0, 0, 0, 0.36);
+    cursor: pointer;
+}
+.shopInList .description .detailed{
+    padding-top: 1.5em;
+    font-size: 1.2em;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: white;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    white-space: pre-wrap;
+}
+.shopInList .description .detailed .tags{
+    padding-top: 1em;
+    color: #3FB8D5;
+}

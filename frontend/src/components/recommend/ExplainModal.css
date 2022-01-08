@@ -1,0 +1,46 @@
+.overlayExplain {
+    position: fixed;
+    top: 0;
+    width: 528px;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0.32);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+  
+.overlayExplain .modal {
+    z-index: 150;
+}
+.overlayExplain .modal .content {
+    position: relative;
+    top: -25px;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    height: auto;
+
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: white;
+    border-radius: 15px;
+    font-size: 1.1em;
+    color: rgba(0,0,0,0.9);
+    font-family: SpoqaRegular;
+}
+  
+@media (max-width: 528px){
+    .overlayExplain {
+        width: 100%;
+    }
+  }
+  @media (orientation: portrait) and (max-width: 768px){
+    .overlayExplain {
+        width: 100%;
+    }
+  }

@@ -1,0 +1,159 @@
+.overlayMenu {
+  position: fixed;
+  top: 0;
+  width: 528px;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: rgba(0,0,0,0.65);
+  z-index: 100;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-box-orient: vertical;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+}
+
+
+.overlayMenu .header {
+  color: white;
+  font-family: "SpoqaRegular";
+  font-size: 1.4em;
+  z-index: 150;
+}
+
+.overlayMenu .modal {
+  width: 90%;
+  z-index: 150;
+  margin-top: 15px;
+
+  background-color: white;
+  border-radius: 10px;
+}
+
+
+.overlayMenu .modal .reset {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  -webkit-box-pack: end;
+  align-items: center;
+  -webkit-box-align: center;
+
+  font-size: 1.1em;
+  color: rgba(0,0,0,0.36);
+}
+
+.overlayMenu .modal .reset .resetButton {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  -webkit-box-pack: end;
+  align-items: center;
+  -webkit-box-align: center;
+
+  cursor: pointer;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-size: 1.1em;
+  color: rgba(0,0,0,0.36);
+}
+
+.overlayMenu .modal .reset .resetIcon{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+  align-items: center;
+  -webkit-box-align: center;
+  margin-left: 5px;
+}
+
+.overlayMenu .modal .menuList {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-box-orient: horizontal;
+  flex-wrap: wrap;
+
+  font-size: 1.2em;
+  font-family: "SpoqaRegular";
+  color: rgba(0,0,0,0.65);
+  
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.overlayMenu .modal .menuList .menuComponent {
+  display: flex;
+  display: -webkit-flex;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 16px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 13px;
+  padding-right: 13px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 7px;
+  margin-right: 7px;
+  cursor: pointer;
+}
+.overlayMenu .modal .menuList .menuComponent.active {
+  border: 1px solid #3FB8D5;
+  color: #3FB8D5;
+}
+
+.overlayMenu .modal .buttonSection {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  padding: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-size: 1.4em;
+  font-family: "SpoqaRegular";
+}
+
+.overlayMenu .modal .buttonSection .close{
+  cursor: pointer;
+  color: rgba(0,0,0,0.65);
+}
+.overlayMenu .modal .buttonSection .apply{
+  cursor: pointer;
+  color: #3FB8D5;
+}
+
+
+
+@media (max-width: 528px){
+  .overlayMenu {
+      width: 100%;
+  }
+  .overlayMenu .modal .menuList {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .overlayMenu .modal .menuList .menuComponent {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}
+@media (orientation: portrait) and (max-width: 768px){
+  .overlayMenu {
+      width: 100%;
+  }
+}
