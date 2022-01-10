@@ -75,13 +75,13 @@ function requestMe(kakaoAccessToken) {
 /**
  * createUserDoc
  *
- * @param {string} userId
+ * @param {string} user_id
  * @param {string} gender
  * @param {string} age_range
  * @return {promise<boolean>}
  */
-async function createUserDoc(userId, gender, age_range) {
-    console.log(`Creating user doc, id: ${userId}`);
+async function createUserDoc(user_id, gender, age_range) {
+    console.log(`Creating user doc, id: ${user_id}`);
     try {
         const docData = {
             user_cluster_a: -1,
@@ -90,10 +90,16 @@ async function createUserDoc(userId, gender, age_range) {
             user_last_tags: [],
             user_gender: "",
             user_age_range: "",
+            user_survey_result: [],
+            user_survey_done: false,
+            user_survey_last_timestamp: "",
+            user_sign_in_timestamp: "",
         };
         docData.user_gender = gender;
         docData.user_age_range = age_range;
-        const documentRef = db.doc(`user_db/${userId}`);
+        const date = new Date();
+        docData.user_sign_in_timestamp = date.toString();
+        const documentRef = db.doc(`user_db/${user_id}`);
         documentRef.set(docData);
         return true;
     }
@@ -106,7 +112,7 @@ async function createUserDoc(userId, gender, age_range) {
  * updateOrCreateUser - Update Firebase user with the give email, create if
  * none exists.
  *
- * @param {string} userId        user id per app
+ * @param {string} user_id       user id per app
  * @param {string} email         user's email address
  * @param {string} displayName   user
  * @param {string} photoURL      profile photo url
@@ -114,7 +120,7 @@ async function createUserDoc(userId, gender, age_range) {
  * @param {string} age_range
  * @return {Prommise<UserRecord>} Firebase user record in a promise
  */
-function updateOrCreateUser(userId, email, displayName, photoURL, gender, age_range) {
+function updateOrCreateUser(user_id, email, displayName, photoURL, gender, age_range) {
     const updateParams = {
         provider: "KAKAO",
         displayName: displayName,
@@ -129,15 +135,15 @@ function updateOrCreateUser(userId, email, displayName, photoURL, gender, age_ra
     if (photoURL) {
         updateParams["photoURL"] = photoURL;
     }
-    return firebaseAdmin.auth().updateUser(userId, updateParams)
+    return firebaseAdmin.auth().updateUser(user_id, updateParams)
         .catch((error) => {
         if (error.code === "auth/user-not-found") {
-            console.log(`creating a firebase user: ${userId}`);
-            updateParams["uid"] = userId;
+            console.log(`creating a firebase user: ${user_id}`);
+            updateParams["uid"] = user_id;
             if (email) {
                 updateParams["email"] = email;
             }
-            createUserDoc(userId, gender, age_range);
+            createUserDoc(user_id, gender, age_range);
             return firebaseAdmin.auth().createUser(updateParams);
         }
         throw error;
@@ -154,6 +160,7 @@ function createFirebaseToken(kakaoAccessToken) {
         console.log(`Kakao token Verified: ${kakaoAccessToken}`);
         const kakaoMe = response.data;
         const kakaoId = `kakao:${kakaoMe.id}`;
+        console.log(`Kakao Me: ${JSON.stringify(kakaoMe)}`);
         const kakaoAccount = kakaoMe.kakao_account;
         const kakaoGender = kakaoMe.gender;
         const kakaoAge = kakaoMe.age_range;

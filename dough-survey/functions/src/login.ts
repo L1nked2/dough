@@ -4,7 +4,6 @@ import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
 import {Request} from "express";
-import {getFirestore, doc, setDoc} from "@firebase/firestore";
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -57,14 +56,14 @@ function requestMe(kakaoAccessToken: string) {
 /**
  * createUserDoc
  *
- * @param {string} userId
+ * @param {string} user_id
  * @param {string} gender
  * @param {string} age_range
  * @return {promise<boolean>}
  */
 async function createUserDoc(
-    userId: string, gender: string, age_range: string): Promise<boolean> {
-  console.log(`Creating user doc, id: ${userId}`);
+    user_id: string, gender: string, age_range: string): Promise<boolean> {
+  console.log(`Creating user doc, id: ${user_id}`);
   try {
     const docData = {
       user_cluster_a: -1,
@@ -73,10 +72,16 @@ async function createUserDoc(
       user_last_tags: [],
       user_gender: "",
       user_age_range: "",
+      user_survey_result: [],
+      user_survey_done: false,
+      user_survey_last_timestamp: "",
+      user_sign_in_timestamp: "",
     };
     docData.user_gender = gender;
     docData.user_age_range = age_range;
-    const documentRef = db.doc(`user_db/${userId}`);
+    const date = new Date();
+    docData.user_sign_in_timestamp = date.toString();
+    const documentRef = db.doc(`user_db/${user_id}`);
     documentRef.set(docData);
     return true;
   } catch (error) {
@@ -90,7 +95,7 @@ async function createUserDoc(
  * updateOrCreateUser - Update Firebase user with the give email, create if
  * none exists.
  *
- * @param {string} userId        user id per app
+ * @param {string} user_id       user id per app
  * @param {string} email         user's email address
  * @param {string} displayName   user
  * @param {string} photoURL      profile photo url
@@ -99,7 +104,7 @@ async function createUserDoc(
  * @return {Prommise<UserRecord>} Firebase user record in a promise
  */
 function updateOrCreateUser(
-    userId: string, email: string, displayName: string, photoURL: string,
+    user_id: string, email: string, displayName: string, photoURL: string,
     gender: string, age_range: string) {
   const updateParams: any = {
     provider: "KAKAO",
@@ -115,15 +120,15 @@ function updateOrCreateUser(
   if (photoURL) {
     updateParams["photoURL"] = photoURL;
   }
-  return firebaseAdmin.auth().updateUser(userId, updateParams)
+  return firebaseAdmin.auth().updateUser(user_id, updateParams)
       .catch((error) => {
         if (error.code === "auth/user-not-found") {
-          console.log(`creating a firebase user: ${userId}`);
-          updateParams["uid"] = userId;
+          console.log(`creating a firebase user: ${user_id}`);
+          updateParams["uid"] = user_id;
           if (email) {
             updateParams["email"] = email;
           }
-          createUserDoc(userId, gender, age_range);
+          createUserDoc(user_id, gender, age_range);
           return firebaseAdmin.auth().createUser(updateParams);
         }
         throw error;
@@ -141,6 +146,7 @@ function createFirebaseToken(kakaoAccessToken: string) {
     console.log(`Kakao token Verified: ${kakaoAccessToken}`);
     const kakaoMe = response.data;
     const kakaoId = `kakao:${kakaoMe.id}`;
+    console.log(`Kakao Me: ${JSON.stringify(kakaoMe)}`);
     const kakaoAccount = kakaoMe.kakao_account;
     const kakaoGender = kakaoMe.gender;
     const kakaoAge = kakaoMe.age_range;

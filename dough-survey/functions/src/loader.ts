@@ -1,24 +1,7 @@
-import {initializeApp} from "@firebase/app";
-import {getFirestore, doc, getDoc} from "@firebase/firestore";
 import * as firebaseAdmin from "firebase-admin";
 import {Request} from "express";
-import {user} from "firebase-functions/v1/auth";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBTuC8MUuBtZtCnP9YJh8BgRuUJMS687Jw",
-  authDomain: "dough-survey.web.app",
-  databaseURL: "https://dough-survey-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "dough-survey",
-  storageBucket: "dough-survey.appspot.com",
-  messagingSenderId: "111678578513",
-  appId: "1:111678578513:web:32f35f3eb65cfb2f19bd70",
-  measurementId: "G-VS98EGYRJL",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-const db = getFirestore();
+const db = firebaseAdmin.firestore();
 
 /**
  * getUserId
@@ -66,25 +49,24 @@ async function getInfo(infotype: string, req: Request): Promise<any> {
   }
 }
 
-
 /**
  * getInfoBase
  *
  * @param  {string} infotype
- * @param  {string} Id
+ * @param  {string} id
  * @return {Promise<any>}
  */
-async function getInfoBase(infotype: string, Id:string): Promise<any> {
+async function getInfoBase(infotype: string, id:string): Promise<any> {
   try {
     if (infotype === "user" || infotype === "place" ||
         infotype === "station" || infotype === "post") {
-      const docRef = doc(db, `${infotype}_db`, Id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log(`returning ${infotype} data: ${Id}`);
+      const docRef = db.collection(`${infotype}_db`).doc(id);
+      const docSnap = await docRef.get();
+      if (docSnap.exists) {
+        console.log(`getInfoBase: ${infotype}, ${id}`);
         return docSnap.data();
       } else {
-        console.log(`No such document: ${Id}`);
+        console.log(`No such document: ${infotype}, ${id}`);
       }
     } else {
       console.log("Not implemented types");
@@ -105,6 +87,7 @@ async function getUserInfo(req: Request) {
   try {
     const userId = await getUserId(req.body.userToken);
     const userInfo = await getInfoBase("user", userId);
+    console.log(`getUserInfo: ${userId}`);
     return {userInfo: userInfo};
   } catch (error) {
     console.log(error);
@@ -115,6 +98,7 @@ async function getUserInfo(req: Request) {
 /**
  * getStationInfo
  * category switch block need to be fixed
+ * distance need to be added
  * @param  {Request} req
  * @return {Promise<any>}
  */
@@ -135,6 +119,7 @@ async function getStationInfo(req: Request): Promise<any> {
       category = "";
       categoryAll = true;
     }
+    console.log(`getStationInfo: ${stationId}`);
     if (userId === "default") {
       const stationInfo =
         await getInfoBase("station", `${stationId}${category}`);
@@ -168,9 +153,7 @@ async function getPlaceInfo(req: Request): Promise<any> {
     const placeCoor: coordinate = {lon: placeInfo.place_coor_x,
       lat: placeInfo.place_coor_y};
     const distance = haversineDistance(stationCoor, placeCoor);
-    console.log(`getPlaceInfo: ${JSON.stringify(stationData)},
-      ${JSON.stringify(placeInfo)}`);
-    console.log(`distance: ${distance}`);
+    console.log(`getPlaceInfo: ${placeId}`);
     return {placeInfo: placeInfo, distance: distance};
   } catch (error) {
     console.log(error);
@@ -188,6 +171,7 @@ async function getPostInfo(req: Request): Promise<any> {
   try {
     const postId = await req.body.postId;
     const postInfo = await getInfoBase("post", postId);
+    console.log(`getPostInfo: ${postId}`);
     return {postInfo: postInfo};
   } catch (error) {
     console.log(error);
@@ -227,4 +211,4 @@ function haversineDistance(coords1: coordinate, coords2:coordinate) {
   return d;
 }
 
-export {getInfo};
+export {getInfo, getUserId};
