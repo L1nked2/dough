@@ -36,7 +36,7 @@ function Home() {
   },[]);
   
   return (
-    <div className="Home-page">
+    <div className="homePage">
       <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
         <ShopModal />
       </CSSTransition>

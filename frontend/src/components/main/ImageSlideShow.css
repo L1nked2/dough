@@ -41,7 +41,7 @@
     cursor: pointer;
 }
 .imgSlidePage .content {
-    height: calc(100vh - 61px - 6em);
+    flex: 1 1 auto;
     background-color: black;
 }
 .imgSlidePage .subNavbar {

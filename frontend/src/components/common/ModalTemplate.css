@@ -1,0 +1,69 @@
+.overlayModal {
+    position: fixed;
+    top: 0;
+    width: 528px;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0.65);
+    z-index: 100;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+  }
+  
+  
+  .overlayModal .header {
+    color: white;
+    font-family: "SpoqaRegular";
+    font-size: 1.4em;
+    z-index: 150;
+  }
+  
+  .overlayModal .modal {
+    width: 90%;
+    z-index: 150;
+    margin-top: 15px;
+  
+    background-color: white;
+    border-radius: 10px;
+  }
+  
+  
+.overlayModal .modal .buttonSection {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    padding: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 1.4em;
+    font-family: "SpoqaRegular";
+  }
+  
+  .overlayModal .modal .buttonSection .close{
+    cursor: pointer;
+    color: rgba(0,0,0,0.65);
+  }
+  .overlayModal .modal .buttonSection .apply{
+    cursor: pointer;
+    color: #3FB8D5;
+  }
+  
+  
+  
+  @media (max-width: 528px){
+    .overlayModal {
+        width: 100%;
+    }
+  }
+  @media (orientation: portrait) and (max-width: 768px){
+    .overlayModal {
+        width: 100%;
+    }
+  }

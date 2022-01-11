@@ -7,7 +7,7 @@ import Navbar from '../components/common/Navbar';
 import './Result.css';
 
 import SlideImages from '../components/common/SlideImages';
-import { refresh_result } from '../actions/userInfo';
+import { refreshResult } from '../actions/userInfo';
 import MyResult from '../components/main/MyResult';
 import CurationContent from '../components/survey/CurationContent';
 import CurationListModal from './CurationList';
@@ -28,7 +28,7 @@ firebaseInit();
 
 function Result(props) {
   const dispatch = useDispatch();
-  dispatch(refresh_result({sampleTestResult: sampleTestResult, mainCuration: mainCuration, sampleCuration: sampleCuration}));
+  dispatch(refreshResult({sampleTestResult: sampleTestResult, mainCuration: mainCuration, sampleCuration: sampleCuration}));
   useEffect(() => {
     getAuth().onAuthStateChanged(function(user){
       if (user) {

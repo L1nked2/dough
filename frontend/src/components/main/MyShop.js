@@ -7,7 +7,7 @@ import { firebaseInit } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
 import MoreShop from '../main/MoreShop';
-import MenuModal from '../common/MenuModal';
+import MenuModal from '../main/MenuModal';
 
 import MapIcon from '../icon/Map';
 

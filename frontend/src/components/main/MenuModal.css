@@ -1,40 +1,4 @@
-.overlayMenu {
-  position: fixed;
-  top: 0;
-  width: 528px;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: rgba(0,0,0,0.65);
-  z-index: 100;
-  display: flex;
-  display: -webkit-flex;
-  flex-direction: column;
-  -webkit-box-orient: vertical;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-}
-
-
-.overlayMenu .header {
-  color: white;
-  font-family: "SpoqaRegular";
-  font-size: 1.4em;
-  z-index: 150;
-}
-
-.overlayMenu .modal {
-  width: 90%;
-  z-index: 150;
-  margin-top: 15px;
-
-  background-color: white;
-  border-radius: 10px;
-}
-
-
-.overlayMenu .modal .reset {
+.overlayModal .modal .reset {
   display: flex;
   display: -webkit-flex;
   justify-content: flex-end;
@@ -46,7 +10,7 @@
   color: rgba(0,0,0,0.36);
 }
 
-.overlayMenu .modal .reset .resetButton {
+.overlayModal .modal .reset .resetButton {
   display: flex;
   display: -webkit-flex;
   justify-content: flex-end;
@@ -63,7 +27,7 @@
   color: rgba(0,0,0,0.36);
 }
 
-.overlayMenu .modal .reset .resetIcon{
+.overlayModal .modal .reset .resetIcon{
   display: flex;
   display: -webkit-flex;
   justify-content: center;
@@ -73,7 +37,7 @@
   margin-left: 5px;
 }
 
-.overlayMenu .modal .menuList {
+.overlayModal .modal .menuList {
   display: flex;
   display: -webkit-flex;
   flex-direction: row;
@@ -92,7 +56,7 @@
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-.overlayMenu .modal .menuList .menuComponent {
+.overlayModal .modal .menuList .menuComponent {
   display: flex;
   display: -webkit-flex;
   border: 1px solid rgba(0,0,0,0.18);
@@ -107,53 +71,23 @@
   margin-right: 7px;
   cursor: pointer;
 }
-.overlayMenu .modal .menuList .menuComponent.active {
+.overlayModal .modal .menuList .menuComponent.active {
   border: 1px solid #3FB8D5;
   color: #3FB8D5;
 }
 
-.overlayMenu .modal .buttonSection {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-between;
-  -webkit-justify-content: space-between;
-  padding: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  font-size: 1.4em;
-  font-family: "SpoqaRegular";
-}
-
-.overlayMenu .modal .buttonSection .close{
-  cursor: pointer;
-  color: rgba(0,0,0,0.65);
-}
-.overlayMenu .modal .buttonSection .apply{
-  cursor: pointer;
-  color: #3FB8D5;
-}
-
-
 
 @media (max-width: 528px){
-  .overlayMenu {
-      width: 100%;
-  }
-  .overlayMenu .modal .menuList {
+  .overlayModal .modal .menuList {
     margin-left: 10px;
     margin-right: 10px;
     padding-left: 20px;
     padding-right: 20px;
   }
-  .overlayMenu .modal .menuList .menuComponent {
+  .overlayModal .modal .menuList .menuComponent {
     margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 4px;
     margin-right: 4px;
-  }
-}
-@media (orientation: portrait) and (max-width: 768px){
-  .overlayMenu {
-      width: 100%;
   }
 }

@@ -1,9 +1,119 @@
-.Profile-page {
-    text-align: center;
-    padding-top: 60px;
+.profilePage {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    justify-content: flex-start;
+    -webkit-box-pack: start;
+    align-items: center;
+    -webkit-box-align: center;
+
+    padding-bottom: 50px;
     width: inherit;
+    user-select: none;
+}
+.profilePage .overlayModal .modal .retestAlert {
+    display: flex;
+    display: -webkit-flex;
+    text-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    font-size: 1.4em;
+    font-family: SpoqaRegular;
+    line-height: 1.5em;
+    padding: 3em 0;
+    color: rgba(0, 0, 0, 0.9);
+    white-space: pre-wrap;
+}
+.profilePage .individual {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    width: 100%;
+    margin-top: 2.211em;
+}
+.profilePage .individual .profileImage{
+    margin: 0 2.211em;
+    width: 20%;
+    aspect-ratio:1;
+    border-radius: 10em;
+}
+.profilePage .individual .text {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: flex-start;
+    -webkit-box-align: start;
+}
+.profilePage .individual .text .name {
+    font-size: 1.8em;
+    color: rgba(0, 0, 0, 0.9);
+}
+.profilePage .individual .text .re-test {
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.36);
+    font-family: SpoqaRegular;
+    margin-top: 1em;
+    cursor: pointer;
+}
+.profilePage .testResult {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    text-align: center;
+
+    box-sizing: border-box;
+    width: calc(100% - 4.422em);
+    margin: 2.211em;
+    padding: 0.5em 0;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 0.5em;
+    cursor: pointer;
 }
 
-.sampleCompProfile {
-    height: 50%;
+.profilePage .content {
+    flex: 1 1 auto;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+.profilePage .content .tag {
+    width: 100%;
+    background-color: white;
+}
+.profilePage .content .tag > span {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+
+    width: 33.333%;
+    padding: 0.3em 0;
+    font-size: 1.4em;
+    font-family: SpoqaRegular;
+    color: rgba(0,0,0,0.9);
+    border-bottom: 3px solid #3FB8D5;
+}
+.profilePage .content .photoType {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    -webkit-box-pack: end;
+}
+.profilePage .content .photoType > div {
+    padding-top: 1em;
+    padding-right: 1em;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.36);
+}
+.profilePage .content .photoType > div.active {
+    color: #3FB8D5;
 }
