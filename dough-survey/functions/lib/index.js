@@ -27,6 +27,7 @@ const functions = __importStar(require("firebase-functions"));
 const express = require("express");
 const login_1 = require("./login");
 const loader_1 = require("./loader");
+const submit_1 = require("./submit");
 const cors_1 = __importDefault(require("cors"));
 const app = express();
 app.use((0, cors_1.default)());
@@ -39,6 +40,15 @@ app.get("/api/login", (req, res) => {
 app.post("/api/login", (req, res) => {
     (0, login_1.kakaoLogin)(req).then((token) => {
         res.send({ access_token: token });
+    });
+});
+// survey submission
+app.get("/api/survey", (req, res) => {
+    res.send("Forbidden GET /survey");
+});
+app.post("/api/survey", (req, res) => {
+    (0, submit_1.submitSurvey)(req).then((writeTime) => {
+        res.send({ writeTime: writeTime });
     });
 });
 // getInfo routes, provide test data

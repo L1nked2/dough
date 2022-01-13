@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import express = require("express");
 import {kakaoLogin} from "./login";
 import {getInfo} from "./loader";
+import {submitSurvey} from "./submit";
 import cors from "cors";
 const app = express();
 app.use(cors());
@@ -16,6 +17,17 @@ app.get("/api/login", (req, res) => {
 app.post("/api/login", (req, res) => {
   kakaoLogin(req).then((token) => {
     res.send({access_token: token});
+  });
+});
+
+// survey submission
+app.get("/api/survey", (req, res) => {
+  res.send("Forbidden GET /survey");
+});
+
+app.post("/api/survey", (req, res) => {
+  submitSurvey(req).then((writeTime) => {
+    res.send({writeTime: writeTime});
   });
 });
 
