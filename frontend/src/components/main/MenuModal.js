@@ -62,7 +62,7 @@ function MenuModalContent (props) {
     return (<>
             <div className="reset">
                 <span onClick={props.resetStates} className="resetButton">{`${props.name} 선택 초기화`}
-                    <span className="resetIcon" ><ResetIcon width={15} color={"#a4a4a4"}/></span>
+                    <span className="resetIcon" ><ResetIcon width={"1em"} color={"#a4a4a4"}/></span>
                 </span>
             </div>
             <div className="menuList">

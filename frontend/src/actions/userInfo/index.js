@@ -4,13 +4,17 @@ export const refreshResult = (result) => {
         payload: result
     };
 };
-export const openRetestModal = () => {
+
+export const setCluster = (cluster) => {
     return {
-        type: 'OPEN_RETEST_MODAL'
+        type: 'SET_CLUSTER',
+        payload: cluster
     };
 };
-export const closeRetestModal = () => {
+
+export const appendCurrentShop = (uuid) => {
     return {
-        type: 'CLOSE_RETEST_MODAL'
+        type: 'APPEND_CURRENT_SHOP',
+        payload: uuid
     };
 };

@@ -2,17 +2,18 @@ const initialState = {
     testResult: {},
     name: '구름',
     myType: '주택가 레스토랑',
-    retestModalIsOpen: false,
+    cluster: -1,
+    currentList: [],
 }
 
 function userInfoReducer (state = initialState, action) {
     switch(action.type){
         case "REFRESH_RESULT":
             return {...state, testResult: action.payload}
-        case "OPEN_RETEST_MODAL":
-            return {...state, retestModalIsOpen: true}
-        case "CLOSE_RETEST_MODAL":
-            return {...state, retestModalIsOpen: false}
+        case "SET_CLUSTER":
+            return {...state, cluster: action.payload}
+        case "APPEND_CURRENT_SHOP":
+            return {...state, currentList: [action.payload, ...state.currentList].slice(0,10)}
         default:
             return state
     }

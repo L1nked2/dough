@@ -12,7 +12,7 @@
     width: inherit;
     user-select: none;
 }
-.profilePage .overlayModal .modal .retestAlert {
+.profilePage .overlayModal .modal .alert {
     display: flex;
     display: -webkit-flex;
     text-align: center;
@@ -78,6 +78,10 @@
 }
 
 .profilePage .content {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
     flex: 1 1 auto;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.03);
@@ -116,4 +120,148 @@
 }
 .profilePage .content .photoType > div.active {
     color: #3FB8D5;
+}
+.profilePage .content .noCurrent {
+    flex: 1 1 auto;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+
+    font-family: SpoqaRegular;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+
+
+.profilePage .settingPage {
+    position: fixed;
+    width: inherit;
+    min-width: 320px;
+    height: calc(100vh - 50px);
+    overflow-y: scroll;
+    background-color: white;
+    z-index: 20;
+    font-family: SpoqaRegular;
+    color: rgba(0, 0, 0, 0.65);
+}
+.profilePage .settingPage .subHeader {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: fixed;
+    top: 0;
+    width: inherit;
+    height: 60px;
+    background-color: white;
+    user-select: none;
+}
+.profilePage .settingPage .subHeader .backButton {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    height: 100%;
+    cursor: pointer;
+}
+.profilePage .settingPage .mainButtons{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+    gap: 15%;
+    height: 20em;
+    margin-top: 60px;
+}
+.profilePage .settingPage .mainButtons > div {
+    cursor: pointer;
+}
+.profilePage .settingPage .mainButtons > div > img{
+    height: 5em;
+}
+.profilePage .settingPage .mainButtons > div > div{
+    width: 100%;
+    text-align: center;
+    font-size: 1.1em;
+    padding-top: 0.5em;
+}
+.profilePage .settingPage .details {
+    padding: 0 2.211em;
+}
+.settingCollapse {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+}
+.settingCollapse .header {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+
+    background-color: white;
+    color: #575757;
+    font-size: 1.1em;
+    cursor: pointer;
+    padding: 0;
+    padding-bottom: 1.25em;
+    border: none;
+    outline: none;
+    transition: background-color 0.4s ease;
+}
+.settingCollapse .header .collapseIcon {
+    margin-right: 0.5265em;
+    transition: transform 0.4s ease;
+}
+.settingCollapse .header .collapseIcon.rotate {
+    transform: rotate(90deg);
+}
+.settingCollapse .collapseContent {
+    background-color: white;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding-left: 1.1em;
+}
+.settingCollapse .collapseContent .normal {
+    font-size: 1.1em;
+    margin-bottom: 1.25em;
+    color: #575757;
+}
+.settingCollapse .collapseContent .normal.cursor {
+    cursor: pointer;
+}
+.settingCollapse .collapseContent .policy {
+    font-size: 1.1em;
+    margin-bottom: 1.25em;
+    color: rgba(0, 0, 0, 0.36);
+    position: relative;
+}
+.settingCollapse .collapseContent .policy .click {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    cursor: pointer;
+}
+.settingCollapse .collapseContent .companyInfo {
+    margin-bottom: 1.25em;
+}
+.settingCollapse .collapseContent .companyInfo .tag {
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.36);
+}
+.settingCollapse .collapseContent .companyInfo .text {
+    font-size: 1.1em;
+    color: #848484;
 }

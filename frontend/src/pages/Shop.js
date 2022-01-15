@@ -4,6 +4,7 @@ import axios from 'axios';
 import './Shop.css';
 import { closeShopPage, tempLikeChange, setShopPageContents, likeChange, openSlideshowPage } from '../actions/homePageInfo';
 import { openListPage } from '../actions/recommendPageInfo';
+import { appendCurrentShop } from '../actions/userInfo';
 import CallModal from '../components/main/CallModal';
 import { CSSTransition } from 'react-transition-group';
 
@@ -81,6 +82,7 @@ function ShopModal() {
         closePage();
     }
     useEffect (() => {
+        dispatch(appendCurrentShop(shopPageContent));
         // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");

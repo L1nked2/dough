@@ -27,10 +27,10 @@
   .overlayModal .modal {
     width: 90%;
     z-index: 150;
-    margin-top: 15px;
+    margin-top: 1.1055em;
   
     background-color: white;
-    border-radius: 10px;
+    border-radius: 0.737em;
   }
   
   
@@ -39,11 +39,11 @@
     display: -webkit-flex;
     justify-content: space-between;
     -webkit-justify-content: space-between;
-    padding: 20px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 1.053em 0.526em;
+    margin: 0 1.053em;
     font-size: 1.4em;
     font-family: "SpoqaRegular";
+    border-top: 1px solid rgba(0,0,0,0.06);
   }
   
   .overlayModal .modal .buttonSection .close{

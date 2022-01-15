@@ -78,7 +78,7 @@ function MyShop(props) {
           const getPlaceList = async () => { 
             const res = await axios({
                 method: 'POST',
-                url: 'https://dough-survey.web.app/api/station',
+                url: 'https://dough-survey.web.app/api/info/station',
                 headers: {
                     "Content-Type": `application/json`
                 },
