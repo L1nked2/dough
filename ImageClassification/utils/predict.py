@@ -19,7 +19,9 @@ def vote(dic):
     # print(prediction)
     for key in prediction.keys():
         prediction[f'{key}'] = np.array(prediction[f'{key}'])
-        # print('directory', prediction[f'{key}'][:, 0], '||->||', 'answer', prediction[f'{key}'][:, 1][0])
+        # print(f'{key}')
+        # print('On the directory', prediction[f'{key}'][:, 0], '->', 'Ground Truth', prediction[f'{key}'][:, 1][0])
+        # print('-------------------------------------------------------------------')
         prediction[f'{key}'] = max(prediction[f'{key}'][:, 0], key=list(prediction[f'{key}'][:, 0]).count)
 
     answer = {
@@ -45,7 +47,7 @@ def vote(dic):
 def predict(args):
 
     print('\n------------------Now predicting------------------')
-    model = torch.load('./I2L_net.pt')
+    model = torch.load('./100E_ALL_I2L_net.pt')
     model.eval()
 
     if args.GPU:
@@ -89,7 +91,7 @@ def predict(args):
 
     prediction, correct = vote(answers)
 
-    print(f'\npredict accuracy is {correct * 100}%')
+    print(f'\npredict accuracy is {correct * 100:>0.2f}%')
 
     # print(len(prediction['Name']), len(prediction['pred']), len(prediction['answer']))
     prediction_df = pd.DataFrame(prediction)
