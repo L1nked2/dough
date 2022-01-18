@@ -1,0 +1,7 @@
+.favoriteMainPage {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+  align-items : center;
+  font-family: "SpoqaRegular";
+}

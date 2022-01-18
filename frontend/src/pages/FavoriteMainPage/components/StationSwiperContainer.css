@@ -1,0 +1,14 @@
+.stationSwiperContainer{
+  padding-top: 50px;
+  display: flex;
+  flex-direction : row;
+  flex-wrap: wrap;
+  width: inherit;
+}
+
+.stationBox{
+  flex-grow : 1;
+  flex-shrink : 0;
+  flex-basis : 40%;
+  text-align : center;
+}

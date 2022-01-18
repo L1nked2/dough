@@ -1,0 +1,8 @@
+.categorySelector{
+  display: flex;
+  width: inherit;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 14px;
+}
+
