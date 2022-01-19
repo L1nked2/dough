@@ -5,7 +5,7 @@ import './BackHeader.css'
 function BackHeader(props){
   const getPlaceCategoryInKorean = (placeCategoryEng) => {
     switch (placeCategoryEng){
-      case "restr":
+      case "rest":
         return "식당";
       case "cafe":
         return "카페";
@@ -25,7 +25,7 @@ function BackHeader(props){
         </Link>
       </div>
       <div className="stationInfo"> 
-        {props.stationName}역 {getPlaceCategoryInKorean(props.placeCategory)} 
+        {props.stationName} {getPlaceCategoryInKorean(props.placeCategory)} 
         ({props.stationNumPlaces}) 
       </div>
     </div>

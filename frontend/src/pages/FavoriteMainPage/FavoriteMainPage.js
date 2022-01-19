@@ -8,15 +8,17 @@ import StationSwiperContainer from './components/StationSwiperContainer'
 import Navbar from '../../components/common/Navbar'
 
 function FavoriteMainPage(props){
-  const [category, setCategory] = useState("restr") // ["restr", "cafe", "bar"] 
+  const [category, setCategory] = useState("rest") // ["rest", "cafe", "bar"] 
 
-  const [userFavorites, setUserFavorites] = useState({});
+  const [userFavorites, setUserFavorites] = useState(undefined);
   useEffect(() => {
     // fetch user favorite json from server with axios
-    setUserFavorites(example_user_favorite);
+    // with Promise
+    setUserFavorites(example_user_favorite.user_favorites);
     console.log("fetch new user favorites data");
   }, [userFavorites]); // run again only if userFavorites have changed
 
+  console.log(userFavorites);
 
   return (
     <div className="favoriteMainPage">
@@ -25,8 +27,12 @@ function FavoriteMainPage(props){
       <CategorySelector 
         category={category} 
         setCategory ={(newCategory)=>{setCategory(newCategory)}} 
+        userFavorites={userFavorites}
       />
-      <StationSwiperContainer category={category}/>
+      <StationSwiperContainer 
+        category={category}
+        userFavorites={userFavorites}  
+      />
       <Navbar page="favorite_main"/>
     </div>
   );
