@@ -4,7 +4,7 @@ import './FavoriteStationPage.css'
 
 import BackHeader from './components/BackHeader'
 import PhotoFilterSelector from './components/PhotoFilterSelector'
-// import PhotoSwiperContainer from './components/PhotoSwiperContainer'
+import PhotoSwiperContainer from './components/PhotoSwiperContainer'
 
 function FavoriteStationPage(props){  
   const [showPlaceNotFood, setShowPlaceNotFood] = useState(true);
@@ -37,7 +37,10 @@ function FavoriteStationPage(props){
         recentFirst={recentFirst}
         setRecentFirst={setRecentFirst}
       />
-      {/* <PhotoSwiperContainer/> */}
+      <PhotoSwiperContainer
+        showPlaceNotFood={showPlaceNotFood}
+        recentFirst={recentFirst}
+      />
     </div>
   );
 }

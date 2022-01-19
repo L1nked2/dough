@@ -1,0 +1,13 @@
+.photoSwiperContainer{
+  display: flex;
+  flex-direction : row;
+  flex-wrap: wrap;
+  width: inherit;
+}
+
+.thumbnailPhotoBox{
+  flex-grow : 1;
+  flex-shrink : 0;
+  flex-basis : 40%;
+  text-align : center;
+}
