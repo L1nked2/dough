@@ -58,8 +58,8 @@ function StationBox(props){
       <div className="stationBox">
         <Link className="stationBoxLink" to={`/favorite_station/${props.stationName}/${props.placeCategory}`}>
         {/*{props.stationThumbnail} <br/> */}
-        {props.stationName}역 사진 <br/>
-        {props.stationName}({props.stationPlaceNum}) 
+        <img className="stationBoxImg" src="https://i.kym-cdn.com/photos/images/newsfeed/001/878/329/dfa.jpg"></img>
+        <span>{props.stationName}({props.stationPlaceNum}) </span>
         </Link>
       </div>
   );

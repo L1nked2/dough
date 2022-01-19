@@ -27,7 +27,7 @@ function ThumbnailPhotoBox(props){
   return (
     <div className="thumbnailPhotoBox">
       <Link to="/home">
-      Clickable Photo
+      <img className='thumbnailPhoto' src="https://i.kym-cdn.com/photos/images/newsfeed/001/878/329/dfa.jpg"/>
       {/* image link from props.placeThumbNail(props.showPlaceNotFood?Place:Food)Photo
       that does the following on click
       (1) dispatch `openShopPage` and `setShopPageContents` with payload=prosp.placeName or UUid
