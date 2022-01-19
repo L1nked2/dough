@@ -101,8 +101,9 @@
     flex-direction: column;
     -webkit-box-orient: vertical;
     
-    padding-top: 1em;
-    padding-bottom: 2.211em;
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 2.211em;
     gap: 0.737em;
 }
 .shopPage .pictures {
@@ -127,6 +128,15 @@
     aspect-ratio: 1;
     object-fit: cover;
 }
+.shopPage .fourPictures > span {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 1.4em;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+    padding: 0.3em 0.5em;
+}
 
 .shopPage .information {
     display: flex;
@@ -134,7 +144,6 @@
     flex-direction: column;
     -webkit-box-orient: vertical;
 
-    gap: 2.457em;
     padding-left: 1.8425em; /* 30px */
     padding-right: 1.8425em;
     font-size: 1.2em;
@@ -175,6 +184,7 @@
     -webkit-box-orient: horizontal;
 
     gap: 1.474em;
+    margin-bottom: 2.457em;
 }
 .shopPage .information .eachInformation .icon{
     display: flex;
@@ -273,6 +283,10 @@
 
     margin-left: auto;
 }
+.shopPage .information .eachInformation .contents > a {
+    overflow: hidden;
+    word-break: break-all;
+}
 .shopPage .information .eachInformation .contents.reviews{
     overflow-y: hidden;
 }
@@ -293,6 +307,39 @@
     overflow-y: hidden;
     font-size: 0.917em;
     color: rgba(0,0,0,0.65);
+}
+.shopPage .infoChange {
+    display: flex;
+    display: -webkit-flex;
+
+    padding-left: 1.8425em; /* 30px */
+    padding-right: 1.8425em;
+    padding-top: 0.5em;
+    padding-bottom: 5em;
+    font-size: 1.2em;
+    
+    gap: 1.474em;
+    background-color: #F7F7F7;
+    color: #A3A3A3;
+    height: 2em;
+}
+.shopPage .infoChange > .icon {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    width: calc(11% - 1.474em);
+}
+.shopPage .infoChange > .icon > img {
+    width: 100%;
+}
+.shopPage .infoChange > .contents {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    padding-top: 0.2em;
+    cursor: pointer;
 }
 
 .shopPage .shopSwiper .mainContent > .expandButton{
