@@ -19,7 +19,7 @@ function FavoriteMainPage(props){
         setCategory ={(newCategory)=>{setCategory(newCategory)}} 
       />
       <StationSwiperContainer category={category}/>
-      <Navbar page="favorite"/>
+      <Navbar page="favorite_main"/>
     </div>
   );
 }
