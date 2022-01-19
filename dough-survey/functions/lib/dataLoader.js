@@ -19,14 +19,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserId = exports.getInfo = void 0;
+exports.getInfoBase = exports.getUserId = exports.getInfo = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const db = firebaseAdmin.firestore();
 /**
  * getUserId
  *
  * @param  {string} userToken
- * @return {Promise<String>}
+ * @return {Promise<string>}
  */
 async function getUserId(userToken) {
     try {
@@ -46,7 +46,7 @@ exports.getUserId = getUserId;
 /**
  * getInfo
  *
- * @param  {string} infotype
+ * @param  {string} infotype info type, user | place | station | post
  * @param  {Request} req
  * @return {Promise<any>}
  */
@@ -77,9 +77,9 @@ exports.getInfo = getInfo;
 /**
  * getInfoBase
  *
- * @param  {string} infotype
- * @param  {string} id
- * @return {Promise<any>}
+ * @param  {string} infotype info type, user | place | station | post
+ * @param  {string} id uuid of target document
+ * @return {Promise<any>} object contaning data of document
  */
 async function getInfoBase(infotype, id) {
     try {
@@ -104,6 +104,7 @@ async function getInfoBase(infotype, id) {
         throw error;
     }
 }
+exports.getInfoBase = getInfoBase;
 /**
  * getUserInfo
  *
@@ -124,7 +125,7 @@ async function getUserInfo(req) {
 }
 /**
  * getStationInfo
- * category switch block need to be fixed
+ * recommendation need to be added
  * distance need to be added
  * @param  {Request} req
  * @return {Promise<any>}
@@ -135,28 +136,34 @@ async function getStationInfo(req) {
         const userId = await getUserId(req.body.userToken);
         let category = req.body.category;
         const tags = req.body.tags;
+        const page = req.body.page;
         let categoryAll = false;
         if (category === "음식점") {
-            category = "";
+            category = "rest";
         }
         else if (category === "카페") {
-            category = "";
+            category = "cafe";
         }
         else if (category === "술집") {
-            category = "";
+            category = "bar";
         }
         else if (category === "") {
             category = "";
             categoryAll = true;
         }
         console.log(`getStationInfo: ${stationId}`);
-        if (userId === "default") {
-            const stationInfo = await getInfoBase("station", `${stationId}${category}`);
+        if (categoryAll === true) {
+            const userInfo = await getInfoBase("user", userId);
+            const stationBaseInfo = await getInfoBase("station", `${stationId}`);
+            const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${page}`);
+            const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
             return { stationInfo: stationInfo };
         }
         else {
             const userInfo = await getInfoBase("user", userId);
-            const stationInfo = await getInfoBase("station", `${stationId}${category}`);
+            const stationBaseInfo = await getInfoBase("station", `${stationId}`);
+            const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${page}`);
+            const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
             return { stationInfo: stationInfo };
         }
     }
@@ -234,4 +241,4 @@ function haversineDistance(coords1, coords2) {
     const d = R * c;
     return d;
 }
-//# sourceMappingURL=loader.js.map
+//# sourceMappingURL=dataLoader.js.map

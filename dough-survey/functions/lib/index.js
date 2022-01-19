@@ -26,33 +26,47 @@ exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
 const express = require("express");
 const login_1 = require("./login");
-const loader_1 = require("./loader");
-const submit_1 = require("./submit");
+const dataLoader_1 = require("./dataLoader");
+const userPreference_1 = require("./userPreference");
 const cors_1 = __importDefault(require("cors"));
 const app = express();
 app.use((0, cors_1.default)());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // login using kakao code
-app.get("/api/login", (req, res) => {
-    res.send("Forbidden GET /login");
-});
 app.post("/api/login", (req, res) => {
     (0, login_1.kakaoLogin)(req).then((token) => {
         res.send({ access_token: token });
     });
 });
 // survey submission
-app.get("/api/survey", (req, res) => {
-    res.send("Forbidden GET /survey");
-});
 app.post("/api/survey", (req, res) => {
-    (0, submit_1.submitSurvey)(req).then((writeTime) => {
-        res.send({ writeTime: writeTime });
+    (0, userPreference_1.submitSurvey)(req).then((userCluster) => {
+        res.send({ userCluster: userCluster });
     });
 });
+// favorites management
+app.get("/api/favorites", (req, res) => {
+    res.send("Forbidden GET /favorites");
+});
+app.post("/api/favorites", (req, res) => {
+    (0, userPreference_1.updateFavorites)(req).then((updateStatus) => {
+        res.json({ result: updateStatus });
+    });
+});
+// user account management
+app.get("/api/account/:action", (req, res) => {
+    const action = req.params.action;
+    res.send(`Forbidden GET /account/${action}`);
+});
+app.post("/api/account/:action", (req, res) => {
+    const action = req.params.action;
+    if (action === "") {
+        res.send(`not implemented ${action}`);
+    }
+});
 // getInfo routes, provide test data
-app.get("/api/:infoType", (req, res) => {
+app.get("/api/info/:infoType", (req, res) => {
     const type = req.params.infoType;
     if (type === "place") {
         req.body.stationId = "2a2fb6a8-e995-515c-a24b-849030c8d8ea";
@@ -70,13 +84,13 @@ app.get("/api/:infoType", (req, res) => {
     else if (type === "post") {
         req.body.postId = "00000001";
     }
-    (0, loader_1.getInfo)(type, req).then((info) => {
+    (0, dataLoader_1.getInfo)(type, req).then((info) => {
         res.json(info);
     });
 });
-app.post("/api/:infoType", (req, res) => {
+app.post("/api/info/:infoType", (req, res) => {
     const type = req.params.infoType;
-    (0, loader_1.getInfo)(type, req).then((info) => {
+    (0, dataLoader_1.getInfo)(type, req).then((info) => {
         res.json(info);
     });
 });

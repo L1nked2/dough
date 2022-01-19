@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 import express = require("express");
 import {kakaoLogin} from "./login";
-import {getInfo} from "./loader";
-import {submitSurvey} from "./submit";
+import {getInfo} from "./dataLoader";
+import {submitSurvey, updateFavorites} from "./userPreference";
 import cors from "cors";
 const app = express();
 app.use(cors());
@@ -10,10 +10,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // login using kakao code
-app.get("/api/login", (req, res) => {
-  res.send("Forbidden GET /login");
-});
-
 app.post("/api/login", (req, res) => {
   kakaoLogin(req).then((token) => {
     res.send({access_token: token});
@@ -21,18 +17,39 @@ app.post("/api/login", (req, res) => {
 });
 
 // survey submission
-app.get("/api/survey", (req, res) => {
-  res.send("Forbidden GET /survey");
-});
-
 app.post("/api/survey", (req, res) => {
-  submitSurvey(req).then((writeTime) => {
-    res.send({writeTime: writeTime});
+  submitSurvey(req).then((userCluster) => {
+    res.send({userCluster: userCluster});
   });
 });
 
+// favorites management
+app.get("/api/favorites", (req, res) => {
+  res.send("Forbidden GET /favorites");
+});
+
+app.post("/api/favorites", (req, res) => {
+  updateFavorites(req).then((updateStatus) => {
+    res.json({result: updateStatus});
+  });
+});
+
+// user account management
+app.get("/api/account/:action", (req, res) => {
+  const action = req.params.action;
+  res.send(`Forbidden GET /account/${action}`);
+});
+
+app.post("/api/account/:action", (req, res) => {
+  const action = req.params.action;
+  if (action === "") {
+    res.send(`not implemented ${action}`);
+  }
+});
+
+
 // getInfo routes, provide test data
-app.get("/api/:infoType", (req, res) => {
+app.get("/api/info/:infoType", (req, res) => {
   const type = req.params.infoType;
   if (type === "place") {
     req.body.stationId = "2a2fb6a8-e995-515c-a24b-849030c8d8ea";
@@ -52,7 +69,7 @@ app.get("/api/:infoType", (req, res) => {
   });
 });
 
-app.post("/api/:infoType", (req, res) => {
+app.post("/api/info/:infoType", (req, res) => {
   const type = req.params.infoType;
   getInfo(type, req).then((info) => {
     res.json(info);
