@@ -12,3 +12,8 @@
   flex-basis : 40%;
   text-align : center;
 }
+
+.stationBoxLink{
+  text-decoration: none;
+  color: black;
+}

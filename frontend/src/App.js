@@ -4,6 +4,7 @@ import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import Home from './pages/Home';
 import Recommend from './pages/Recommend';
 import FavoriteMainPage from './pages/FavoriteMainPage/FavoriteMainPage';
+import FavoriteStationPage from './pages/FavoriteStationPage/FavoriteStationPage';
 import Profile from './pages/Profile';
 import Login from './pages/Login' ;
 import Oauth from './pages/Oauth' ;
@@ -21,7 +22,8 @@ function App() {
             <Route exact path="/" component={Login} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/recommend" component={Recommend} />
-            <Route exact path="/favorite" component={FavoriteMainPage} />
+            <Route exact path="/favorite_main" component={FavoriteMainPage} />
+            <Route exact path="/favorite_station/:stationName/:placeCategory" component={FavoriteStationPage} />
             <Route exact path="/profile" component={Profile} />
 
             <Route exact path="/survey" component={Survey} />

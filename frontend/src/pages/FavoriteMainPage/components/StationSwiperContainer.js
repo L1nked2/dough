@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import './StationSwiperContainer.css'
 
 function StationSwiperContainer(props){
@@ -9,20 +10,20 @@ function StationSwiperContainer(props){
   console.log(currCategory);
 
   let dummyRestrList = <div className="stationSwiperContainer">
-  <StationBox stationName="강남" stationPlaceNum={10}/>
-  <StationBox stationName="교대" stationPlaceNum={6}/>
-  <StationBox stationName="상수" stationPlaceNum={2}/>
-  <StationBox stationName="월곡" stationPlaceNum={5}/>
-  <StationBox stationName="안암" stationPlaceNum={3}/>
-  <StationBox stationName="을지로" stationPlaceNum={9}/> </div>;
+  <StationBox placeCategory={currCategory} stationName="강남" stationPlaceNum={10}/>
+  <StationBox placeCategory={currCategory} stationName="교대" stationPlaceNum={6}/>
+  <StationBox placeCategory={currCategory} stationName="상수" stationPlaceNum={2}/>
+  <StationBox placeCategory={currCategory} stationName="월곡" stationPlaceNum={5}/>
+  <StationBox placeCategory={currCategory} stationName="안암" stationPlaceNum={3}/>
+  <StationBox placeCategory={currCategory} stationName="을지로" stationPlaceNum={9}/> </div>;
 
   let dummyCafeList = <div className="stationSwiperContainer">
-  <StationBox stationName="강남" stationPlaceNum={2}/>
-  <StationBox stationName="교대" stationPlaceNum={4}/>
-  <StationBox stationName="상수" stationPlaceNum={3}/>
-  <StationBox stationName="월곡" stationPlaceNum={5}/>
-  <StationBox stationName="안암" stationPlaceNum={10}/>
-  <StationBox stationName="을지로" stationPlaceNum={9}/> </div>;
+  <StationBox placeCategory={currCategory} stationName="강남" stationPlaceNum={2}/>
+  <StationBox placeCategory={currCategory} stationName="교대" stationPlaceNum={4}/>
+  <StationBox placeCategory={currCategory} stationName="상수" stationPlaceNum={3}/>
+  <StationBox placeCategory={currCategory} stationName="월곡" stationPlaceNum={5}/>
+  <StationBox placeCategory={currCategory} stationName="안암" stationPlaceNum={10}/>
+  <StationBox placeCategory={currCategory} stationName="을지로" stationPlaceNum={9}/> </div>;
 
   let dummyBarList = null;
 
@@ -53,17 +54,14 @@ function StationSwiperContainer(props){
 
 function StationBox(props){
 
-  let routeToFavoriteStationPage = () => {
-    console.log("route to favorite station page with props.stationName")
-    // route to FavoriteStationPage with `props.stationName` value
-  }
-
   return (
-    <div className="stationBox" onClick={routeToFavoriteStationPage}>
-      {/*{props.stationPicList[0]} <br/> */}
-      {props.stationName}역 사진 <br/>
-      {props.stationName}({props.stationPlaceNum}) 
-    </div>
+      <div className="stationBox">
+        <Link className="stationBoxLink" to={`/favorite_station/${props.stationName}/${props.placeCategory}`}>
+        {/*{props.stationThumbnail} <br/> */}
+        {props.stationName}역 사진 <br/>
+        {props.stationName}({props.stationPlaceNum}) 
+        </Link>
+      </div>
   );
 }
 
