@@ -1,7 +1,7 @@
 import React from 'react'
 import './FavoriteStationPage.css'
 
-// import BackHeader from './components/BackHeader'
+import BackHeader from './components/BackHeader'
 // import PhotoFilterSelector from './components/PhotoFilterSelector'
 // import PhotoSwiperContainer from './components/PhotoSwiperContainer'
 
@@ -24,9 +24,11 @@ function FavoriteStationPage(props){
 
   return (
     <div className="favoriteStationPage">
-      {stationName}역 {placeCategory} 입니다.
-      {/* <BackHeader stationName={stationName} stationNumPlaces={stationNumPlaces}/>
-      <PhotoFilterSelector/>
+      <BackHeader 
+        stationName={stationName} placeCategory={placeCategory}
+        stationNumPlaces={stationNumPlaces}  
+      />
+      {/* <PhotoFilterSelector/>
       <PhotoSwiperContainer/> */}
     </div>
   );
