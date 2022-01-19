@@ -1,11 +1,14 @@
 import React from 'react'
+import { useState } from 'react'
 import './FavoriteStationPage.css'
 
 import BackHeader from './components/BackHeader'
-// import PhotoFilterSelector from './components/PhotoFilterSelector'
+import PhotoFilterSelector from './components/PhotoFilterSelector'
 // import PhotoSwiperContainer from './components/PhotoSwiperContainer'
 
 function FavoriteStationPage(props){  
+  const [showPlaceNotFood, setShowPlaceNotFood] = useState(true);
+  const [recentFirst, setRecentFirst] = useState(true);
 
   const stationName = props.match.params.stationName;
   const placeCategory = props.match.params.placeCategory;
@@ -28,8 +31,13 @@ function FavoriteStationPage(props){
         stationName={stationName} placeCategory={placeCategory}
         stationNumPlaces={stationNumPlaces}  
       />
-      {/* <PhotoFilterSelector/>
-      <PhotoSwiperContainer/> */}
+      <PhotoFilterSelector
+        showPlaceNotFood={showPlaceNotFood}
+        setShowPlaceNotFood={setShowPlaceNotFood}
+        recentFirst={recentFirst}
+        setRecentFirst={setRecentFirst}
+      />
+      {/* <PhotoSwiperContainer/> */}
     </div>
   );
 }
