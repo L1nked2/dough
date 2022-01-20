@@ -23,7 +23,7 @@ function App() {
             <Route exact path="/home" component={Home} />
             <Route exact path="/recommend" component={Recommend} />
             <Route exact path="/favorite_main" component={FavoriteMainPage} />
-            <Route exact path="/favorite_station/:stationName/:placeCategory" component={FavoriteStationPage} />
+            <Route exact path="/favorite_station/:stationUUID/:placeCategory" component={FavoriteStationPage} />
             <Route exact path="/profile" component={Profile} />
 
             <Route exact path="/survey" component={Survey} />

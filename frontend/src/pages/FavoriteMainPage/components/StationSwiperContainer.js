@@ -11,7 +11,9 @@ function StationSwiperContainer(props){
   let stationBoxList = [];
   for (let stationUUID in currStations){
     stationBoxList.push(
-      <StationBox placeCategory={currCategory}
+      <StationBox key={stationUUID} 
+        placeCategory={currCategory}
+        stationUUID={stationUUID}
         stationName={currStations[stationUUID].station_name}
         stationPlaceNum={currStations[stationUUID].place_list.length}
         stationThumbNail={currStations[stationUUID].station_thumbnail_inside}
@@ -29,7 +31,7 @@ function StationBox(props){
 
   return (
       <div className="stationBox">
-        <Link className="stationBoxLink" to={`/favorite_station/${props.stationName}/${props.placeCategory}`}>
+        <Link className="stationBoxLink" to={`/favorite_station/${props.stationUUID}/${props.placeCategory}`}>
         <img className="stationBoxImg" src={props.stationThumbNail}></img>
         <span>{props.stationName}({props.stationPlaceNum}) </span>
         </Link>

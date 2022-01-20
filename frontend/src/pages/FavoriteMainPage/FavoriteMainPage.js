@@ -22,8 +22,6 @@ function FavoriteMainPage(props){
     console.log("fetch new user favorites data");
   }, [userFavorites]); // run again only if userFavorites have changed
 
-  console.log(userFavorites);
-
   return (
     <div className="favoriteMainPage">
       <Header changeIsHome={props.changeIsHome}/>

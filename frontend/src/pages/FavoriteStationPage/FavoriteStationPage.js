@@ -8,14 +8,17 @@ import PhotoFilterSelector from './components/PhotoFilterSelector'
 import PhotoSwiperContainer from './components/PhotoSwiperContainer'
 
 function FavoriteStationPage(props){  
+  // state
   const [showPlaceNotFood, setShowPlaceNotFood] = useState(true);
   const [recentFirst, setRecentFirst] = useState(true);
 
+  // get global state
   const userFavorites = useSelector((state) => state.userFavorites.userFavorites);
 
-  const stationName = props.match.params.stationName;
+  // get value passed from link
+  const stationUUID = props.match.params.stationUUID;
   const placeCategory = props.match.params.placeCategory;
-  if (!stationName || !placeCategory){
+  if (!stationUUID || !placeCategory){
     console.error("/stationName/placeCategory was not passed to /favorite_station")
     return (
       <div>
@@ -24,15 +27,16 @@ function FavoriteStationPage(props){
     );
   }
 
-  // stationName으로 부터 아래 정보들을 받아온다
-  const stationNumPlaces = 10
-  const stationPhotos = ["link1", "link2", "link3", "link4"]
+  // extract info about current station & category
+  const currStationInfo = userFavorites[placeCategory][stationUUID];
+  const stationName = currStationInfo.station_name;
+  const placeList = currStationInfo.place_list;
 
   return (
     <div className="favoriteStationPage">
       <BackHeader 
         stationName={stationName} placeCategory={placeCategory}
-        stationNumPlaces={stationNumPlaces}  
+        stationNumPlaces={placeList.length}  
       />
       <PhotoFilterSelector
         showPlaceNotFood={showPlaceNotFood}
