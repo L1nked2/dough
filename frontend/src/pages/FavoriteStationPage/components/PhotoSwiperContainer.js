@@ -2,36 +2,49 @@ import React from 'react'
 import './PhotoSwiperContainer.css'
 
 import { Link } from 'react-router-dom'
- 
+
+import { useDispatch } from 'react-redux'
+import { openShopPage, setShopPageContents } from '../../../actions/homePageInfo'
+
 function PhotoSwiperContainer(props){
   const showPlaceNotFood = props.showPlaceNotFood;
   const recentFirst = props.recentFirst;
+  const placeList = props.placeList;
 // recentFirst or not에 따라 photoboxes의 정렬 reverse or not
 // ThumbnialPhotoBox에 image link와 place uuid or name도 props로 보내줘야 함
+  
+  const thumbnailPhotoList = placeList.map((placeInfo) => 
+    <ThumbnailPhotoBox key={placeInfo.place_uuid}
+      thumbnailPhoto={showPlaceNotFood? 
+        placeInfo.place_thumbnail_inside : placeInfo.place_thumbnail_food}
+      placeUuid={placeInfo.place_uuid}
+    />
+  );
+
+  // current assumption : older one at head of the array
+  const sortedThumbnailPhotoList = recentFirst? 
+    thumbnailPhotoList.slice().reverse() : thumbnailPhotoList;
+
   return (
     <div className='photoSwiperContainer'>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
-      <ThumbnailPhotoBox showPlaceNotFood={showPlaceNotFood}/>
+      {sortedThumbnailPhotoList}
     </div>
   );
 }
 
 function ThumbnailPhotoBox(props){
+  const dispatch = useDispatch();
+  const openCurrentPlacePageAtHome = () => {
+    console.log("will fetch shop content from server with place uuid");
+    // dispatch(openShopPage());
+    // const shopContent = {};
+    // dispatch(setShopPageContents(shopContent));
+  };
+
   return (
-    <div className="thumbnailPhotoBox">
+    <div className="thumbnailPhotoBox" onClick={openCurrentPlacePageAtHome}>
       <Link to="/home">
-      <img className='thumbnailPhoto' src="https://i.kym-cdn.com/photos/images/newsfeed/001/878/329/dfa.jpg"/>
-      {/* image link from props.placeThumbNail(props.showPlaceNotFood?Place:Food)Photo
-      that does the following on click
-      (1) dispatch `openShopPage` and `setShopPageContents` with payload=prosp.placeName or UUid
-      (2) goto `/home`  */}
+      <img className='thumbnailPhoto' src={props.thumbnailPhoto}/>
       </Link>
     </div>
   )

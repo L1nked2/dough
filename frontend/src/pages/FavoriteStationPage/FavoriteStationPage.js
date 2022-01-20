@@ -47,6 +47,7 @@ function FavoriteStationPage(props){
       <PhotoSwiperContainer
         showPlaceNotFood={showPlaceNotFood}
         recentFirst={recentFirst}
+        placeList={placeList}
       />
     </div>
   );
