@@ -10,9 +10,7 @@ function PhotoSwiperContainer(props){
   const showPlaceNotFood = props.showPlaceNotFood;
   const recentFirst = props.recentFirst;
   const placeList = props.placeList;
-// recentFirst or not에 따라 photoboxes의 정렬 reverse or not
-// ThumbnialPhotoBox에 image link와 place uuid or name도 props로 보내줘야 함
-  
+
   const thumbnailPhotoList = placeList.map((placeInfo) => 
     <ThumbnailPhotoBox key={placeInfo.place_uuid}
       thumbnailPhoto={showPlaceNotFood? 

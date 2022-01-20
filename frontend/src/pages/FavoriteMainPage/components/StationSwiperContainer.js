@@ -7,7 +7,15 @@ function StationSwiperContainer(props){
   if (!userFavorites) return null; // it may take time to fetch from server
   const currCategory = props.category;
   const currStations = userFavorites[currCategory]; // {uuid: station_info} 
-  
+
+  if (Object.keys(currStations).length === 0){
+    return (
+      <div className="emptyStationContainer">
+        아직 찜한 가게가 없습니다.
+      </div>
+    );
+  }
+
   let stationBoxList = [];
   for (let stationUUID in currStations){
     stationBoxList.push(
