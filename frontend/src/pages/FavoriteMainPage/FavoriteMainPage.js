@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
 import './FavoriteMainPage.css'
 
 import Header from '../../components/common/Header'
@@ -18,9 +19,29 @@ function FavoriteMainPage(props){
   useEffect(() => {
     // fetch user favorite json from server with axios
     // with Promise
-    dispatch(saveUserFavorites(example_user_favorite.user_favorites));
-    console.log("fetch new user favorites data");
-  }, [userFavorites]); // run again only if userFavorites have changed
+    axios({
+        method: 'get',
+        url: 'https://dough-survey.web.app/api/info/user',
+        headers: {
+            "Content-type" : "application/json"
+        },
+        data : {
+            userToken: ""
+        }
+    }).then( (response) => {
+        ////// temporary dummy data
+        console.log(response.data.userInfo.user_favorites);
+        dispatch(saveUserFavorites(example_user_favorite.user_favorites));
+        
+        ////// actual code
+        // dispatch(saveUserFavorites(response.data.userInfo.user_favorites));
+    });
+    
+  }, 
+  [] // <--------TODO : userFavorites.last_modified 를 넣을 것 (last_modified : user가 
+  // 찜한 가게 list 바꾸면 그때의 timestamp) 
+  // userFavorites 전체를 비교해 버리면, object간 비교가 되어서 계속 api request 하게 됨
+  ); // run again only if userFavorites have changed
 
   return (
     <div className="favoriteMainPage">
