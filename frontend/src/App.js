@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { AnimatedSwitch } from 'react-router-transition';
 
 import Home from './pages/Home';
 import Recommend from './pages/Recommend';
@@ -13,7 +14,7 @@ import './App.css';
 import Survey from './components/survey/Survey';
 import Result from './pages/Result' ;
 
-function App() {  
+function App() { 
   return(
     <div className="viewPage" >
       <div className="layout" id="layout">
@@ -22,15 +23,18 @@ function App() {
             <Route exact path="/" component={Login} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/recommend" component={Recommend} />
-            <Route exact path="/favorite_main" component={FavoriteMainPage} />
-            <Route exact path="/favorite_station/:stationUUID/:placeCategory" component={FavoriteStationPage} />
             <Route exact path="/profile" component={Profile} />
-
             <Route exact path="/survey" component={Survey} />
             <Route exact path="/survey/result" component={Result} />
-
+            <Route exact path="/favorite_main" component={FavoriteMainPage} />
             <Route path="/login/callback/kakao" component={Oauth} />
           </Switch>
+          <AnimatedSwitch
+            atEnter={{ opacity: 0 }}
+            atActive={{ opacity: 1 }}
+          > 
+            <Route exact path="/favorite_station/:stationUUID/:placeCategory" component={FavoriteStationPage}/>
+          </AnimatedSwitch>
         </Router>
       </div>
     </div>
