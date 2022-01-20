@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import './FavoriteStationPage.css'
 
 import BackHeader from './components/BackHeader'
@@ -9,6 +10,8 @@ import PhotoSwiperContainer from './components/PhotoSwiperContainer'
 function FavoriteStationPage(props){  
   const [showPlaceNotFood, setShowPlaceNotFood] = useState(true);
   const [recentFirst, setRecentFirst] = useState(true);
+
+  const userFavorites = useSelector((state) => state.userFavorites.userFavorites);
 
   const stationName = props.match.params.stationName;
   const placeCategory = props.match.params.placeCategory;
@@ -20,7 +23,7 @@ function FavoriteStationPage(props){
       </div>
     );
   }
-  
+
   // stationName으로 부터 아래 정보들을 받아온다
   const stationNumPlaces = 10
   const stationPhotos = ["link1", "link2", "link3", "link4"]

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import './FavoriteMainPage.css'
 
 import Header from '../../components/common/Header'
@@ -7,14 +8,17 @@ import CategorySelector from './components/CategorySelector'
 import StationSwiperContainer from './components/StationSwiperContainer'
 import Navbar from '../../components/common/Navbar'
 
+import { saveUserFavorites } from '../../actions/userFavoritesActions'
+
 function FavoriteMainPage(props){
   const [category, setCategory] = useState("rest") // ["rest", "cafe", "bar"] 
 
-  const [userFavorites, setUserFavorites] = useState(undefined);
+  const userFavorites = useSelector((state) => state.userFavorites.userFavorites);
+  const dispatch = useDispatch();
   useEffect(() => {
     // fetch user favorite json from server with axios
     // with Promise
-    setUserFavorites(example_user_favorite.user_favorites);
+    dispatch(saveUserFavorites(example_user_favorite.user_favorites));
     console.log("fetch new user favorites data");
   }, [userFavorites]); // run again only if userFavorites have changed
 
