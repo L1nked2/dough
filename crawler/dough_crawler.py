@@ -51,7 +51,7 @@ parse_table_naver = dict(
 
 
 class DoughCrawler:
-    def __init__(self, db_path, photo_dir_path, log_dir_path, **kwargs):
+    def __init__(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs):
         # attributes initializing
         self.log = True
         current_time = datetime.datetime.now().isoformat('-', timespec='seconds').replace(':', '')
@@ -93,6 +93,9 @@ class DoughCrawler:
         if self.log:
             self.log_file = open(self.log_path, "w+")
 
+        # crawling limit
+        self.crawl_only_ten_places_for_test = crawl_only_ten_places_for_test
+
         return
 
     def __del__(self):
@@ -101,13 +104,13 @@ class DoughCrawler:
             self.log_file.close()
         return
 
-    def clear(self, db_path, photo_dir_path, log_dir_path, **kwargs):
-        self.__init__(db_path, photo_dir_path, log_dir_path, **kwargs)
+    def clear(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs):
+        self.__init__(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs)
         return
 
     def run_crawler_naver(self, station_name=None, search_keyword=None, options=None):
         self.crawler_msg(f'{station_name} {search_keyword} crawling start')
-        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, **options)
+        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, self.crawl_only_ten_places_for_test, **options)
         self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
         self.get_place_link_list_naver()
         self.get_place_info_naver()
@@ -161,6 +164,11 @@ class DoughCrawler:
         return self.place_db_list
 
     def get_place_link_list_naver(self):
+        if self.crawl_only_ten_places_for_test:
+            NUM_PLACE_MAX = 10
+        else:
+            NUM_PLACE_MAX = 300 # by default, max 300 places for "강남역 맛집"
+
         if not self.naver_arg_set_flag:
             self.crawler_msg('naver arguments not set; set naver arguments before getting link list')
             raise AttributeError
@@ -171,6 +179,8 @@ class DoughCrawler:
                           "Chrome/95.0.4638.69 Safari/537.36"
         }
         for page in range(NAVER_PAGE_MAX):
+            if len(self.place_link_list) > NUM_PLACE_MAX:
+                break
             self._set_naver_restaurant_query_page(page)
             naver_query_str = json.dumps(naver_restaurant_query_json)
             try:
@@ -197,10 +207,14 @@ class DoughCrawler:
                     return None
             item_list = res['data']['restaurants']['items']
             for item in item_list:
+                if len(self.place_link_list) > NUM_PLACE_MAX:
+                    break
                 try:
                     self.place_link_list.append(item['id'])
                 except AttributeError:
                     continue
+
+
         if not os.path.isdir(f'{self.photo_dir_path}'):
             os.mkdir(f'{self.photo_dir_path}')
         self.duplicate_prone_flag = True
@@ -457,9 +471,9 @@ class DoughCrawler:
 
 
 def crawl(stations, search_keywords, crawler_options, 
-    db_path, photo_dir_path, log_dir_path):
+    db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test):
     done_list = os.listdir(db_path)
-    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path)
+    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test)
     for station_name in stations:
         for search_keyword in search_keywords:
             if f'{station_name}_{search_keyword}' in done_list:
