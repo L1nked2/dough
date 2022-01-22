@@ -83,7 +83,8 @@ function ShopModal() {
         closePage();
     }
     useEffect (() => {
-        dispatch(appendCurrentShop(shopPageContent));
+        setTimeout(() => {dispatch(appendCurrentShop(shopPageContent))}, 200);
+        
         // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");
@@ -121,6 +122,7 @@ function ShopModal() {
         setPhotoSlideIndex(index);
         dispatch(openSlideshowPage())
     }
+
     return (<>
         <CSSTransition in={isPhotoOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
             <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} />

@@ -419,7 +419,7 @@
     left: 0%;
     gap: 0.7em;
     cursor: pointer;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     height: inherit;
 }
 .shopPage .subNavbar .buttons .shareButton {
@@ -432,6 +432,6 @@
     right: 0%;
     gap: 0.7em;
     cursor: pointer;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     height: inherit;
 }

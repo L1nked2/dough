@@ -1,7 +1,10 @@
-import React, {useState, useRef } from 'react'
+import React, {useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import './Profile.css';
+import ShopModal from './Shop';
+import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
+
 import Header from '../components/common/Header';
 import Navbar from '../components/common/Navbar';
 import NoLogin from '../components/common/NoLogin';
@@ -13,6 +16,7 @@ import sampleImage from "../img/login_background.png";
 import { customer_center, info_icon, unknown_profile_icon } from '../data/imgPath';
 
 function Profile(props) {
+  const dispatch = useDispatch();
   const [photoCategory, setPhotoCategory] = useState("space");
   const [retestModalIsOpen, setRetestModalIsOpen] = useState(false); 
   const [settingPageIsOpen, setSettingPageIsOpen] = useState(false); 
@@ -21,11 +25,16 @@ function Profile(props) {
     openFunc(true);
     document.body.style.overflow = 'hidden';
   };
+  const openPage = (shop) => {
+    dispatch(openShopPage());
+    document.body.style.overflow = 'hidden';
+    dispatch(setShopPageContents({...shop, tag: 'currentList'}));
+  }
 
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   const isLogin = true;
-  console.log(currentList);
   return (
     <div className="profilePage">
       <CSSTransition in={retestModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -49,6 +58,9 @@ function Profile(props) {
                        applyFunc={()=>{setNoResultModalIsOpen(false);window.location.replace("/survey");}}
                        applyButton="취향테스트 하러가기"/>
       </CSSTransition>
+      <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+        <ShopModal />
+      </CSSTransition>
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
@@ -58,7 +70,7 @@ function Profile(props) {
           {cluster >= 0 && <div className="re-test" onClick={()=>{openModal(setRetestModalIsOpen)}}>취향테스트 다시하기</div>}
         </div>
       </div>
-      <div className="testResult active" 
+      <div className={`testResult ${isLogin?"active":""}`}
            onClick={()=>{if(cluster < 0){
                            openModal(setNoResultModalIsOpen)
                          }}}>
@@ -76,15 +88,17 @@ function Profile(props) {
               <div className={photoCategory==='food'?'active':''} onClick={()=>{setPhotoCategory('food')}}>음식사진</div>
             </nav>
             <div className="pictures">
-              {currentList.map((imgSrc, index) => {
+              {currentList.map((elem, index) => {
                 if (index % 2 === 0) {
                   return (<div className="twoPictures" key={index}>
                     <img src={photoCategory==='space'?
                               currentList[index].place_inside_photo_list[0]:
-                              currentList[index].place_food_photo_list[0]} alt={index} onClick={null}/>
-                    {currentList.length!==index+1?<img src={photoCategory==='space'?
-                                                            currentList[index+1].place_inside_photo_list[0]:
-                                                            currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={null}/>:null}
+                              currentList[index].place_food_photo_list[0]} alt={index} onClick={()=>{openPage(currentList[index])}}/>
+                    {currentList.length!==index+1 ?
+                      <img src={photoCategory==='space' ?
+                                currentList[index+1].place_inside_photo_list[0]:
+                                currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
+                    : null}
                   </div>);
                 }
               })}
