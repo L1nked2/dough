@@ -23,6 +23,8 @@
     display: -webkit-flex;
     align-items: center;
     -webkit-box-align: center;
+    justify-content: flex-start;
+    -webkit-box-pack: start;
 
     position: sticky;
     position: -webkit-sticky;
@@ -123,10 +125,20 @@
 
     gap: 0.737em;
 }
-.shopPage .twoPictures > img {
+.shopPage .twoPictures > div{
+    position: relative;
     width: calc(50% - 0.3685em);
-    aspect-ratio: 1;
-    object-fit: cover;
+}
+.shopPage .twoPictures > div::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.shopPage .twoPictures > div > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
 }
 .shopPage .fourPictures > span {
     position: absolute;

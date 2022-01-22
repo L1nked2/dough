@@ -34,7 +34,7 @@ function EachMoreShop(props) {
   return (
     <div onClick={openPage} className="eachShop" key={props.rank}>
       <div className="image">
-        <div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/>
+        <div><div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/></div>
       </div>
       <div className="information">
         <div className="rankAndDistance">
@@ -47,9 +47,9 @@ function EachMoreShop(props) {
           <span id="menu">{shop.place_kind.join(', ').length > 10 ? shop.place_kind.join(', ').slice(0, 10)+"..." : shop.place_kind.join(', ')}</span>
         </div>
         <div className="subimages">
-          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/>
-          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/>
-          <div id="plusButton"><MoreIcon width={15}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/></div>
+          <span id="plusButton"><MoreIcon width={15}/></span>
         </div>
       </div>
     </div>

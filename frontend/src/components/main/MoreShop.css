@@ -28,9 +28,20 @@
     width: 38%;
     padding-right: 2.211em;
 }
-.eachShop .image #image {
+.eachShop .image > div {
+    position: relative;
     width: 100%;
-    aspect-ratio: 1;
+    border-radius: 0.737em;
+}
+.eachShop .image > div::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.eachShop .image > div #image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
     background-size: cover;
     border-radius: 0.737em;
 }
@@ -91,13 +102,24 @@
     align-items: center;
 }
 
-.eachShop .information .subimages > #subimage{
+.eachShop .information .subimages > div {
+    position: relative;
     margin-right: 0.737em;
     margin-top: 0.3685em;
     width: calc(100%/62*38 - 2.211em - 2.438em - 0.3685em);
-    aspect-ratio: 1;
+    border-radius: 0.437em;
+}
+.eachShop .information .subimages > div::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.eachShop .information .subimages > div #subimage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
     background-size: cover;
-    border-radius: 5px;
+    border-radius: 0.437em;
 }
 
 .eachShop .information .subimages #plusButton{
