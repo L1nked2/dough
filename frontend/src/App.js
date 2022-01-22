@@ -18,6 +18,7 @@ import { CSSTransition } from "react-transition-group";
 import ShopModal from './pages/Shop';
 
 function App() { 
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   return(
     <div className="viewPage" >
       <div className="layout" id="layout">
