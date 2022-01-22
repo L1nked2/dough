@@ -35,13 +35,22 @@
     margin-top: 2.211em;
 }
 .profilePage .individual .profileImage{
+    position: relative;
     margin: 0 2.211em;
     width: 20%;
-    aspect-ratio:1;
     border-radius: 10em;
-    background-repeat: no-repeat;
-    background-position: center;
-    object-fit: cover;
+}
+.profilePage .individual .profileImage::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.profilePage .individual .profileImage > div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    border-radius: 10em;
 }
 .profilePage .individual .text {
     display: flex;
@@ -157,11 +166,22 @@
     -webkit-box-orient: horizontal;
 
     gap: 0.737em;
+    margin: 0 2.211em;
 }
-.profilePage .content .pictures .twoPictures > img {
+.profilePage .content .pictures .twoPictures > div{
+    position: relative;
     width: calc(50% - 0.3685em);
-    aspect-ratio: 1;
-    object-fit: cover;
+}
+.profilePage .content .pictures .twoPictures > div::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.profilePage .content .pictures .twoPictures > div > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
 }
 
 

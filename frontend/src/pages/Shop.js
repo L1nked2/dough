@@ -151,12 +151,12 @@ function ShopModal() {
                     </div>
                     <div className="fourPictures" >
                         <div className="twoPictures">
-                            <img src={shopPageContent.place_main_photo_list[0]} alt="first" />
-                            <img src={shopPageContent.place_main_photo_list[1]} alt="second" />
+                            <div><img src={shopPageContent.place_main_photo_list[0]} alt="first" /></div>
+                            <div><img src={shopPageContent.place_main_photo_list[1]} alt="second" /></div>
                         </div>
                         <div className="twoPictures">
-                            <img src={shopPageContent.place_main_photo_list[2]} alt="third" />
-                            <img src={shopPageContent.place_main_photo_list[3]} alt="fourth" />
+                            <div><img src={shopPageContent.place_main_photo_list[2]} alt="third" /></div>
+                            <div><img src={shopPageContent.place_main_photo_list[3]} alt="fourth" /></div>
                         </div>
                         <span>{`${shopPageContent.place_provided_photo_list.length + shopPageContent.place_inside_photo_list.length + shopPageContent.place_food_photo_list.length}+`}</span>
                     </div>
@@ -263,8 +263,8 @@ function ShopModal() {
                         {gallery.map((imgSrc, index) => {
                             if (index % 2 === 0) {
                                 return (<div className="twoPictures" key={index}>
-                                    <img src={gallery[index]} alt={index} onClick={()=>{slideOpen(gallery, galleryType, index)}}/>
-                                    {gallery.length!==index+1?<img src={gallery[index+1]} alt={index+1} onClick={()=>{slideOpen(gallery, galleryType, index+1)}}/>:null}
+                                    <div><img src={gallery[index]} alt={index} onClick={()=>{slideOpen(gallery, galleryType, index)}}/></div>
+                                    <div>{gallery.length!==index+1?<img src={gallery[index+1]} alt={index+1} onClick={()=>{slideOpen(gallery, galleryType, index+1)}}/>:null}</div>
                                 </div>);
                             }
                         })}

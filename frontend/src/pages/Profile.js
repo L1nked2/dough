@@ -32,7 +32,6 @@ function Profile(props) {
 
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
-  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   const isLogin = true;
   return (
     <div className="profilePage">
@@ -60,7 +59,7 @@ function Profile(props) {
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
-        <div className="profileImage" style={{backgroundImage: `url(${isLogin?sampleImage:unknown_profile_icon})`}} />
+        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?sampleImage:unknown_profile_icon})`}} /></div>
         <div className="text">
           <div className="name">{isLogin?"신혜영":"unknown"}</div>
           {cluster >= 0 && <div className="re-test" onClick={()=>{openModal(setRetestModalIsOpen)}}>취향테스트 다시하기</div>}
@@ -87,14 +86,15 @@ function Profile(props) {
               {currentList.map((elem, index) => {
                 if (index % 2 === 0) {
                   return (<div className="twoPictures" key={index}>
-                    <img src={photoCategory==='space'?
-                              currentList[index].place_inside_photo_list[0]:
-                              currentList[index].place_food_photo_list[0]} alt={index} onClick={()=>{openPage(currentList[index])}}/>
+                    <div><img src={photoCategory==='space'?
+                                  currentList[index].place_inside_photo_list[0]:
+                                  currentList[index].place_food_photo_list[0]} alt={index} onClick={()=>{openPage(currentList[index])}}/></div>
+                    <div>
                     {currentList.length!==index+1 ?
                       <img src={photoCategory==='space' ?
-                                currentList[index+1].place_inside_photo_list[0]:
-                                currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
-                    : null}
+                                    currentList[index+1].place_inside_photo_list[0]:
+                                    currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
+                    : null}</div>
                   </div>);
                 }
               })}

@@ -113,12 +113,18 @@
 }
 
 .swiperSlide.result {
+  position: relative;
   width: 100%;
-  aspect-ratio: 0.5974;
   padding: 0;
   color: black;
 }
+.swiperSlide.result::after {
+  content: "";
+  display: block;
+  padding-bottom: 167.39%;
+}
 .swiperSlide.result > div {
+  position: absolute;
   height: 100%;
   width: 100%;
 }
