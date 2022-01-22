@@ -294,6 +294,8 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
     db_cdn = DB_and_CDN()
     station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
  
+    place_uuids_in_photo_dir = os.listdir(photo_dir_path)
+
     for entry in os.listdir(raw_db_path):
         filename = os.path.join(raw_db_path, entry)
         if not os.path.isfile(filename): continue
@@ -315,10 +317,11 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
-            # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
-            # do not upload on CDN          
-            if place_docu.has_photo_folder(photo_dir_path):
-                place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
+            
+            # since crawling and convert&uploading phase can be executed separately,
+            # there might be a case where photo_dir is inconsistent with loaded raw_db data
+            if place_docu.has_photo_folder(place_uuids_in_photo_dir):
+                place_docu.convert_with(category_to_tag_table_dir_path)
                 db_cdn.upload_place(place_docu, station_docu)
 
     db_cdn.update_station_db(station_id_names)
