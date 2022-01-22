@@ -1,17 +1,21 @@
-import React, {useState, useRef } from 'react'
+import React, {useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import './Profile.css';
+import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
+
 import Header from '../components/common/Header';
 import Navbar from '../components/common/Navbar';
+import NoLogin from '../components/common/NoLogin';
 import ModalTemplate from '../components/common/ModalTemplate';
 import CloseButton from '../components/icon/Close';
 import Chevron from '../components/icon/Chevron';
 
 import sampleImage from "../img/login_background.png";
-import { customer_center, info_icon } from '../data/imgPath';
+import { customer_center, info_icon, unknown_profile_icon } from '../data/imgPath';
 
 function Profile(props) {
+  const dispatch = useDispatch();
   const [photoCategory, setPhotoCategory] = useState("space");
   const [retestModalIsOpen, setRetestModalIsOpen] = useState(false); 
   const [settingPageIsOpen, setSettingPageIsOpen] = useState(false); 
@@ -20,10 +24,16 @@ function Profile(props) {
     openFunc(true);
     document.body.style.overflow = 'hidden';
   };
+  const openPage = (shop) => {
+    dispatch(openShopPage());
+    document.body.style.overflow = 'hidden';
+    dispatch(setShopPageContents({...shop, tag: 'currentList'}));
+  }
 
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
-  console.log(cluster, currentList);
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
+  const isLogin = true;
   return (
     <div className="profilePage">
       <CSSTransition in={retestModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -50,25 +60,49 @@ function Profile(props) {
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
-        <div className="profileImage" style={{backgroundImage: `url(${sampleImage})`}} />
+        <div className="profileImage" style={{backgroundImage: `url(${isLogin?sampleImage:unknown_profile_icon})`}} />
         <div className="text">
-          <div className="name">신혜영</div>
+          <div className="name">{isLogin?"신혜영":"unknown"}</div>
           {cluster >= 0 && <div className="re-test" onClick={()=>{openModal(setRetestModalIsOpen)}}>취향테스트 다시하기</div>}
         </div>
       </div>
-      <div className="testResult active" onClick={()=>{if(cluster < 0){openModal(setNoResultModalIsOpen)}}}>
+      <div className={`testResult ${isLogin?"active":""}`}
+           onClick={()=>{if(cluster < 0){
+                           openModal(setNoResultModalIsOpen)
+                         }}}>
         <div style={{fontSize: '1.1em', color: 'rgba(0,0,0,0.36)'}}>MY</div>
         <div style={{fontSize: '1.2em', color: 'rgba(0,0,0,0.65)'}}>취향 테스트 결과</div>
       </div>
       <div className="content">
         <div className="tag"><span>최근 본 가게</span></div>
-        {currentList.length > 0 ? <>
-          <nav className="photoType">
-            <div className={photoCategory==='space'?'active':''} onClick={()=>{setPhotoCategory('space')}}>공간사진</div>
-            <div className={photoCategory==='food'?'active':''} onClick={()=>{setPhotoCategory('food')}}>음식사진</div>
-          </nav>
-        </>
-        : <div className="noCurrent"><div>최근에 본 가게가 없습니다.</div></div>
+        {!isLogin ? <>
+          <NoLogin />
+        </>:<>
+          {currentList.length > 0 ? <>
+            <nav className="photoType">
+              <div className={photoCategory==='space'?'active':''} onClick={()=>{setPhotoCategory('space')}}>공간사진</div>
+              <div className={photoCategory==='food'?'active':''} onClick={()=>{setPhotoCategory('food')}}>음식사진</div>
+            </nav>
+            <div className="pictures">
+              {currentList.map((elem, index) => {
+                if (index % 2 === 0) {
+                  return (<div className="twoPictures" key={index}>
+                    <img src={photoCategory==='space'?
+                              currentList[index].place_inside_photo_list[0]:
+                              currentList[index].place_food_photo_list[0]} alt={index} onClick={()=>{openPage(currentList[index])}}/>
+                    {currentList.length!==index+1 ?
+                      <img src={photoCategory==='space' ?
+                                currentList[index+1].place_inside_photo_list[0]:
+                                currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
+                    : null}
+                  </div>);
+                }
+              })}
+            </div>
+          </>
+          : <div className="noCurrent"><div>최근에 본 가게가 없습니다.</div></div>
+          }
+          </>
         }
       </div>
       <Navbar page={"profile"}/>

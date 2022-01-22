@@ -8,6 +8,7 @@ import { appendCurrentShop } from '../actions/userInfo';
 import CallModal from '../components/main/CallModal';
 import { CSSTransition } from 'react-transition-group';
 
+import { info_icon } from '../data/imgPath';
 import BackButton from '../components/icon/Back';
 import WonIcon from '../components/icon/Won';
 import LocationIcon from '../components/icon/Location';
@@ -82,7 +83,8 @@ function ShopModal() {
         closePage();
     }
     useEffect (() => {
-        dispatch(appendCurrentShop(shopPageContent));
+        setTimeout(() => {dispatch(appendCurrentShop(shopPageContent))}, 200);
+        
         // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
         window.history.pushState({page: "shop_modal"}, "shop_modal");
@@ -120,6 +122,7 @@ function ShopModal() {
         setPhotoSlideIndex(index);
         dispatch(openSlideshowPage())
     }
+
     return (<>
         <CSSTransition in={isPhotoOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
             <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} />
@@ -155,6 +158,7 @@ function ShopModal() {
                             <img src={shopPageContent.place_main_photo_list[2]} alt="third" />
                             <img src={shopPageContent.place_main_photo_list[3]} alt="fourth" />
                         </div>
+                        <span>{`${shopPageContent.place_provided_photo_list.length + shopPageContent.place_inside_photo_list.length + shopPageContent.place_food_photo_list.length}+`}</span>
                     </div>
                     <div className="information">
                         <div className="eachInformation">
@@ -209,9 +213,13 @@ function ShopModal() {
                             </div>
                         </div>
                         <div className="eachInformation">
-                            <div className="icon naver"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
-                            <a className="contents" href={shopPageContent.place_naver_link} target="_blank">{shopPageContent.place_naver_link}</a>
+                            <div className="icon"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
+                            <div className="contents">
+                                <div>네이버 검색 바로가기</div>
+                                <a href={shopPageContent.place_naver_link} target="_blank">{shopPageContent.place_naver_link}</a>
+                            </div>
                         </div>
+                        
                         {/* <div className="eachInformation">
                             <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
                             <div className="contents reviews" style={{height: `${reviewHeight}px`}} ref={reviewContent}>
@@ -226,6 +234,12 @@ function ShopModal() {
                                 })}
                             </div>
                         </div> */}
+                    </div>
+                    <div className="infoChange">
+                        <div className="icon"><img src={info_icon} alt="info_icon"/></div>
+                        <div className="contents">
+                            <div>{"정보 수정 요청하러 가기 >"}</div>
+                        </div>
                     </div>
                     {/* {!closeExpandButton ? 
                     <div onClick={()=>{expandReviewHeight()}} className="expandButton">
@@ -263,7 +277,7 @@ function ShopModal() {
                         {shopPageContent.place_likes
                         ? <HeartFilledIcon width={25} color={"#f17474"}/>
                         : <HeartIcon width={25} color={"#a3a3a3"}/>}
-                        좋아요
+                        찜하기
                     </div>
                     <div className="shareButton"><ShareIcon width={22} color={"#a3a3a3"}/>공유</div>
                 </div>

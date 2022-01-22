@@ -39,6 +39,9 @@
     width: 20%;
     aspect-ratio:1;
     border-radius: 10em;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: cover;
 }
 .profilePage .individual .text {
     display: flex;
@@ -74,6 +77,10 @@
     padding: 0.5em 0;
     border: 1px solid rgba(0,0,0,0.12);
     border-radius: 0.5em;
+    visibility: hidden;
+}
+.profilePage .testResult.active {
+    visibility: visible;
     cursor: pointer;
 }
 
@@ -134,7 +141,28 @@
     font-size: 1.4em;
     color: rgba(0, 0, 0, 0.65);
 }
+.profilePage .content .pictures {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    
+    padding-top: 1.35em;
+    gap: 0.737em;
+}
+.profilePage .content .pictures .twoPictures {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
 
+    gap: 0.737em;
+}
+.profilePage .content .pictures .twoPictures > img {
+    width: calc(50% - 0.3685em);
+    aspect-ratio: 1;
+    object-fit: cover;
+}
 
 
 .profilePage .settingPage {
