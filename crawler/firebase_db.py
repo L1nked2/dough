@@ -79,7 +79,7 @@ class DB_and_CDN:
 
         # collecting dict<local_photo_path, cdn_photo_link>
         # this will be used for 품질분류 phase
-        self.local_path_to_cdn_link = dict()
+        self._local_path_to_cdn_link = dict()
 
     """
     Each station's `place_list` will be
@@ -171,8 +171,6 @@ class DB_and_CDN:
         place_doc._menu_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
             for naver_link, local_path in place_doc._menu_photo_list]
 
-        print(place_doc._menu_photo_list)
-
     """
     upload photo with either local_path or naver_link and return the link of CDN
     # input : 00b7a056-d99d-b47e, "https:// ..." , "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/f2.jpg"
@@ -201,8 +199,7 @@ class DB_and_CDN:
         CDN_link = self._cdn_root_url + path_to_store_on_CDN
 
         # collect local_path --> cdn_link
-        print(photo_local_path, CDN_link)
-        self.local_path_to_cdn_link[photo_local_path] = CDN_link
+        self._local_path_to_cdn_link[photo_local_path] = CDN_link
 
         return CDN_link
 
@@ -250,6 +247,13 @@ class DB_and_CDN:
                     station_doc_name = f"{station_uuid}_{category_eng}_{idx}" # e.g. 264a887-4b2b_rest_2
                     self._db_station_collection.document(station_doc_name).update({'place_list' : divided_place_docs})
 
+    """
+    local_path --> cdn_link
+      will be used in 품질분류 phase to relocate cdn links in our db
+    """
+    def save_local_path_to_CDN_link(self):
+        with open('./local_path_to_cdn_link.pkl', 'wb') as f:
+            dill.dump(self._local_path_to_cdn_link, f)
 
 def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
     category_to_tag_table_dir_path : str):
@@ -274,7 +278,7 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
-            
+            print(place_docu._name)
             # since crawling and convert&uploading phase can be executed separately,
             # there might be a case where photo_dir is inconsistent with loaded raw_db data
             if place_docu.has_photo_folder(place_uuids_in_photo_dir):
@@ -282,3 +286,4 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
                 db_cdn.upload_place(place_docu, station_docu)
 
     db_cdn.update_station_db(station_id_names)
+    db_cdn.save_local_path_to_CDN_link()

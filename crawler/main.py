@@ -11,7 +11,7 @@ if __name__ == "__main__":
     CRAWLER_OPTIONS = dict(log=True, msg=True)
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = True
 
-    DO_CRAWL = True
+    DO_CRAWL = False
     DO_UPLOAD = True
 
     if DO_CRAWL:
