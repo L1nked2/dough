@@ -306,6 +306,7 @@ function ResultPageImageSlide (props) {
 
 
 function SlideShowImageSlide (props) {
+  console.log(props);
   const slideContentList = props.list;
   return (
     <Swiper pagination={false} loop={false}

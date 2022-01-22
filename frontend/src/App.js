@@ -11,11 +11,18 @@ import Oauth from './pages/Oauth' ;
 import './App.css';
 import Survey from './components/survey/Survey';
 import Result from './pages/Result' ;
+import { useSelector } from 'react-redux';
+import { CSSTransition } from "react-transition-group";
+import ShopModal from './pages/Shop';
 
 function App() {  
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   return(
     <div className="viewPage" >
       <div className="layout" id="layout">
+        <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
+          <ShopModal />
+        </CSSTransition>
         <Router>
           <Switch>
             <Route exact path="/" component={Login} />

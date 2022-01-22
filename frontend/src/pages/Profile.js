@@ -2,7 +2,6 @@ import React, {useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import './Profile.css';
-import ShopModal from './Shop';
 import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
 
 import Header from '../components/common/Header';
@@ -57,9 +56,6 @@ function Profile(props) {
                        closeFunc={()=>{setNoResultModalIsOpen(false)}}
                        applyFunc={()=>{setNoResultModalIsOpen(false);window.location.replace("/survey");}}
                        applyButton="취향테스트 하러가기"/>
-      </CSSTransition>
-      <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <ShopModal />
       </CSSTransition>
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
