@@ -7,6 +7,7 @@ Classes
 
 Functions
   convert_documents_and_upload_to_db
+  update_cluster
 """
 
 import firebase_admin
@@ -16,7 +17,7 @@ from google.oauth2 import service_account
 from firebase_admin import firestore
 from google.cloud import storage
 import os 
-import dill
+import dill, pickle
 import requests
 
 from firebase_document import PlaceDocument, StationDocument
@@ -129,7 +130,6 @@ class DB_and_CDN:
         else: # no document for current place on placedb -> create new one & upload photos
             self._upload_photos_and_replace_link(place_doc)
             self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
-            
 
     """
     transaction of
@@ -255,6 +255,18 @@ class DB_and_CDN:
         with open('./local_path_to_cdn_link.pkl', 'wb') as f:
             dill.dump(self._local_path_to_cdn_link, f)
 
+    """
+    update place cluster.
+    """
+    def update_place_cluster(self, place_uuid : str, assigned_cluster : int):
+        doc_ref = self._db_place_collection.document(place_uuid)
+        doc = doc_ref.get()
+        if doc.exists:
+            doc_ref.update({'place_cluster_a' : assigned_cluster})
+        else:
+            print(f"no document with name {place_uuid} exists in place_db")
+
+
 def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
     category_to_tag_table_dir_path : str):
     
@@ -287,3 +299,13 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
 
     db_cdn.update_station_db(station_id_names)
     db_cdn.save_local_path_to_CDN_link()
+
+
+def update_cluster(cluster_result_path : str):    
+    db_cdn = DB_and_CDN()
+    cluster_result: dict[str, int] = pickle.load(open(cluster_result_path, 'rb'))
+    
+    for place_uuid in cluster_result:
+        assigned_cluster = cluster_result[place_uuid]
+        print(place_uuid)
+        db_cdn.update_place_cluster(place_uuid, assigned_cluster)
