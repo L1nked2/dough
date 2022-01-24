@@ -23,6 +23,8 @@ import dill
 import uuid
 #from firestore_lib import *
 
+import httpx
+
 naver_graphql_url = 'https://pcmap-api.place.naver.com/graphql'
 naver_restaurant_api_root_url = 'https://map.naver.com/v5/api/sites/summary'
 naver_restaurant_root_url = 'https://pcmap.place.naver.com/restaurant'
@@ -120,7 +122,7 @@ class DoughCrawler:
     def set_arg_naver(self, station='', search_keyword='', delay=0):
         naver_restaurant_query_json['variables']['input']['query'] = f'{station} {search_keyword}'
         station_query_table = dict(query=station, displayCount=1, lang='ko')
-        station_res = requests.get(naver_station_query_root_url,
+        station_res = httpx.get(naver_station_query_root_url,
                                    params=station_query_table)
       
         if station_res.status_code == 200:

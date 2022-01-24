@@ -14,9 +14,9 @@ if __name__ == "__main__":
     CRAWLER_OPTIONS = dict(log=True, msg=True)
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = True
 
-    DO_CRAWL = False
+    DO_CRAWL = True
     DO_UPLOAD = False
-    DO_UPADTE_CLUSTER = True
+    DO_UPADTE_CLUSTER = False
 
     if DO_CRAWL:
         crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, CRAWL_ONLY_TEN_PLACES_FOR_TEST)
