@@ -126,7 +126,7 @@ class DoughCrawler:
         if station_res.status_code == 200:
             station_res = station_res.json()
         else:
-            assert "status_code not 200"
+            assert False, ("status_code not 200, is " + str(station_res.status_code))
 
         self.station_raw_info = station_res['result']['place']['list'][0]
         cookie_res = requests.get("https://www.naver.com/")
