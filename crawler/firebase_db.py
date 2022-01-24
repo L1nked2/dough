@@ -60,7 +60,6 @@ class DB_and_CDN:
         self._db_transaction = self._db.transaction() # interface to transaction that uses this client(DB)
         
         # create references to collections under DB
-
         self._db_place_collection = self._db.collection('place_db')
         self._db_station_collection = self._db.collection('station_db')
         self._db_user_collection = self._db.collection('user_db')
@@ -78,6 +77,9 @@ class DB_and_CDN:
             int (self._MAX_NUM_PLACES_PER_STATION_AND_CATEGORY / self._MAX_NUM_PLACES_PER_STATION_DOC )
             # e.g. 300/50 = 6 documents for "강남역 맛집", 강남역uuid_rest_0 , ... 강남역uuid_rest_5
 
+        # collecting dict<local_photo_path, cdn_photo_link>
+        # this will be used for 품질분류 phase
+        self._local_path_to_cdn_link = dict()
 
     """
     Each station's `place_list` will be
@@ -169,8 +171,6 @@ class DB_and_CDN:
         place_doc._menu_photo_list = [(naver_link, self._upload_photo_and_return_CDN_link(place_id, naver_link, local_path))
             for naver_link, local_path in place_doc._menu_photo_list]
 
-        print(place_doc._menu_photo_list)
-
     """
     upload photo with either local_path or naver_link and return the link of CDN
     # input : 00b7a056-d99d-b47e, "https:// ..." , "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/f2.jpg"
@@ -197,6 +197,10 @@ class DB_and_CDN:
         blob.upload_from_filename(filename_to_upload)
 
         CDN_link = self._cdn_root_url + path_to_store_on_CDN
+
+        # collect local_path --> cdn_link
+        self._local_path_to_cdn_link[photo_local_path] = CDN_link
+
         return CDN_link
 
 
@@ -243,57 +247,22 @@ class DB_and_CDN:
                     station_doc_name = f"{station_uuid}_{category_eng}_{idx}" # e.g. 264a887-4b2b_rest_2
                     self._db_station_collection.document(station_doc_name).update({'place_list' : divided_place_docs})
 
-
-
-############################# To support picked old_raw_db ###########################################
-from firestore_lib import DB
-"""
-Why do we need to use this?
-
-(1) the already-cralwed data in `old_raw_db` (previously named `raw_db`)
-    contains dumped data of class `DB` of `firestore_lib.py`.
-
-(2) But we're not using `firestore_lib.py` anymore, thus no `DB` class. 
-    Crawler in `dough_crawler` now stores the data about place with dictionary type, instead of `DB` class.
-
-(3) Thus, in order to load crawled data in `old_raw_db`, we need to bring back `DB` class of `firestore_lib.py`
-
-(4) After 22-01-04 (Tue), we'll crawl from the beginning with current cralwer, and will deprecate `old_raw_db`.
-    This code section is only necessary until 22-01-04 (Tue).
-"""
-# stored data = [self.station_info : dict, self.place_db_list : list of DB, self.place_uuid_dict : list]
-def process_loaded_old_DB_info(old_data_body):
-    station_dict = old_data_body[0]
-    place_db_list: list[DB] = old_data_body[1]
-    _ = old_data_body[2]
-
-    def place_db_to_dict(place_db : DB) -> dict:
-        raw_dict = place_db._data
-        # match with current dict structure
-        raw_dict["place_likes"] = 0
-        raw_dict["place_recent_views"] = 0
-        raw_dict["place_main_photo_list"] = []
-        raw_dict["place_provided_photo_list"] = raw_dict["place_photo_provided"]
-        raw_dict["place_food_photo_list"] = raw_dict["place_photo_food"]
-        raw_dict["place_inside_photo_list"] = raw_dict["place_photo_inside"]
-        raw_dict["place_menu_photo_list"] = raw_dict["place_photo_menu"]
-        raw_dict["place_menu_info"] = raw_dict["place_menu"]
-        raw_dict["parent_station_list"] = raw_dict["parent_stations"]
-        return raw_dict
-
-    place_dict_list = [place_db_to_dict(db) for db in place_db_list]
-
-    return station_dict, place_dict_list
-
-######################################################################################################
-
+    """
+    local_path --> cdn_link
+      will be used in 품질분류 phase to relocate cdn links in our db
+    """
+    def save_local_path_to_CDN_link(self):
+        with open('./local_path_to_cdn_link.pkl', 'wb') as f:
+            dill.dump(self._local_path_to_cdn_link, f)
 
 def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
-    category_to_tag_table_dir_path : str, use_old_db : bool):
+    category_to_tag_table_dir_path : str):
     
     db_cdn = DB_and_CDN()
     station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
  
+    place_uuids_in_photo_dir = os.listdir(photo_dir_path)
+
     for entry in os.listdir(raw_db_path):
         filename = os.path.join(raw_db_path, entry)
         if not os.path.isfile(filename): continue
@@ -301,13 +270,7 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
         # e.g. 강남역_맛집, 뚝섬역_술집
         station_category_dumped = filename 
         print(station_category_dumped)
-        ############################# To support picked old_raw_db ###########################################
-        if use_old_db:
-            raw_station_dict, place_dict_list = process_loaded_old_DB_info(dill.load(open(station_category_dumped, "rb")))
-        ###################################################################################################### 
-        else:
-            raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
-        ###################################################################################################### 
+        raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
 
         station_docu = StationDocument(raw_station_dict)
         db_cdn.upload_station(station_docu)       
@@ -315,10 +278,12 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
 
         for place_dict in place_dict_list:
             place_docu = PlaceDocument(place_dict)
-            # if no photo folder in `temp_img` (or `ml_learning_data` or whatsoever), 
-            # do not upload on CDN          
-            if place_docu.has_photo_folder(photo_dir_path):
-                place_docu.convert_with(category_to_tag_table_dir_path, photo_dir_path)
+            print(place_docu._name)
+            # since crawling and convert&uploading phase can be executed separately,
+            # there might be a case where photo_dir is inconsistent with loaded raw_db data
+            if place_docu.has_photo_folder(place_uuids_in_photo_dir):
+                place_docu.convert_with(category_to_tag_table_dir_path)
                 db_cdn.upload_place(place_docu, station_docu)
 
     db_cdn.update_station_db(station_id_names)
+    db_cdn.save_local_path_to_CDN_link()

@@ -77,18 +77,15 @@ class PlaceDocument:
     place_data_dict['place_likes'] = self._likes
     place_data_dict['place_recent_views'] = self._recent_views
 
-    def drop_local_path (photo_list : list[Tuple[str, str]]) -> list[str]:
-      return [naver_link for (naver_link, local_path) in photo_list]
-    """
     # need to use this to upload CDN link to DB
     def drop_naver_link (photo_list : list[Tuple[str, str]]) -> list[str]:
       return [cdn_link for (naver_link, cdn_link) in photo_list]
-    """
-    place_data_dict['place_food_photo_list'] = drop_local_path(self._food_photo_list)
-    place_data_dict['place_inside_photo_list'] = drop_local_path(self._inside_photo_list)
-    place_data_dict['place_menu_photo_list'] = drop_local_path(self._menu_photo_list)
-    place_data_dict['place_main_photo_list'] = drop_local_path(self._main_photo_list)
-    place_data_dict['place_provided_photo_list'] = drop_local_path(self._provided_photo_list)
+    
+    place_data_dict['place_food_photo_list'] = drop_naver_link(self._food_photo_list)
+    place_data_dict['place_inside_photo_list'] = drop_naver_link(self._inside_photo_list)
+    place_data_dict['place_menu_photo_list'] = drop_naver_link(self._menu_photo_list)
+    place_data_dict['place_main_photo_list'] = drop_naver_link(self._main_photo_list)
+    place_data_dict['place_provided_photo_list'] = drop_naver_link(self._provided_photo_list)
 
     place_data_dict['place_road_address'] = self._road_address
     place_data_dict['place_legacy_address'] = self._legacy_address
@@ -99,21 +96,13 @@ class PlaceDocument:
     place_data_dict['place_last_timestamp'] = self._last_timestamp
     return place_data_dict
 
-  def has_photo_folder(self, photo_dir_path) -> bool:
-    uuids = os.listdir(photo_dir_path)    
-    return str(self._uuid) in uuids
+  def has_photo_folder(self, place_uuids_in_photo_dir: list[str]) -> bool:
+    return str(self._uuid) in place_uuids_in_photo_dir
 
-  def convert_with(self, 
-    category_to_tag_dir,
-    photo_dir_path,
-    classifier_path=None):
-
+  def convert_with(self, category_to_tag_dir):
     self._fill_in_category(category_to_tag_dir)
-    is_photo_filled = self._fill_in_photo_lists(photo_dir_path)
-    self._fill_in_cluster_a(classifier_path)
+    self._fill_in_main_photo_list()
     self.has_converted = True
-    if is_photo_filled == False:
-      self.has_converted = False
 
   # (1) fill in category with files in `category_to_tag`
   # CODE COPY-PASTED FROM 이어진's
@@ -153,74 +142,17 @@ class PlaceDocument:
       print(f' category of {self._name} is weird. Its category is {temp_category}')
 
      
-  # (2) fill in *_photo_lists with `photo_dir_path`
+  # (2) fill in *_photo_lists
   """
-  <old>
-  _food : full
-  _inside : full
-  _provided : full
-  _main : empty
-
-  <auxiliary>
-  /food
-  /inside
-  (/menu ... will not be used here)
-  /thumbnail_food
-  /thumbnail_inside
-
-  <new_expected>
-  _food' = _food (OLD : subset of _food, determined by /food ... cancelled due to time constraints of labeler)
-  _inside' = _inside (OLD : subset of _inside, determined by /inside ... cancelled due to time constraints of labeler)
-  _provided' = _provided
-  _main = one from _inside, determined by /thumbnail_inside ; zero~three from _food, determined by /thumbnail_food
-  """
-  def _fill_in_photo_lists(self, photo_dir_path):
-    # e.g. "./temp_img/505e7ffc-dd02-5ade-bc1d-4704a86e2385/"    
-    place_dir_path = os.path.join(photo_dir_path, str(self._uuid))
-
-    # paths to photo directoires
-    main_food_dir, main_inside_dir = os.path.join(place_dir_path, "thumbnail_food"), os.path.join(place_dir_path, "thumbnail_inside")
-
-    # main_food_entries: e.g. ["f0.jpg", "f24.jpg", "a6.jpg"]
-    main_food_entries, main_inside_entries = os.listdir(main_food_dir), os.listdir(main_inside_dir)
-
-    # "f24.jpg" --> "f", 24
-    def extract_kind_index(entry : str) -> tuple[str, int]:
-      first_char = entry[0] # "f"
-      assert first_char in ["a", "f", "i"]
-      number = entry[1:].split(".")[0] # "24"
-      assert number.isnumeric()
-      return first_char, int(number) 
-
-    main_food_infos = [extract_kind_index(entry) for entry in main_food_entries]
-    main_inside_infos = [extract_kind_index(entry) for entry in main_inside_entries]
-
-    if (not 0<=len(main_food_infos)<=3) or (not len(main_inside_infos)==1):
-      return False
-    #assert 0<=len(main_food_infos)<=3
-    #assert len(main_inside_infos)==1
-
-    # [("i", 4), ("a", 4), ("f", 4), ("f", 27)]
-    main_infos = main_inside_infos + sorted(main_food_infos) 
-
-    def select_photo_link(kind : str, index : int) -> int:
-      if kind == "f":
-        return self._food_photo_list[index]
-      elif kind == "a":
-        return self._provided_photo_list[index]
-      elif kind == "i":
-        return self._inside_photo_list[index]
-      else:
-        assert False, "kind must be one of f, a, i"
-
-    self._main_photo_list = [select_photo_link(info[0], info[1]) for info in main_infos]
-  
-  
-  # (3) fill in cluster_a with `classifier_path`
-  def _fill_in_cluster_a(self, classfier_path: str):
-    self._cluster_a = -2
-    # classifier side not implemented yet
-    #raise NotImplementedError
+  main(=thumbnail) photos will be determined later. For now, just fill in
+    (1) provided photos 0~3
+    (2) if no 4 provided photos, inside 0 & food3
+  """ 
+  def _fill_in_main_photo_list(self):
+    if len(self._provided_photo_list) >= 4 :
+      self._main_photo_list = self._provided_photo_list[0:4]
+    else:
+      self._main_photo_list = self._inside_photo_list[0:1] + self._food_photo_list[0:3]
 
 
 class StationDocument:
