@@ -5,5 +5,3 @@
 (2) install pip modules in `depedency.txt`
 
 (3) configure variables in `main.py` and execute
-
-
