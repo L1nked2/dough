@@ -2,15 +2,16 @@ from dough_crawler import crawl
 from firebase_db import convert_documents_and_upload_to_db, update_cluster
 
 if __name__ == "__main__":
-    DB_PATH = "./raw_db"
-    PHOTO_DIR_PATH = "./temp_img"
-    LOG_DIR_PATH = "./log"
+    DB_PATH = "/media/k/DB/DIR_FOR_CRAWLING/raw_db"
+    PHOTO_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/temp_img"
+    LOG_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/log"
     CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
     CLUSTER_RESULT_PATH = "./sample_cluster_result.pkl"
 
-    STATIONS = ['사당역']#, '방배역', '서초역', '교대역']
+    STATIONS = ['강남역', '잠실역', '선릉역', '구로디지털단지역', '홍대입구역']
     SEARCH_KEYWORD = ['술집', '카페', '맛집']
     CRAWLER_OPTIONS = dict(log=True, msg=True)
+    
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = False
 
     DO_CRAWL = False
