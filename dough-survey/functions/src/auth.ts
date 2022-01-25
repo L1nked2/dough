@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
-import {initializeApp} from "@firebase/app";
 import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
 import {Request} from "express";
+import {getUserId} from "./dataLoader"
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -23,8 +23,8 @@ const firebaseConfig = {
 
 // // Initialize Firebase
 firebaseAdmin.initializeApp(firebaseConfig);
-initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
+const auth = firebaseAdmin.auth();
 const db = firebaseAdmin.firestore();
 
 // Initialize kakao api server uri
@@ -75,6 +75,11 @@ async function createUserDoc(
       user_survey_result: [],
       user_survey_done: false,
       user_survey_last_timestamp: "",
+      user_favorites: {
+        rest: {},
+        cafe: {},
+        bar: {},
+      },
       user_sign_in_timestamp: "",
     };
     docData.user_gender = gender;
@@ -220,4 +225,24 @@ async function kakaoLogin(req: Request) {
   return firebaseToken;
 }
 
-export {kakaoLogin};
+/**
+ * deleteUser
+ * @param  {Request} req axios request
+ * @return {Promise<string>} uuid of deleted user, failed if user is not found
+ */
+async function deleteUser(req: Request): Promise<string> {
+  const userId = await getUserId(req.body.userToken);
+  const userDocRef = db.doc(`user_db/${userId}`);
+  try {
+    //clean up user document
+    await userDocRef.delete();
+    //delete user account from firebase/auth
+    await auth.deleteUser(userId);
+  } catch (e) {
+    console.log(`Error deleting user: ${e}`);
+    return "failed";
+  }
+  return userId;
+}
+
+export {kakaoLogin, deleteUser};
