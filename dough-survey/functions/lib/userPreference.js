@@ -299,7 +299,7 @@ async function addFavoritesItem(userObject, targetCategory, targetStationId, sta
     }
     console.log(`addFavoritesItem: station added, ${JSON.stringify(categoryObject)}`);
     const placeList = categoryObject[targetStationId].place_list;
-    const index = placeList.indexOf(targetPlaceId);
+    const index = await findIndex(placeList, targetPlaceId);
     const placeListItem = {
         place_uuid: placeDataObject.place_uuid,
         place_name: placeDataObject.place_name,

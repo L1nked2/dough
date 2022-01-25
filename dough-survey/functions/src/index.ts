@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import express = require("express");
-import {kakaoLogin} from "./login";
+import {kakaoLogin} from "./auth";
 import {getInfo} from "./dataLoader";
 import {submitSurvey, updateFavorites} from "./userPreference";
 import cors from "cors";
