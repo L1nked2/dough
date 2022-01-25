@@ -1,4 +1,3 @@
-from turtle import update
 from dough_crawler import crawl
 from firebase_db import convert_documents_and_upload_to_db, update_cluster
 
@@ -14,13 +13,12 @@ if __name__ == "__main__":
     CRAWLER_OPTIONS = dict(log=True, msg=True)
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = False
 
-    DO_CRAWL = True
-    DOWNLOAD_PHOTO = False
+    DO_CRAWL = False
     DO_UPLOAD = False
     DO_UPADTE_CLUSTER = False
 
     if DO_CRAWL:
-        crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, CRAWL_ONLY_TEN_PLACES_FOR_TEST, DOWNLOAD_PHOTO)
+        crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, CRAWL_ONLY_TEN_PLACES_FOR_TEST)
     if DO_UPLOAD:
         convert_documents_and_upload_to_db (DB_PATH, PHOTO_DIR_PATH, CATEGORY_TO_TAG_TABLE_DIR_PATH)
     if DO_UPADTE_CLUSTER:

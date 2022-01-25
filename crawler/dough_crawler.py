@@ -19,7 +19,7 @@ import requests
 import json
 import datetime
 import re
-import dill
+import dill, pickle
 import uuid
 #from firestore_lib import *
 
@@ -53,7 +53,7 @@ parse_table_naver = dict(
 
 
 class DoughCrawler:
-    def __init__(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, download_photo, **kwargs):
+    def __init__(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs):
         # attributes initializing
         self.log = True
         current_time = datetime.datetime.now().isoformat('-', timespec='seconds').replace(':', '')
@@ -97,7 +97,9 @@ class DoughCrawler:
 
         # crawling limit
         self.crawl_only_ten_places_for_test = crawl_only_ten_places_for_test
-        self.download_photo = download_photo
+
+        # for category
+        self.collected_category_set = set()
 
         return
 
@@ -107,13 +109,13 @@ class DoughCrawler:
             self.log_file.close()
         return
 
-    def clear(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, download_photo, **kwargs):
-        self.__init__(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, download_photo, **kwargs)
+    def clear(self, db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs):
+        self.__init__(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, **kwargs)
         return
 
     def run_crawler_naver(self, station_name=None, search_keyword=None, options=None):
         self.crawler_msg(f'{station_name} {search_keyword} crawling start')
-        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, self.crawl_only_ten_places_for_test, self.download_photo, **options)
+        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, self.crawl_only_ten_places_for_test, **options)
         self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
         self.get_place_link_list_naver()
         self.get_place_info_naver()
@@ -272,22 +274,20 @@ class DoughCrawler:
         place_db['place_last_timestamp'] = datetime.date.today().isoformat()
         place_db['place_uuid'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, link))
 
-        
-        if self.download_photo:
-            # make directory for images
-            place_uuid = place_db['place_uuid']
-            local_path = f'{self.photo_dir_path}/{place_uuid}'
-            if not os.path.isdir(local_path):
-                os.mkdir(local_path)
-                os.mkdir(f'{local_path}/menu')
-                os.mkdir(f'{local_path}/food')
-                os.mkdir(f'{local_path}/inside')
-                os.mkdir(f'{local_path}/thumbnail_inside')
-                os.mkdir(f'{local_path}/thumbnail_food')
+        # make directory for images
+        place_uuid = place_db['place_uuid']
+        local_path = f'{self.photo_dir_path}/{place_uuid}'
+        if not os.path.isdir(local_path):
+            os.mkdir(local_path)
+            os.mkdir(f'{local_path}/menu')
+            os.mkdir(f'{local_path}/food')
+            os.mkdir(f'{local_path}/inside')
+            os.mkdir(f'{local_path}/thumbnail_inside')
+            os.mkdir(f'{local_path}/thumbnail_food')
 
-            # download menu, provided images
-            self._download_photo(place_db, 'menu')
-            self._download_photo(place_db, 'provided')
+        # download menu, provided images
+        self._download_photo(place_db, 'menu')
+        self._download_photo(place_db, 'provided')
         
         return True
 
@@ -386,7 +386,7 @@ class DoughCrawler:
         for link in self.place_link_list:
             try:
                 validity = self._get_place_info_naver_basic(link)
-                if validity and self.download_photo:
+                if validity:
                     self._get_place_info_naver_photo(link, relations='food')
                     self._get_place_info_naver_photo(link, relations='inside')
             except TypeError:
@@ -473,20 +473,60 @@ class DoughCrawler:
             kwargs['file'] = self.log_file
             print(f'DoughCrawler: {string}', **kwargs)
         return
-    # to do
-    # def _upload_photo_naver(self, img_links, place_db, img_type):  # not appropriate, to be moved to firestore_lib
-    # migrate img_transform part to firestore_lib, transform_img_url function(using db_list) add
-    # resume_getting_photo function(using photo_error_list) add
+    
+############# NEEDED TO BE SEPARATED INTO DIFFERNT CLASS, ONLY FOR CATEGORY CRAWLING ###############
+    def run_crawler_only_for_category(self, station_name, search_keyword, options):
+        self.crawler_msg(f'{station_name} {search_keyword} category crawling start')
+        self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, self.crawl_only_ten_places_for_test, **options)
+        self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
+        self.get_place_link_list_naver()
+        self.get_category_info_naver()
+        self.crawler_msg(f'{station_name} {search_keyword} category crawling done')
+
+    def get_category_info_naver(self):
+        self.crawler_msg('naver_info_get start')
+        self._remove_duplicates()
+        for link in self.place_link_list:
+            self._get_category_info_naver_basic(link)
+
+    def _get_category_info_naver_basic(self, link):
+        restaurant_link = f'{naver_restaurant_api_root_url}/{link}'
+        params = {"lang": "ko"}
+        res = requests.get(url=restaurant_link, params=params).json()
+        try:
+            place_category = res['category']
+            #print(place_category)
+            self.collected_category_set.add(place_category)
+        except KeyError:
+            self.crawler_msg(f'{link} has no category in return json data')
+
+    def get_collected_category_set(self):
+        return self.collected_category_set
+###########################################################################
 
 
 def crawl(stations, search_keywords, crawler_options, 
-    db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test,
-    download_photo):
+    db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test):
     done_list = os.listdir(db_path)
-    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, download_photo)
+    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test)
     for station_name in stations:
         for search_keyword in search_keywords:
             if f'{station_name}_{search_keyword}' in done_list:
                 continue
             else:
                 dhc.run_crawler_naver(station_name=station_name, search_keyword=search_keyword, options=crawler_options)
+
+
+def crawl_only_category(stations, search_keywords, crawler_options, 
+    db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test, collected_category_dir_path):
+    done_list = os.listdir(db_path)
+    dhc = DoughCrawler(db_path, photo_dir_path, log_dir_path, crawl_only_ten_places_for_test)
+    for station_name in stations:
+        for search_keyword in search_keywords:
+            if f'{station_name}_{search_keyword}' in done_list:
+                continue
+            else:
+                dhc.run_crawler_only_for_category(station_name, search_keyword, crawler_options)
+                with open(f"{collected_category_dir_path}/cat_{station_name}_{search_keyword}.pkl", 'wb') as f:
+                    print(dhc.get_collected_category_set())
+                    pickle.dump(dhc.get_collected_category_set(), f)
