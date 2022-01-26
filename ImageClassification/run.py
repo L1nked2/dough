@@ -31,6 +31,6 @@ def parse():
 
 if __name__ == '__main__':
     args = parse()
-    train(args)
+    # train(args)
     predict(args)
     print("\nDone!!!")
