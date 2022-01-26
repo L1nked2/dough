@@ -10,7 +10,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 import matplotlib.pyplot as plt
-import numpy as np
 
 '''
 Something for training
