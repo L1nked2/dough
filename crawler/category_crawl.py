@@ -1,17 +1,9 @@
 """
 file for category crawling.
 """
-import os, pickle, csv
+import os, pickle
+from utils import csv_to_list, create_dirs_if_not_exist
 from dough_crawler import crawl_only_category
-
-def csv_to_list(csv_path):
-  lst = list()
-  with open(csv_path,'r') as f:
-      reader = csv.reader(f)
-      for row in reader:
-          lst.append(row[0])
-  print(lst)
-  return lst
 
 def save_only_diff(collected_category_dir_path, existing_category_to_tag_table_dir_path):
 
@@ -32,10 +24,12 @@ def save_only_diff(collected_category_dir_path, existing_category_to_tag_table_d
 
 
 if __name__ == "__main__":
-    DB_PATH = "/media/k/DB/DIR_FOR_CRAWLING/raw_db"
-    PHOTO_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/temp_img"
-    LOG_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/log"
-    COLLECTED_CATEGORY_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/collected_categories"
+    DB_PATH = "./raw_db"
+    PHOTO_DIR_PATH = "./temp_img"
+    LOG_DIR_PATH = "./log"
+    COLLECTED_CATEGORY_DIR_PATH = "./collected_categories"
+    EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
+    create_dirs_if_not_exist([DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, COLLECTED_CATEGORY_DIR_PATH, EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH])
 
     STATIONS = csv_to_list("./all_metro_list.csv")
     SEARCH_KEYWORD = ['술집', '카페', '맛집']
@@ -45,5 +39,5 @@ if __name__ == "__main__":
     crawl_only_category(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, 
     DB_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, CRAWL_ONLY_TEN_PLACES_FOR_TEST, COLLECTED_CATEGORY_DIR_PATH)
 
-    EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
+    
     # save_only_diff(COLLECTED_CATEGORY_DIR_PATH , EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH)
