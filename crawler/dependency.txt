@@ -1,3 +1,4 @@
+anyio==3.5.0
 attrs==21.4.0
 CacheControl==0.12.10
 cachetools==4.2.4
@@ -18,7 +19,10 @@ google-resumable-media==2.1.0
 googleapis-common-protos==1.54.0
 grpcio==1.43.0
 grpcio-status==1.43.0
+h11==0.12.0
+httpcore==0.14.5
 httplib2==0.20.2
+httpx==0.21.3
 idna==3.3
 iniconfig==1.1.1
 msgpack==1.0.3
@@ -36,8 +40,10 @@ pytest==6.2.5
 python-dateutil==2.8.2
 pytz==2021.3
 requests==2.26.0
+rfc3986==1.5.0
 rsa==4.8
 six==1.16.0
+sniffio==1.2.0
 toml==0.10.2
 uritemplate==4.1.1
 urllib3==1.26.7
