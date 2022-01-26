@@ -7,6 +7,7 @@ warnings.filterwarnings(action='ignore')
 from ImageClassification.utils.train_part import train
 import argparse
 from ImageClassification.utils.predict import predict
+from ImageClassification.utils.inference import inference
 
 def parse():
     parser = argparse.ArgumentParser(description='Dough ImageClassification project', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -31,6 +32,7 @@ def parse():
 
 if __name__ == '__main__':
     args = parse()
-    train(args)
-    predict(args)
+    # train(args)
+    # predict(args)
+    inference(args)
     print("\nDone!!!")

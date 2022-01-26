@@ -71,7 +71,7 @@ def inf_file_list(path, args):
     np.random.shuffle(dir_list)
     dir_list = list(dir_list)
 
-    print('------image loading and throwing away------')
+    print('------image loading and throwing away for inference image------')
 
     real = []
     for dir in dir_list:
@@ -124,9 +124,9 @@ class DoughDataset(data.Dataset):
         color = self.colors[idx]
         # change if csv changes
         # print(self.annotation)
+        # print(img_path)
         # print(self.annotation[self.annotation['Name']==img_path[7:43]])
         index = self.annotation.index[self.annotation['Name']==img_path[7:43]].tolist()[0] # label = self.annotation[self.annotation['hash']==img_path[8:44]].iloc[0, 2]
-        # print(index)
         name = self.annotation[self.annotation['Name']==img_path[7:43]].iloc[0, 0]
         label = self.annotation.iloc[index, 1]
         hot_label = [0] * self.args.classes
@@ -152,7 +152,8 @@ class PassTheData():
         base_path = args.path
         batch = args.batch_size
         df = pd.read_csv(f'{args.path}/file_list.csv', encoding='utf=8')
-        inf_df = pd.DataFrame(os.listdir(f'{args.path}'))
+        inf_df = pd.DataFrame(columns=['Name'], data=os.listdir(f'{args.path}'))
+        inf_df['Cluster_a'] = [-1] * len(inf_df)
         train_dic, test_dic = file_list(base_path, args)
         train_dic = regular(dic=train_dic, df=df, args=args)
         inf_dic = inf_file_list(base_path, args)
