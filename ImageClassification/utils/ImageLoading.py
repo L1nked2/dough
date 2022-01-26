@@ -10,6 +10,7 @@ from glob import glob
 import matplotlib.pyplot as plt
 import pandas as pd
 from tqdm import tqdm
+import os
 
 def filtered_colored(path_list, args):
     input_list = {'list' : [], 'color' : []}
@@ -33,9 +34,9 @@ def filtered_colored(path_list, args):
 
 def file_list(path, args):
     dir_list = glob(f'{path}/*')
-    if './data/file_list.csv' in dir_list: dir_list.remove('./data/file_list.csv')
-    if './data/file_list.csv' in dir_list: dir_list.remove('./data/file_list.xlsx')
-    if './data/trash' in dir_list: dir_list.remove('./data/trash')
+    if f'{args.path}file_list.csv' in dir_list: dir_list.remove('./data/file_list.csv')
+    if f'{args.path}file_list.csv' in dir_list: dir_list.remove('./data/file_list.xlsx')
+    if f'{args.path}trash' in dir_list: dir_list.remove('./data/trash')
 
     np.random.shuffle(dir_list)
     dir_list = list(dir_list)
@@ -61,6 +62,26 @@ def file_list(path, args):
 
     return real_train, real_test
 
+def inf_file_list(path, args):
+    dir_list = glob(f'{path}/*')
+    if f'{args.path}file_list.csv' in dir_list: dir_list.remove(f'{args.path}file_list.csv')
+    if f'{args.path}file_list.csv' in dir_list: dir_list.remove(f'{args.path}file_list.csv')
+    if f'{args.path}trash' in dir_list: dir_list.remove(f'{args.path}trash')
+
+    np.random.shuffle(dir_list)
+    dir_list = list(dir_list)
+
+    print('------image loading and throwing away------')
+
+    real = []
+    for dir in dir_list:
+        img_list = glob(f'{dir}/{args.level}.jpg')
+        real += img_list
+
+    print('Processing...')
+    real = filtered_colored(real, args)
+
+    return real
 
 def regular(dic, df, args):
     freq = df.groupby(['Cluster_a']).count()
@@ -131,9 +152,10 @@ class PassTheData():
         base_path = args.path
         batch = args.batch_size
         df = pd.read_csv(f'{args.path}/file_list.csv', encoding='utf=8')
+        inf_df = pd.DataFrame(os.listdir(f'{args.path}'))
         train_dic, test_dic = file_list(base_path, args)
         train_dic = regular(dic=train_dic, df=df, args=args)
-
+        inf_dic = inf_file_list(base_path, args)
         # train_test split
 
         train_dic, val_dic = train_test_split(
@@ -153,6 +175,7 @@ class PassTheData():
             df=df,
             args=args
         )
+
         self.train_dataloader = data.DataLoader(dataset=train_dataset, batch_size=batch, shuffle=True)
         self.val_dataloader = data.DataLoader(dataset=val_dataset, batch_size=batch, shuffle=True)
 
@@ -165,6 +188,13 @@ class PassTheData():
 
         self.test_dataloader = data.DataLoader(dataset=test_dataset, batch_size=1, shuffle=True)
 
+        inf_dataset = DoughDataset(
+            dic=inf_dic,
+            transform=ImageTransform(args),
+            df=inf_df,
+            args=args
+        )
+        self.inf_dataloader = data.DataLoader(dataset=inf_dataset, batch_size=batch, shuffle=True)
     def pass_train_dataloader(self):
         return self.train_dataloader
 
@@ -173,4 +203,7 @@ class PassTheData():
 
     def pass_test_dataloader(self):
         return self.test_dataloader
+
+    def pass_inf_dataloader(self):
+        return self.inf_dataloader
 
