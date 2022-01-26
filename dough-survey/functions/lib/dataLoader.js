@@ -21,6 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getInfoBase = exports.getUserId = exports.getInfo = void 0;
 const firebaseAdmin = __importStar(require("firebase-admin"));
+const userPreference_1 = require("./userPreference");
 const db = firebaseAdmin.firestore();
 /**
  * getUserId
@@ -30,7 +31,10 @@ const db = firebaseAdmin.firestore();
  */
 async function getUserId(userToken) {
     try {
-        if (userToken === "") {
+        if (userToken === undefined) {
+            return "";
+        }
+        else if (userToken === "") {
             return "default";
         }
         const decodedToken = await firebaseAdmin.auth().verifyIdToken(userToken);
@@ -180,7 +184,9 @@ async function getStationInfo(req) {
  */
 async function getPlaceInfo(req) {
     try {
-        const stationId = `${req.body.stationId}`;
+        const userToken = req.body.userToken;
+        const userId = await getUserId(userToken);
+        const stationId = req.body.stationId;
         const placeId = req.body.placeId;
         const stationData = await getInfoBase("station", stationId);
         const placeInfo = await getInfoBase("place", placeId);
@@ -190,6 +196,9 @@ async function getPlaceInfo(req) {
             lat: placeInfo.place_coor_y };
         const distance = haversineDistance(stationCoor, placeCoor);
         console.log(`getPlaceInfo: ${placeId}`);
+        if (userId !== "") {
+            (0, userPreference_1.updateRecent)(userId, placeId, stationId);
+        }
         return { placeInfo: placeInfo, distance: distance };
     }
     catch (error) {

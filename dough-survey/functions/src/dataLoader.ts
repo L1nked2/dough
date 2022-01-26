@@ -1,5 +1,6 @@
 import * as firebaseAdmin from "firebase-admin";
 import {Request} from "express";
+import {updateRecent} from "./userPreference";
 
 const db = firebaseAdmin.firestore();
 
@@ -11,7 +12,9 @@ const db = firebaseAdmin.firestore();
  */
 async function getUserId(userToken: string): Promise<string> {
   try {
-    if (userToken === "") {
+    if (userToken === undefined) {
+      return "";
+    } else if (userToken === "") {
       return "default";
     }
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(userToken);
@@ -150,7 +153,9 @@ async function getStationInfo(req: Request): Promise<any> {
  */
 async function getPlaceInfo(req: Request): Promise<any> {
   try {
-    const stationId = `${req.body.stationId}`;
+    const userToken = req.body.userToken;
+    const userId = await getUserId(userToken);
+    const stationId = req.body.stationId;
     const placeId = req.body.placeId;
     const stationData = await getInfoBase("station", stationId);
     const placeInfo = await getInfoBase("place", placeId);
@@ -160,6 +165,9 @@ async function getPlaceInfo(req: Request): Promise<any> {
       lat: placeInfo.place_coor_y};
     const distance = haversineDistance(stationCoor, placeCoor);
     console.log(`getPlaceInfo: ${placeId}`);
+    if (userId !== "") {
+      updateRecent(userId, placeId, stationId);
+    }
     return {placeInfo: placeInfo, distance: distance};
   } catch (error) {
     console.log(error);
