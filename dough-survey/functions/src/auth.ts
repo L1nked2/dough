@@ -3,7 +3,7 @@ import * as firebaseAdmin from "firebase-admin";
 import axios from "axios";
 import qs = require("qs");
 import {Request} from "express";
-import {getUserId} from "./dataLoader"
+import {getUserId} from "./dataLoader";
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -234,9 +234,9 @@ async function deleteUser(req: Request): Promise<string> {
   const userId = await getUserId(req.body.userToken);
   const userDocRef = db.doc(`user_db/${userId}`);
   try {
-    //clean up user document
+    // clean up user document
     await userDocRef.delete();
-    //delete user account from firebase/auth
+    // delete user account from firebase/auth
     await auth.deleteUser(userId);
   } catch (e) {
     console.log(`Error deleting user: ${e}`);

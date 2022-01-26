@@ -22,12 +22,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.kakaoLogin = void 0;
+exports.deleteUser = exports.kakaoLogin = void 0;
 /* eslint-disable camelcase */
-const app_1 = require("@firebase/app");
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const axios_1 = __importDefault(require("axios"));
 const qs = require("qs");
+const dataLoader_1 = require("./dataLoader");
 // Initialize FirebaseApp with service-account.json
 // SET GOOGLE_APPLICATION_CREDENTIALS=
 // "C:\Users\K\Desktop\dough\dough-survey\service-account.json"
@@ -45,8 +45,8 @@ const firebaseConfig = {
 };
 // // Initialize Firebase
 firebaseAdmin.initializeApp(firebaseConfig);
-(0, app_1.initializeApp)(firebaseConfig);
 // const analytics = getAnalytics(app);
+const auth = firebaseAdmin.auth();
 const db = firebaseAdmin.firestore();
 // Initialize kakao api server uri
 const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
@@ -93,6 +93,11 @@ async function createUserDoc(user_id, gender, age_range) {
             user_survey_result: [],
             user_survey_done: false,
             user_survey_last_timestamp: "",
+            user_favorites: {
+                rest: {},
+                cafe: {},
+                bar: {},
+            },
             user_sign_in_timestamp: "",
         };
         docData.user_gender = gender;
@@ -230,4 +235,25 @@ async function kakaoLogin(req) {
     return firebaseToken;
 }
 exports.kakaoLogin = kakaoLogin;
-//# sourceMappingURL=login.js.map
+/**
+ * deleteUser
+ * @param  {Request} req axios request
+ * @return {Promise<string>} uuid of deleted user, failed if user is not found
+ */
+async function deleteUser(req) {
+    const userId = await (0, dataLoader_1.getUserId)(req.body.userToken);
+    const userDocRef = db.doc(`user_db/${userId}`);
+    try {
+        // clean up user document
+        await userDocRef.delete();
+        // delete user account from firebase/auth
+        await auth.deleteUser(userId);
+    }
+    catch (e) {
+        console.log(`Error deleting user: ${e}`);
+        return "failed";
+    }
+    return userId;
+}
+exports.deleteUser = deleteUser;
+//# sourceMappingURL=auth.js.map

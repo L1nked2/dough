@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
 const express = require("express");
-const login_1 = require("./login");
+const auth_1 = require("./auth");
 const dataLoader_1 = require("./dataLoader");
 const userPreference_1 = require("./userPreference");
 const cors_1 = __importDefault(require("cors"));
@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // login using kakao code
 app.post("/api/login", (req, res) => {
-    (0, login_1.kakaoLogin)(req).then((token) => {
+    (0, auth_1.kakaoLogin)(req).then((token) => {
         res.send({ access_token: token });
     });
 });
