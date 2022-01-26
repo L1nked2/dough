@@ -1,0 +1,18 @@
+.categorySelector{
+  display: flex;
+  width: inherit;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 14px;
+}
+
+.categoryItem{
+  flex-grow: 1;
+  text-align: center;
+}
+
+.selected{
+  border-bottom: 3px solid skyblue;
+  transition: opacity 200ms;
+}
+

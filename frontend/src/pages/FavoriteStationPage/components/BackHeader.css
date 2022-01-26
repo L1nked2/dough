@@ -1,0 +1,18 @@
+.backHeader{
+  padding-top : 10px;
+  padding-bottom : 60px; 
+  display: flex;
+  flex-direction: row;
+  width: inherit; 
+  justify-content: flex-start;
+}
+
+.stationInfo{
+  padding-left : 10px;
+  font-size: 14px;
+}
+
+.backHeaderLink{
+  text-decoration: none;
+  color: black;
+}

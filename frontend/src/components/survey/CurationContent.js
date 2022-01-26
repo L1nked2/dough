@@ -1,3 +1,5 @@
+// same as ../recommend/RecommendContent.js
+
 import React, { useEffect } from 'react';
 import './CurationContent.css';
 

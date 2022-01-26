@@ -4,9 +4,6 @@ import './MyResult.css';
 
 function MyResult(props) {
     const testResult = useSelector((state) => state.userInfo.testResult.sampleTestResult);
-    if (!testResult) {
-        return (<div>none</div>);
-    }
     return(
         <>
             {props.className !== 'curation' ? <>

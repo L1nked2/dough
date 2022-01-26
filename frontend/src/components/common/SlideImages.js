@@ -4,6 +4,7 @@ import Header from './Header';
 import MyResult from '../main/MyResult';
 import ExpandIcon2 from "../icon/Expand2";
 import MapIcon from "../icon/Map";
+import LocationIcon from "../icon/Location";
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 import { openListPage, setListPageContents, openCurationPage, setCurationPageContents } from "../../actions/recommendPageInfo"
 
@@ -19,6 +20,7 @@ import "./SlideImages.css";
 import SwiperCore, {
     Pagination
 } from 'swiper';
+import { useRef } from "react";
 
 function SlideImages(props) {
     if (props.page === 'main') {
@@ -39,6 +41,9 @@ function SlideImages(props) {
     else if (props.page === 'result') {
       return (<ResultPageImageSlide elem={props.elem} />);
     }
+    else if (props.page === 'slideShow') {
+      return (<SlideShowImageSlide list={props.list} setSlideIndex={props.setSlideIndex} index={props.index}/>);
+    }
     return null;
   }
 
@@ -46,7 +51,6 @@ export default SlideImages;
 
 
 function MainPageSlide (props) {
-  console.log(props)
   const slideContentList = props.slideContentList;
   const dispatch = useDispatch();
   const openPage = (shop, rank) => {
@@ -54,18 +58,17 @@ function MainPageSlide (props) {
     document.body.style.overflow = 'hidden';
     dispatch(setShopPageContents({...shop, rank: rank, tag: 'myPlaceList'}));
   }
-
   return (
     <Swiper pagination={false} loop={false}
-            slidesPerView={3} slidesPerView={'auto'} 
-            centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
-            className={`mySwiper main ${props.name}`}>
+    slidesPerView={3} slidesPerView={'auto'} 
+    centeredSlides={true} spaceBetween={15} // viewpoint에 따라 변경 예정
+    className={`mySwiper main ${props.name}`}>
       {slideContentList.map((elem, index) => {
         return (
           <SwiperSlide onClick={()=>{openPage(elem, index+1)}} style={{backgroundImage: `url(${elem.place_main_photo_list[0]})`}} className={`swiperSlide main`} key={index}>
             <div>
-              <div style={{fontSize:"1.8em", marginBottom:40}}>{`${index+1}위`}</div>
-              <div style={{fontSize:"2.6em", marginBottom:20}}>{elem.place_name}</div>
+              <div>{`${index+1}위 ${elem.place_name}`}</div>
+              <div><LocationIcon width={'1em'} color={'white'}/>{` 역에서 200m     ${elem.place_kind.join(', ').length > 10 ? elem.place_kind.join(', ').slice(0, 10)+"..." : elem.place_kind.join(', ')}`}</div>
             </div>
           </SwiperSlide>
         );
@@ -301,3 +304,19 @@ function ResultPageImageSlide (props) {
   );
 }
 
+
+function SlideShowImageSlide (props) {
+  const slideContentList = props.list;
+  return (
+    <Swiper pagination={false} loop={false}
+            slidesPerView={3} slidesPerView={'auto'} 
+            centeredSlides={false} spaceBetween={0} initialSlide={props.index}
+            className={`mySwiper slideShow`} onSlideChange={(swiper) => props.setSlideIndex(swiper.activeIndex)}>
+      {slideContentList.map((elem, index) => {
+        return (
+          <SwiperSlide style={{backgroundImage: `url(${elem})`}} className={`swiperSlide slideShow`} key={index}/>
+        );
+      })}
+    </Swiper>
+  );
+}

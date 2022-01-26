@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from 'axios';
 import { sumScore, changeScore, nextPage, previousPage, reset } from "../../actions/survey";
+import { setCluster } from "../../actions/userInfo";
 
 import { survey_preview, survey_loading, survey } from '../../data/imgPath';
 
@@ -15,7 +17,6 @@ import { Link, useHistory } from "react-router-dom";
 function Survey() {
   const scores = useSelector((state) => state.survey.scores);
   const page = useSelector((state) => state.survey.page);
-  // const quizs = useSelector((state) => state.survey.quizs); // DB에서 제대로 된 이미지 링크 받은 후 redux 사용 시
   const quizs = survey
   const dispatch = useDispatch();
   
@@ -115,11 +116,28 @@ function PostSurvey(props) {
   let history = useHistory();
   const dispatch = props.dispatch;
   const scores = useSelector((state) => state.survey.scores);
+  const getCluster = async () => { 
+    const res = await axios({
+      method: 'POST',
+      url: 'https://dough-survey.web.app/api/survey',
+      headers: {
+          "Content-Type": `application/json`
+      },
+      data: {userToken: '', surveyResult: scores},
+    }).then(response => {
+      console.log(response);
+      for (let i = 0; i < scores.length; i++) {
+        dispatch(sumScore(scores[i]));
+      }
+      dispatch(setCluster(response.data.userCluster));
+      return response.data;
+    }).catch(err => {
+      console.log(err);
+    });
+  }
   if (props.isActive) {
-    for (let i = 0; i < scores.length; i++) {
-      dispatch(sumScore(scores[i]));
-    }
     // axios post scores
+    getCluster();
     setTimeout(() => {
       dispatch(reset());
       history.replace('/survey/result');

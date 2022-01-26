@@ -1,0 +1,11 @@
+.subHeader {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+  align-items : center;
+}
+
+.likedPlace{
+  padding-top: 9px;
+  font-size: 18px; 
+}

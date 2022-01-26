@@ -6,6 +6,7 @@
     align-items: center;
     -webkit-box-align: center;
 
+    position: relative;
     width: inherit;
     height: 4.421em;
     background-color: white;
@@ -23,5 +24,20 @@
     padding-left: 2.21em;
     padding-right: 2.21em;
 
+    cursor: pointer;
+}
+
+.mainHeader .rightAlign {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-box-pack: center;
+    align-items: center;
+    -webkit-box-align: center;
+
+    position: absolute;
+    right: 0;
+    padding: 0 2.211em;
+    height: 100%;
     cursor: pointer;
 }

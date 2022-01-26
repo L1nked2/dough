@@ -5,8 +5,6 @@ import './Home.css';
 import Header from '../components/common/Header'
 import MyShop from '../components/main/MyShop'
 import CollapseResult from '../components/main/CollapseResult'
-import ShopModal from './Shop'
-import SlideImages from '../components/common/SlideImages';
 import LocationModal from './Location'
 import Navbar from '../components/common/Navbar';
 import { initialMenuState } from '../actions/homePageInfo';
@@ -17,15 +15,12 @@ import { initializeList } from '../actions/myPlaceList';
 import { sampleShop } from '../data/samplePlaceDB';
 
 function Home() {
-  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
   const locationPageIsOpen = useSelector((state) => state.homePageInfo.locationPageIsOpen);
   const fullFoodList = useSelector((state) => state.homePageInfo.fullFoodList); 
   const fullCafeList = useSelector((state) => state.homePageInfo.fullCafeList); 
   const fullDrinkList = useSelector((state) => state.homePageInfo.fullDrinkList); 
   const initializedMenuList = useSelector((state) => state.homePageInfo.initializedList); 
   const dispatch = useDispatch();
-
-  const cookie = new Cookies();
   
   useEffect(() => {
     dispatch(initializeList(sampleList));
@@ -36,10 +31,7 @@ function Home() {
   },[]);
   
   return (
-    <div className="Home-page">
-      <CSSTransition in={shopPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
-        <ShopModal />
-      </CSSTransition>
+    <div className="homePage">
       <CSSTransition in={locationPageIsOpen} unmountOnExit classNames="fade" timeout={{enter: 200, exit: 200}}>
         <LocationModal />
       </CSSTransition>

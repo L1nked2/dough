@@ -23,6 +23,8 @@
     display: -webkit-flex;
     align-items: center;
     -webkit-box-align: center;
+    justify-content: flex-start;
+    -webkit-box-pack: start;
 
     position: sticky;
     position: -webkit-sticky;
@@ -101,8 +103,9 @@
     flex-direction: column;
     -webkit-box-orient: vertical;
     
-    padding-top: 1em;
-    padding-bottom: 2.211em;
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 2.211em;
     gap: 0.737em;
 }
 .shopPage .pictures {
@@ -122,10 +125,29 @@
 
     gap: 0.737em;
 }
-.shopPage .twoPictures > img {
+.shopPage .twoPictures > div{
+    position: relative;
     width: calc(50% - 0.3685em);
-    aspect-ratio: 1;
-    object-fit: cover;
+}
+.shopPage .twoPictures > div::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.shopPage .twoPictures > div > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+.shopPage .fourPictures > span {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 1.4em;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+    padding: 0.3em 0.5em;
 }
 
 .shopPage .information {
@@ -134,7 +156,6 @@
     flex-direction: column;
     -webkit-box-orient: vertical;
 
-    gap: 2.457em;
     padding-left: 1.8425em; /* 30px */
     padding-right: 1.8425em;
     font-size: 1.2em;
@@ -175,6 +196,7 @@
     -webkit-box-orient: horizontal;
 
     gap: 1.474em;
+    margin-bottom: 2.457em;
 }
 .shopPage .information .eachInformation .icon{
     display: flex;
@@ -213,7 +235,34 @@
     padding: 0.5em 0;
     cursor: pointer;
 }
+.shopPage .menuImg {
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-end;
+    -webkit-box-align: end;
+    justify-content: flex-end;
+    -webkit-box-pack: end;
 
+    margin: 1em 2.211em;
+    height: 5em;
+    background-repeat: none;
+    background-position: center;
+    background-size: cover;
+}
+.shopPage .menuImg > div {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    justify-content: center;
+    -webkit-box-pack: center;
+
+    font-size: 1.2em;
+    color: white;
+    background-color: rgba(0,0,0,0.36);
+    height: 2em;
+    padding: 0 1em;
+}
 .shopPage .information .eachInformation .contents .eachMenu{
     display: inline-flex;
     display: -webkit-inline-flex;
@@ -246,6 +295,10 @@
 
     margin-left: auto;
 }
+.shopPage .information .eachInformation .contents > a {
+    overflow: hidden;
+    word-break: break-all;
+}
 .shopPage .information .eachInformation .contents.reviews{
     overflow-y: hidden;
 }
@@ -266,6 +319,39 @@
     overflow-y: hidden;
     font-size: 0.917em;
     color: rgba(0,0,0,0.65);
+}
+.shopPage .infoChange {
+    display: flex;
+    display: -webkit-flex;
+
+    padding-left: 1.8425em; /* 30px */
+    padding-right: 1.8425em;
+    padding-top: 0.5em;
+    padding-bottom: 5em;
+    font-size: 1.2em;
+    
+    gap: 1.474em;
+    background-color: #F7F7F7;
+    color: #A3A3A3;
+    height: 2em;
+}
+.shopPage .infoChange > .icon {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    width: calc(11% - 1.474em);
+}
+.shopPage .infoChange > .icon > img {
+    width: 100%;
+}
+.shopPage .infoChange > .contents {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    padding-top: 0.2em;
+    cursor: pointer;
 }
 
 .shopPage .shopSwiper .mainContent > .expandButton{
@@ -345,7 +431,8 @@
     left: 0%;
     gap: 0.7em;
     cursor: pointer;
-    margin-bottom: 2px;
+    padding-bottom: 3px;
+    height: inherit;
 }
 .shopPage .subNavbar .buttons .shareButton {
     display: flex;
@@ -357,5 +444,6 @@
     right: 0%;
     gap: 0.7em;
     cursor: pointer;
-    margin-bottom: 2px;
+    padding-bottom: 3px;
+    height: inherit;
 }

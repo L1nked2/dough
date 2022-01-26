@@ -34,7 +34,7 @@ function EachMoreShop(props) {
   return (
     <div onClick={openPage} className="eachShop" key={props.rank}>
       <div className="image">
-        <div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/>
+        <div><div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/></div>
       </div>
       <div className="information">
         <div className="rankAndDistance">
@@ -43,13 +43,13 @@ function EachMoreShop(props) {
           <span id="distance">{`역에서 200m`}</span>
         </div>
         <div className="nameAndMenu">
-          <span id="name">{shop.place_name}</span>
-          <span id="menu">{shop.place_kind[0]}</span>
+          <span id="name">{shop.place_name.length > 5 ? shop.place_name.slice(0, 5)+"..." : shop.place_name}</span>
+          <span id="menu">{shop.place_kind.join(', ').length > 10 ? shop.place_kind.join(', ').slice(0, 10)+"..." : shop.place_kind.join(', ')}</span>
         </div>
         <div className="subimages">
-          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/>
-          <div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/>
-          <div id="plusButton"><MoreIcon width={15}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/></div>
+          <span id="plusButton"><MoreIcon width={15}/></span>
         </div>
       </div>
     </div>
