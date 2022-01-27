@@ -20,7 +20,7 @@ function FavoriteMainPage(props){
     // fetch user favorite json from server with axios
     // with Promise
     axios({
-        method: 'get',
+        method: 'post',
         url: 'https://dough-survey.web.app/api/info/user',
         headers: {
             "Content-type" : "application/json"
@@ -30,11 +30,11 @@ function FavoriteMainPage(props){
         }
     }).then( (response) => {
         ////// temporary dummy data
-        console.log(response.data.userInfo.user_favorites);
-        dispatch(saveUserFavorites(example_user_favorite.user_favorites));
+        //console.log(response.data.userInfo.user_favorites);
+        //dispatch(saveUserFavorites(example_user_favorite.user_favorites));
         
         ////// actual code
-        // dispatch(saveUserFavorites(response.data.userInfo.user_favorites));
+        dispatch(saveUserFavorites(response.data.userInfo.user_favorites));
     });
     
   }, 
