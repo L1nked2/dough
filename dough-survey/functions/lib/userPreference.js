@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateFavorites = exports.submitSurvey = void 0;
+exports.updateRecent = exports.updateFavorites = exports.submitSurvey = void 0;
 /* eslint-disable camelcase */
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const dataLoader_1 = require("./dataLoader");
@@ -159,7 +159,7 @@ async function updateFavorites(req) {
                 else {
                     throw new Error("userDoc not exists");
                 }
-                return placeData.place_name;
+                return `successfully added: ${placeData.place_name}`;
             });
         }
         catch (e) {
@@ -318,4 +318,60 @@ async function addFavoritesItem(userObject, targetCategory, targetStationId, sta
     setStationThumbnails(categoryObject[targetStationId]);
     return userObject;
 }
+/**
+ * updateRecent
+ * @param {string} userId
+ * @param {string} placeId
+ * @param {string} stationId
+ * @return {Promise<string>} place_uuid of target place else failed
+ */
+async function updateRecent(userId, placeId, stationId) {
+    const placeDocRef = db.doc(`place_db/${placeId}`);
+    const stationDocRef = db.doc(`station_db/${stationId}`);
+    const userDocRef = db.doc(`user_db/${userId}`);
+    let res;
+    try {
+        res = await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userDocRef);
+            const userData = userDoc.data();
+            const placeDoc = await transaction.get(placeDocRef);
+            const placeData = placeDoc.data();
+            const stationDoc = await transaction.get(stationDocRef);
+            const stationData = stationDoc.data();
+            if (userDoc.exists) {
+                // check place exists and update recently viewed place queue
+                const placeId = placeData.place_uuid;
+                let placeList = userData.user_recent_place_list;
+                placeList = placeList.reverse();
+                const index = await findIndex(placeList, placeId);
+                const recentListItem = {
+                    place_uuid: placeData.place_uuid,
+                    place_name: placeData.place_name,
+                    station_name: stationData.station_name,
+                    place_thumbnail: placeData.place_main_photo_list[0],
+                };
+                if (index === -1) {
+                    placeList.push(recentListItem);
+                }
+                else {
+                    placeList.splice(index, 1);
+                    placeList.push(recentListItem);
+                }
+                placeList = placeList.reverse();
+                userData.user_recent_place_list = placeList;
+                transaction.set(userDocRef, userData, { merge: false });
+            }
+            else {
+                throw new Error("userDoc not exists");
+            }
+            return `updateRecent: place(${placeId}) to user(${userId}) `;
+        });
+    }
+    catch (e) {
+        console.log("updateRecent failed: ", e);
+        return "updateRecent failed";
+    }
+    return "updateRecent failed";
+}
+exports.updateRecent = updateRecent;
 //# sourceMappingURL=userPreference.js.map

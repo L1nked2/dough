@@ -151,7 +151,7 @@ async function updateFavorites(
         } else {
           throw new Error("userDoc not exists");
         }
-        return placeData.place_name;
+        return `successfully added: ${placeData.place_name}`;
       });
     } catch (e) {
       console.log("updateFavorites failed: ", e);
@@ -321,4 +321,58 @@ async function addFavoritesItem(
   return userObject;
 }
 
-export {submitSurvey, updateFavorites};
+/**
+ * updateRecent
+ * @param {string} userId
+ * @param {string} placeId
+ * @param {string} stationId
+ * @return {Promise<string>} place_uuid of target place else failed
+ */
+async function updateRecent(userId: string,
+    placeId: string, stationId: string): Promise<string> {
+  const placeDocRef = db.doc(`place_db/${placeId}`);
+  const stationDocRef = db.doc(`station_db/${stationId}`);
+  const userDocRef = db.doc(`user_db/${userId}`);
+  let res;
+  try {
+    res = await db.runTransaction(async (transaction) => {
+      const userDoc = await transaction.get(userDocRef);
+      const userData = userDoc.data() as FirebaseFirestore.DocumentData;
+      const placeDoc = await transaction.get(placeDocRef);
+      const placeData = placeDoc.data() as FirebaseFirestore.DocumentData;
+      const stationDoc = await transaction.get(stationDocRef);
+      const stationData = stationDoc.data() as FirebaseFirestore.DocumentData;
+      if (userDoc.exists) {
+        // check place exists and update recently viewed place queue
+        const placeId = placeData.place_uuid;
+        let placeList = userData.user_recent_place_list;
+        placeList = placeList.reverse();
+        const index = await findIndex(placeList, placeId);
+        const recentListItem = {
+          place_uuid: placeData.place_uuid,
+          place_name: placeData.place_name,
+          station_name: stationData.station_name,
+          place_thumbnail: placeData.place_main_photo_list[0],
+        };
+        if (index === -1) {
+          placeList.push(recentListItem);
+        } else {
+          placeList.splice(index, 1);
+          placeList.push(recentListItem);
+        }
+        placeList = placeList.reverse();
+        userData.user_recent_place_list = placeList;
+        transaction.set(userDocRef, userData, {merge: false});
+      } else {
+        throw new Error("userDoc not exists");
+      }
+      return `updateRecent: place(${placeId}) to user(${userId}) `;
+    });
+  } catch (e) {
+    console.log("updateRecent failed: ", e);
+    return "updateRecent failed";
+  }
+  return "updateRecent failed";
+}
+
+export {submitSurvey, updateFavorites, updateRecent};
