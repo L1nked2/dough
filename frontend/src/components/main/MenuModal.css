@@ -53,8 +53,8 @@
   display: flex;
   display: -webkit-flex;
   border: 1px solid rgba(0,0,0,0.18);
-  border-radius: 1em;
-  padding: 0.123em 0.798em;
+  border-radius: 2em;
+  padding: 0.323em 0.798em;
   margin: 0.491em 0.43em;
   cursor: pointer;
 }

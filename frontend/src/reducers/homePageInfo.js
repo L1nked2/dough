@@ -7,7 +7,7 @@ const initialState = {
     drinkPlaceList: [],
 
     shopPageIsOpen: false,
-    shopPageContent: {},
+    shopPageContent: null,
     locationPageIsOpen: false,
     menuModalIsOpen: false,
     slideShowPageIsOpen: false,
@@ -63,7 +63,7 @@ function homePageReducer (state = initialState, action) {
                     tempDrinkStateList: action.payload.tempDrinkStateList,
                     initializedList: true}
         case "SET_SHOP_PAGE_CONTENTS":
-            return {...state, shopPageContent: action.payload}
+            return {...state, shopPageContent: {...action.payload, prevLike: action.payload.place_likes}}
         case "APPLY_FOOD_LIST":
             return {...state, tempFoodStateList: action.payload}
         case "APPLY_CAFE_LIST":
@@ -71,7 +71,7 @@ function homePageReducer (state = initialState, action) {
         case "APPLY_DRINK_LIST":
             return {...state, tempDrinkStateList: action.payload}
         case "TEMP_LIKE_CHANGE":
-            return {...state, shopPageContent: {...state.shopPageContent, place_likes:!state.shopPageContent.place_likes}}
+            return {...state, shopPageContent: {...state.shopPageContent, place_likes:action.payload}}
         case "LIKE_CHANGE":
             switch(action.payload.category){
                 case "food":

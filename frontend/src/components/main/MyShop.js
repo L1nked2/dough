@@ -59,6 +59,8 @@ function MyShop(props) {
   };
 
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
+  const shopPageContent = useSelector((state) => state.homePageInfo.shopPageContent);
 
   const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
   const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
@@ -104,6 +106,28 @@ function MyShop(props) {
     // })
   },[]);
 
+  useEffect (() => {
+    if (!shopPageIsOpen && shopPageContent) {
+      const postList = async () => { 
+        const res = await axios({
+            method: 'POST',
+            url: 'https://dough-survey.web.app/api/favorites',
+            headers: {
+                "Content-Type": `application/json`
+            },
+            data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', action: shopPageContent.place_likes?"add":"delete", placeId: shopPageContent.place_uuid},
+        }).then(response => {
+            console.log(response);
+        }).catch(err => {
+            console.log(err);
+        });
+      }
+      console.log(shopPageContent, shopPageContent.prevLike, shopPageContent.place_likes);
+      if (shopPageContent.prevLike !== shopPageContent.place_likes){
+          postList();
+      }
+    }
+  },[shopPageIsOpen]);
   // 취향 테스트 결과 없는 경우
   // if (!testResult) {
   //   return(
