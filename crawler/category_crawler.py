@@ -17,22 +17,22 @@ class CategoryCrawler:
     with open(naver_restaurant_query_json_path, "r", encoding='utf-8') as f:
       self._naver_restaurant_query_json = json.load(f)
 
-  def _get_station_info(self, station):
-    # send station query
-    for i in range(MAX_QUERY_RETRY):
-      time.sleep(RETRY_DELAY*i)
-      if not i == 0 : print(f"Retrying station query for {i} time more...")
-      station_resp = httpx.get(NAVER_STATION_QUERY_ROOT_URL, params=dict(query=station, displayCount=1, lang='ko'))
-      if station_resp.status_code == 200: break
-    assert station_resp.status_code == 200, f"Station query retried {MAX_QUERY_RETRY} times more but still status code {station_resp.status_code}, not 200"
-    station_raw_info = station_resp.json()['result']['place']['list'][0]
+  # def _get_station_info(self, station):
+  #   # send station query
+  #   for i in range(MAX_QUERY_RETRY):
+  #     time.sleep(RETRY_DELAY*i)
+  #     if not i == 0 : print(f"Retrying station query for {i} time more...")
+  #     station_resp = httpx.get(NAVER_STATION_QUERY_ROOT_URL, params=dict(query=station, displayCount=1, lang='ko'))
+  #     if station_resp.status_code == 200: break
+  #   assert station_resp.status_code == 200, f"Station query retried {MAX_QUERY_RETRY} times more but still status code {station_resp.status_code}, not 200"
+  #   station_raw_info = station_resp.json()['result']['place']['list'][0]
+  #   return station_raw_info
 
-    # cookie 
+  def _get_cookie(self):
     cookie_res = requests.get("https://www.naver.com/")
     if cookie_res.status_code == 200:
       site_cookies = cookie_res.cookies.get_dict()
-
-    return station_raw_info, site_cookies
+    return site_cookies
 
   def _get_place_links(self, station, search_keyword, cookies):
     HEADER = {
@@ -74,7 +74,7 @@ class CategoryCrawler:
           break
         except requests.exceptions.ConnectionError:
           print(f"connection error, retrying for {i}th time")
-          time.sleep(5)
+          time.sleep(5*i)
 
       if not place_resp.status_code == 200:
         print(f"{place_link} request failed, status code {place_resp.status_code}")
@@ -94,7 +94,7 @@ class CategoryCrawler:
       pickle.dump(collected_categories, f)
 
   def run(self, station, search_keyword):
-    station_raw_info, cookies = self._get_station_info(station)
+    cookies = self._get_cookie()
     place_links = self._get_place_links(station, search_keyword, cookies)
     collected_categories = self._collect_categories(place_links)
     self._save(station, search_keyword, collected_categories)
