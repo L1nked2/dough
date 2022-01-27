@@ -125,15 +125,37 @@ class DoughCrawler:
     def set_arg_naver(self, station='', search_keyword='', delay=0):
         naver_restaurant_query_json['variables']['input']['query'] = f'{station} {search_keyword}'
         station_query_table = dict(query=station, displayCount=1, lang='ko')
-        station_res = httpx.get(naver_station_query_root_url,
-                                   params=station_query_table)
-      
-        if station_res.status_code == 200:
-            station_res = station_res.json()
-        else:
-            assert False, ("status_code not 200, is " + str(station_res.status_code))
 
-        self.station_raw_info = station_res['result']['place']['list'][0]
+        station_res_json = None
+        for i in range(MAX_QUERY_RETRY):
+            time.sleep(delay*i)
+            if not i == 0 : print(f"Retrying query for {i} time more...")
+            station_res = httpx.get(naver_station_query_root_url,
+                                    params=station_query_table)
+            if station_res.status_code == 200:
+                station_res_json = station_res.json()
+                break
+        
+        if station_res.status_code != 200: 
+            # sleep 100s
+            print("will sleep for 100s")
+            httpx.get(naver_station_query_root_url, params=dict(query="다른역", displayCount=1, lang='ko'))
+            time.sleep(100) # sleep for 100s!
+
+            # one more time
+            station_res_json = None
+            for i in range(MAX_QUERY_RETRY):
+                time.sleep(delay*i)
+                if not i == 0 : print(f"One more time: Retrying query for {i} time more...")
+                station_res = httpx.get(naver_station_query_root_url,
+                                        params=station_query_table)
+                if station_res.status_code == 200:
+                    station_res_json = station_res.json()
+                    break
+
+        assert station_res.status_code!=None, f"query retried {MAX_QUERY_RETRY} times more and slept 100s but keep showing status code that is not 200."
+
+        self.station_raw_info = station_res_json['result']['place']['list'][0]
         cookie_res = requests.get("https://www.naver.com/")
         if cookie_res.status_code == 200:
             self.site_cookies = cookie_res.cookies.get_dict()
@@ -478,7 +500,7 @@ class DoughCrawler:
     def run_crawler_only_for_category(self, station_name, search_keyword, options):
         self.crawler_msg(f'{station_name} {search_keyword} category crawling start')
         self.clear(self.db_path, self.photo_dir_path, self.log_dir_path, self.crawl_only_ten_places_for_test, **options)
-        self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=3)
+        self.set_arg_naver(station=station_name, search_keyword=search_keyword, delay=1)
         self.get_place_link_list_naver()
         self.get_category_info_naver()
         self.crawler_msg(f'{station_name} {search_keyword} category crawling done')
@@ -495,7 +517,6 @@ class DoughCrawler:
         res = requests.get(url=restaurant_link, params=params).json()
         try:
             place_category = res['category']
-            #print(place_category)
             self.collected_category_set.add(place_category)
         except KeyError:
             self.crawler_msg(f'{link} has no category in return json data')
