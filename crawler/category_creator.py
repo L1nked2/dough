@@ -7,6 +7,11 @@ from utils import csv_to_list, iterable_to_csv, create_dirs_if_not_exist
 from category_crawler import crawl_only_category
 
 def save_only_diff(collected_category_dir_path, existing_category_to_tag_table_dir_path):
+  entire_existing_categories= set()
+  for kind, kind_eng in [('술집', 'drink'), ('맛집', 'res'), ('카페','cafe')]:
+    existing_categories = set(csv_to_list(f"{existing_category_to_tag_table_dir_path}/category_to_tag_table_{kind_eng}.csv", encoding='cp949')[1:])
+    entire_existing_categories.update(existing_categories)
+
   for kind, kind_eng in [('술집', 'drink'), ('맛집', 'res'), ('카페','cafe')]:
     # union all the collected categories
     all_collected_categories = set()
@@ -17,11 +22,7 @@ def save_only_diff(collected_category_dir_path, existing_category_to_tag_table_d
       collected_categories_for_current_station_type = pickle.load(open(station_type_pickle, "rb")) # e.g. category set colleted for 강남역_맛집
       all_collected_categories.update(collected_categories_for_current_station_type)
 
-    # open existing category csv and compute difference
-    existing_categories = set(csv_to_list(f"{existing_category_to_tag_table_dir_path}/category_to_tag_table_{kind_eng}.csv", encoding='cp949')[1:])
-    #print(existing_categories)
-    print(all_collected_categories)
-    new_categories = all_collected_categories.difference(existing_categories)
+    new_categories = all_collected_categories.difference(entire_existing_categories)
     iterable_to_csv(new_categories, csv_path=f"{existing_category_to_tag_table_dir_path}/new_cat_{kind}.csv")
 
 
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     DB_DIR_PATH = "./raw_db"
     PHOTO_DIR_PATH = "./temp_img"
     LOG_DIR_PATH = "./log"
-    COLLECTED_CATEGORY_DIR_PATH = "collected_categories_test2" #"./collected_categories"
+    COLLECTED_CATEGORY_DIR_PATH = "collected_categories_test" #"./collected_categories"
     EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
     create_dirs_if_not_exist([DB_DIR_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, COLLECTED_CATEGORY_DIR_PATH, EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH])
 
