@@ -95,9 +95,9 @@ export const tempLikeChange = (like) => {
         payload: 1-like
     };
 };
-export const likeChange = (category, rank) => {
+export const likeChange = (category, uuid) => {
     return {
         type: 'LIKE_CHANGE',
-        payload: {category: category, rank: rank}
+        payload: {category: category, uuid: uuid}
     };
 };
