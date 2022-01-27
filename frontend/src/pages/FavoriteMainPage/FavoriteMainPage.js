@@ -20,7 +20,7 @@ function FavoriteMainPage(props){
     // fetch user favorite json from server with axios
     // with Promise
     axios({
-        method: 'get',
+        method: 'post',
         url: 'https://dough-survey.web.app/api/info/user',
         headers: {
             "Content-type" : "application/json"
