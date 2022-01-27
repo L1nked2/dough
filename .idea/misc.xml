@@ -5,7 +5,7 @@
     <option name="openedFilesInfos">
       <list>
         <OpenedFileInfo>
-          <option name="caretOffset" value="233" />
+          <option name="caretOffset" value="1893" />
           <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/run.py" />
         </OpenedFileInfo>
         <OpenedFileInfo>
@@ -17,10 +17,6 @@
           <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/utils/ImageProcessing.py" />
         </OpenedFileInfo>
         <OpenedFileInfo>
-          <option name="caretOffset" value="5404" />
-          <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/utils/ImageLoading.py" />
-        </OpenedFileInfo>
-        <OpenedFileInfo>
           <option name="caretOffset" value="2785" />
           <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/utils/predict.py" />
         </OpenedFileInfo>
@@ -29,8 +25,12 @@
           <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/utils/inference.py" />
         </OpenedFileInfo>
         <OpenedFileInfo>
-          <option name="caretOffset" value="0" />
+          <option name="caretOffset" value="848" />
           <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/set.sh" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="5404" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/ImageClassification/utils/ImageLoading.py" />
         </OpenedFileInfo>
       </list>
     </option>
