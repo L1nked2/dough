@@ -29,3 +29,14 @@ V5=$(pip list | grep glob | wc -l)
 if [ ${V5} -eq 0 ] ; then
   pip3 install glob
 fi
+
+V6=$(pip list | grep sklearn | wc -l)
+if [ ${V6} -eq 0 ] ; then
+  pip3 install sklearn
+fi
+
+V7=$(pip list | grep seaborn | wc -l)
+if [ ${V7} -eq 0 ] ; then
+  pip3 install seaborn
+fi
+
