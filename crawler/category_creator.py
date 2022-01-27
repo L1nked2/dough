@@ -32,11 +32,11 @@ if __name__ == "__main__":
     DB_DIR_PATH = "./raw_db"
     PHOTO_DIR_PATH = "./temp_img"
     LOG_DIR_PATH = "./log"
-    COLLECTED_CATEGORY_DIR_PATH = "collected_categories_test" #"./collected_categories"
+    COLLECTED_CATEGORY_DIR_PATH = "./collected_categories"
     EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
     create_dirs_if_not_exist([DB_DIR_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, COLLECTED_CATEGORY_DIR_PATH, EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH])
 
-    STATIONS = [station+"역" for station in csv_to_list("./all_metro_list.csv")][129:] # ["구로디지털단지역", "홍대입구역", "선릉역", "잠실역", "강남역"]
+    STATIONS = [station+"역" for station in csv_to_list("./all_metro_list.csv")][149:] # ["구로디지털단지역", "홍대입구역", "선릉역", "잠실역", "강남역"]
     print(STATIONS)   
     SEARCH_KEYWORD = ['술집', '카페', '맛집']
     CRAWLER_OPTIONS = dict(log=True, msg=True)
