@@ -45,13 +45,12 @@ def inference(args):
     with torch.no_grad():
         print('\n------------inferencing---------------')
 
-        for name, Xs, ys, cs in tqdm(inf_dataloader): # for name, Xs, ys in tqdm(predict_dataloader):
+        for name, Xs, _,  cs in tqdm(inf_dataloader): # for name, Xs, ys in tqdm(predict_dataloader):
             # print(name, Xs, ys)
 
             if args.GPU:
                 device = torch.device('cuda')
                 Xs = Xs.to(device)
-                ys = ys.to(device)
                 cs = cs.to(device)
 
             pred = model(Xs, cs)

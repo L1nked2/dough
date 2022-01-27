@@ -151,7 +151,7 @@ class PassTheData():
 
         base_path = args.path
         batch = args.batch_size
-        df = pd.read_csv(f'{args.path}/file_list.csv', encoding='utf=8')
+        df = pd.DataFrame({'Name':[], 'Cluster_a':[]}) # df = pd.read_csv(f'{args.path}/file_list.csv', encoding='utf=8')
         inf_df = pd.DataFrame(columns=['Name'], data=os.listdir(f'{args.path}'))
         inf_df['Cluster_a'] = [-1] * len(inf_df)
         train_dic, test_dic = file_list(base_path, args)
