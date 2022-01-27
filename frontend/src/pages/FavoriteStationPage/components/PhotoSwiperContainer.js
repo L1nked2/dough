@@ -42,7 +42,7 @@ function ThumbnailPhotoBox(props){
           "Content-type" : "application/json"
       },
       data : {
-          placeId : "002b7a00-95a7-52a1-8e81-6338fea1d6c2",
+          placeId : props.placeUuid, //"002b7a00-95a7-52a1-8e81-6338fea1d6c2",
           stationId : "",
       }
     }).then( (response) => {

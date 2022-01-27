@@ -30,11 +30,11 @@ function FavoriteMainPage(props){
         }
     }).then( (response) => {
         ////// temporary dummy data
-        console.log(response.data.userInfo.user_favorites);
-        dispatch(saveUserFavorites(example_user_favorite.user_favorites));
+        //console.log(response.data.userInfo.user_favorites);
+        //dispatch(saveUserFavorites(example_user_favorite.user_favorites));
         
         ////// actual code
-        // dispatch(saveUserFavorites(response.data.userInfo.user_favorites));
+        dispatch(saveUserFavorites(response.data.userInfo.user_favorites));
     });
     
   }, 
