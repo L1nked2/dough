@@ -78,10 +78,6 @@ class DB_and_CDN:
             int (self._MAX_NUM_PLACES_PER_STATION_AND_CATEGORY / self._MAX_NUM_PLACES_PER_STATION_DOC )
             # e.g. 300/50 = 6 documents for "강남역 맛집", 강남역uuid_rest_0 , ... 강남역uuid_rest_5
 
-        # collecting dict<local_photo_path, cdn_photo_link>
-        # this will be used for 품질분류 phase
-        self._local_path_to_cdn_link = dict()
-
     """
     Each station's `place_list` will be
         divided into `num_station_docs_per_station_category = 6` * 3(rest/cafe/bar) documents, each documents having at most 50 elements in place_list
@@ -198,9 +194,6 @@ class DB_and_CDN:
 
         CDN_link = self._cdn_root_url + path_to_store_on_CDN
 
-        # collect local_path --> cdn_link
-        self._local_path_to_cdn_link[photo_local_path] = CDN_link
-
         return CDN_link
 
 
@@ -248,14 +241,6 @@ class DB_and_CDN:
                     self._db_station_collection.document(station_doc_name).update({'place_list' : divided_place_docs})
 
     """
-    local_path --> cdn_link
-      will be used in 품질분류 phase to relocate cdn links in our db
-    """
-    def save_local_path_to_CDN_link(self):
-        with open('./local_path_to_cdn_link.pkl', 'wb') as f:
-            dill.dump(self._local_path_to_cdn_link, f)
-
-    """
     update place cluster.
     """
     def update_place_cluster(self, place_uuid : str, assigned_cluster : int):
@@ -298,7 +283,26 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
                 db_cdn.upload_place(place_docu, station_docu)
 
     db_cdn.update_station_db(station_id_names)
-    db_cdn.save_local_path_to_CDN_link()
+
+def update_station_db_in_case_convert_documents_and_upload_to_db_terminated_unexpectedly(raw_db_path):
+    db_cdn = DB_and_CDN()
+    station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
+
+    for entry in os.listdir(raw_db_path):
+        filename = os.path.join(raw_db_path, entry)
+        if not os.path.isfile(filename): continue
+
+        # e.g. 강남역_맛집, 뚝섬역_술집
+        station_category_dumped = filename 
+        print(station_category_dumped)
+        raw_station_dict, _ = dill.load(open(station_category_dumped, "rb"))
+
+        station_docu = StationDocument(raw_station_dict)    
+        db_cdn.upload_station(station_docu)     
+        station_id_names.append((station_docu._uuid, station_docu._name)) 
+
+    db_cdn.update_station_db(station_id_names)
+
 
 
 def update_cluster(cluster_result_path : str):    

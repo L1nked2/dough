@@ -1,6 +1,6 @@
 from utils import create_dirs_if_not_exist
 from dough_crawler import crawl
-from firebase_db import convert_documents_and_upload_to_db, update_cluster
+from firebase_db import convert_documents_and_upload_to_db, update_station_db_in_case_convert_documents_and_upload_to_db_terminated_unexpectedly, update_cluster
 
 if __name__ == "__main__":
     DB_DIR_PATH = "/media/k/DB/DIR_FOR_CRAWLING/raw_db"
@@ -17,12 +17,15 @@ if __name__ == "__main__":
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = False
 
     DO_CRAWL = False
-    DO_UPLOAD = True
+    DO_UPLOAD = False
+    DO_UPDATE_STATION_DB_IN_CASE_UPLOAD_TERMINATED_UNEXPECTEDLY = True
     DO_UPADTE_CLUSTER = False
 
     if DO_CRAWL:
         crawl(STATIONS, SEARCH_KEYWORD, CRAWLER_OPTIONS, DB_DIR_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, CRAWL_ONLY_TEN_PLACES_FOR_TEST)
     if DO_UPLOAD:
         convert_documents_and_upload_to_db (DB_DIR_PATH, PHOTO_DIR_PATH, CATEGORY_TO_TAG_TABLE_DIR_PATH)
+    if DO_UPDATE_STATION_DB_IN_CASE_UPLOAD_TERMINATED_UNEXPECTEDLY:
+        update_station_db_in_case_convert_documents_and_upload_to_db_terminated_unexpectedly(DB_DIR_PATH)
     if DO_UPADTE_CLUSTER:
         update_cluster(CLUSTER_RESULT_PATH)
