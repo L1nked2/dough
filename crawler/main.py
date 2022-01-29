@@ -17,7 +17,7 @@ if __name__ == "__main__":
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = False
 
     DO_CRAWL = False
-    DO_UPLOAD = False
+    DO_UPLOAD = True
     DO_UPADTE_CLUSTER = False
 
     if DO_CRAWL:
