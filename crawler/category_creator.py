@@ -36,14 +36,14 @@ if __name__ == "__main__":
     EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH = "./cat_to_tag_table"
     create_dirs_if_not_exist([DB_DIR_PATH, PHOTO_DIR_PATH, LOG_DIR_PATH, COLLECTED_CATEGORY_DIR_PATH, EXISTING_CATEGORY_TO_TAG_TABLE_DIR_PATH])
 
-    STATIONS = [station+"역" for station in csv_to_list("./all_metro_list.csv")][149:] # ["구로디지털단지역", "홍대입구역", "선릉역", "잠실역", "강남역"]
+    STATIONS = [station+"역" for station in csv_to_list("./all_metro_list.csv")][239:] # ["구로디지털단지역", "홍대입구역", "선릉역", "잠실역", "강남역"]
     print(STATIONS)   
     SEARCH_KEYWORD = ['술집', '카페', '맛집']
     CRAWLER_OPTIONS = dict(log=True, msg=True)
     CRAWL_ONLY_TEN_PLACES_FOR_TEST = False
 
-    DO_CRAWL = True
-    DO_COMPUTE_DIFF = False
+    DO_CRAWL = False
+    DO_COMPUTE_DIFF = True
 
     if DO_CRAWL:
       crawl_only_category(STATIONS, SEARCH_KEYWORD, COLLECTED_CATEGORY_DIR_PATH, 'naver_get_restaurants_query.json')
