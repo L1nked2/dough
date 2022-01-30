@@ -462,7 +462,7 @@ class DoughCrawler:
             path = f'{self.db_path}/db'
         data_body = [self.station_raw_info, self.place_db_list]
 
-        print(data_body)
+       # print(data_body)
 
         file = open(path, "wb+")
         dill.dump(data_body, file=file)
