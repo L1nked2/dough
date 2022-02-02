@@ -268,7 +268,7 @@ class DoughCrawler:
             for item in res['menuImages']:
                 img_links.append(item['imageUrl'])
             res['menuImages'] = img_links
-        except TypeError:
+        except KeyError:
             self.crawler_msg(f'menu images not exists, {link}')
 
         # get image_provided
@@ -278,7 +278,7 @@ class DoughCrawler:
                 if item['type'] == 'DRT':
                     img_links_provided.append(item['url'])
             res['images'] = img_links_provided
-        except TypeError:
+        except (KeyError, TypeError):
             self.crawler_msg(f'img_provided not exists, {link}')
 
         # add items to current_place_db
