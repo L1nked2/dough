@@ -37,7 +37,7 @@ const db = firebaseAdmin.firestore();
 const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
 const kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
 const REST_API_KEY = "c6d8dd20d5ff2084f591d8b34cbe2608";
-const REDIRECT_URI = "https://dough-survey.web.app/login/callback/kakao";
+const REDIRECT_URI = "https://babyak.kr/login/callback/kakao";
 // const REDIRECT_URI = "http://localhost:3000/login/callback/kakao";
 const CLIENT_SECRET = "KjRkQKwcrPVGDx82f3craYzhDzdH4S8H";
 /**
