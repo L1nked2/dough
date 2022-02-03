@@ -233,7 +233,13 @@ async function getPostInfo(req) {
  */
 async function filterByTag(placeList, tags) {
     try {
-        const result = placeList.filter((element) => tags.some((eachTag) => element.place_kind.includes(eachTag)));
+        let result;
+        if (tags.length === 0) {
+            result = placeList;
+        }
+        else {
+            result = placeList.filter((element) => tags.some((eachTag) => element.place_kind.includes(eachTag)));
+        }
         return result;
     }
     catch (error) {

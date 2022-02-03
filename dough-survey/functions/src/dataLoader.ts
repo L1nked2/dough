@@ -205,10 +205,15 @@ async function getPostInfo(req: Request): Promise<any> {
  */
 async function filterByTag(placeList: any[], tags: string[]): Promise<any> {
   try {
-    const result = placeList.filter((element) =>
-      tags.some((eachTag) =>
-        element.place_kind.includes(eachTag))
-    );
+    let result;
+    if (tags.length === 0) {
+      result = placeList;
+    } else {
+      result = placeList.filter((element) =>
+        tags.some((eachTag) =>
+          element.place_kind.includes(eachTag))
+      );
+    }
     return result;
   } catch (error) {
     console.log(error);
