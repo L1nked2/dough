@@ -4,7 +4,7 @@ import {Request} from "express";
 import {getUserId} from "./dataLoader";
 import {transpose, multiply, distance, pow} from "mathjs";
 import {coeffs_a, pca_a_inv_mat, centroid_a} from "./data";
-
+firebaseAdmin.initializeApp();
 const db = firebaseAdmin.firestore();
 const DIM_A = 3;
 

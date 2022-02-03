@@ -25,6 +25,7 @@ const firebaseAdmin = __importStar(require("firebase-admin"));
 const dataLoader_1 = require("./dataLoader");
 const mathjs_1 = require("mathjs");
 const data_1 = require("./data");
+firebaseAdmin.initializeApp();
 const db = firebaseAdmin.firestore();
 const DIM_A = 3;
 /**

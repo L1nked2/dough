@@ -1,8 +1,12 @@
+/* eslint-disable camelcase */
 import * as firebaseAdmin from "firebase-admin";
 import {Request} from "express";
 import {updateRecent} from "./userPreference";
+import {priority_cluster_a} from "./data";
 
 const db = firebaseAdmin.firestore();
+const ELEMENT_PER_PAGE = 30;
+const CLUSTER_NUM = 8;
 
 /**
  * getUserId
@@ -112,33 +116,32 @@ async function getStationInfo(req: Request): Promise<any> {
     let category = req.body.category;
     const tags = req.body.tags;
     const page = req.body.page;
-    let categoryAll = false;
+    const doBlockShuffle = true;
     if (category === "음식점") {
       category = "rest";
     } else if (category === "카페") {
       category = "cafe";
     } else if (category === "술집") {
       category = "bar";
-    } else if (category === "") {
-      category = "";
-      categoryAll = true;
+    } else {
+      throw new Error("Invalid category");
     }
     console.log(`getStationInfo: ${stationId}`);
-    if (categoryAll === true) {
-      const userInfo = await getInfoBase("user", userId);
-      const stationBaseInfo = await getInfoBase("station", `${stationId}`);
+    const userInfo = await getInfoBase("user", userId);
+    const clusterA = userInfo.user_cluster_a;
+    const stationTotalInfo = await getInfoBase("station", `${stationId}_${category}_0`);
+    for (let i = 1; i < 6; i++) {
       const stationPageInfo =
-        await getInfoBase("station", `${stationId}_${category}_${page}`);
-      const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
-      return {stationInfo: stationInfo};
-    } else {
-      const userInfo = await getInfoBase("user", userId);
-      const stationBaseInfo = await getInfoBase("station", `${stationId}`);
-      const stationPageInfo =
-        await getInfoBase("station", `${stationId}_${category}_${page}`);
-      const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
-      return {stationInfo: stationInfo};
+        await getInfoBase("station", `${stationId}_${category}_${i}`);
+      stationTotalInfo.place_list.concat(stationPageInfo.place_list);
     }
+    stationTotalInfo.place_list = await filterByTag(
+        stationTotalInfo.place_list, tags);
+    stationTotalInfo.place_list = await sortByPriority(
+        stationTotalInfo.place_list, clusterA, doBlockShuffle);
+    stationTotalInfo.place_list = stationTotalInfo.place_list.slice(
+        page*ELEMENT_PER_PAGE, (page+1)*ELEMENT_PER_PAGE);
+    return {stationInfo: stationTotalInfo};
   } catch (error) {
     console.log(error);
     throw error;
@@ -187,6 +190,67 @@ async function getPostInfo(req: Request): Promise<any> {
     const postInfo = await getInfoBase("post", postId);
     console.log(`getPostInfo: ${postId}`);
     return {postInfo: postInfo};
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+/**
+ * filterByTag
+ *
+ * @param  {any[]} placeList
+ * @param  {string} tags
+ * @return {Promise<any>}
+ */
+async function filterByTag(placeList: any[], tags: string[]): Promise<any> {
+  try {
+    const result = placeList.filter((element) =>
+      tags.some((eachTag) =>
+        element.place_kind.includes(eachTag))
+    );
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+/**
+ * sortByPriority
+ *
+ * @param  {any[]} placeList
+ * @param  {number} clusterA
+ * @param  {boolean} shuffleBlock
+ * @return {Promise<any>}
+ */
+async function sortByPriority(
+    placeList: any[], clusterA: number,
+    shuffleBlock = true): Promise<any> {
+  try {
+    const clusterBlock: any[any] = [];
+    const currentPriority = priority_cluster_a[clusterA];
+    // build block using priority array
+    for (let i = 0; i < CLUSTER_NUM; i++) {
+      clusterBlock[i] = placeList.filter(
+          (element) => (element.place_cluster_a === currentPriority[i])
+      );
+    }
+    // concat places that cluster_a is not initialized
+    clusterBlock[CLUSTER_NUM] = placeList.filter(
+        (element) => (element.place_cluster_a === null)
+    );
+    if (shuffleBlock === true) {
+      for (let i = 0; i < clusterBlock.length; i++) {
+        for (let j = clusterBlock[i].length - 1; j > 0; j--) {
+          const k = Math.floor(Math.random() * (j + 1));
+          [clusterBlock[i][j], clusterBlock[i][k]] =
+            [clusterBlock[i][k], clusterBlock[i][j]];
+        }
+      }
+    }
+    const result = clusterBlock.flat();
+    return result;
   } catch (error) {
     console.log(error);
     throw error;

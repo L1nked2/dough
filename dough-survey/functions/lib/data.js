@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.centroid_a = exports.coeffs_a = exports.pca_a_inv_mat = void 0;
+exports.priority_cluster_a = exports.centroid_a = exports.coeffs_a = exports.pca_a_inv_mat = void 0;
 /* eslint-disable*/
 const mathjs_1 = require("mathjs");
 const pca_a_mat = [
@@ -134,4 +134,16 @@ const centroid_a = [
     [3.986050059, -2.181516886, 1.28431464],
 ];
 exports.centroid_a = centroid_a;
+// 8 by 8 priority matrix for cluster_a
+const priority_cluster_a = [
+    [0, 4, 5, 6, 3, 2, 1, 7],
+    [1, 5, 3, 7, 2, 4, 0, 6],
+    [2, 4, 7, 5, 3, 1, 6, 0],
+    [3, 5, 7, 1, 2, 0, 6, 4],
+    [4, 2, 5, 0, 6, 3, 1, 7],
+    [5, 1, 4, 2, 3, 0, 7, 6],
+    [6, 4, 2, 1, 3, 7, 5, 1],
+    [7, 2, 3, 1, 5, 6, 4, 0],
+];
+exports.priority_cluster_a = priority_cluster_a;
 //# sourceMappingURL=data.js.map

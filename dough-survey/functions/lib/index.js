@@ -46,9 +46,6 @@ app.post("/api/survey", (req, res) => {
     });
 });
 // favorites management
-app.get("/api/favorites", (req, res) => {
-    res.send("Forbidden GET /favorites");
-});
 app.post("/api/favorites", (req, res) => {
     (0, userPreference_1.updateFavorites)(req).then((updateStatus) => {
         res.json({ result: updateStatus });
