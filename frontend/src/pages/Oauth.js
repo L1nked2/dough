@@ -15,7 +15,7 @@ function Oauth() {
 
         const token = await axios ({
             method: 'POST',
-            url: 'https://dough-survey.web.app/api/login',
+            url: 'https://babyak.kr/api/login',
             headers: {
                 "Content-Type": `application/json`
             },
