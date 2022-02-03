@@ -18,7 +18,7 @@ function Login() {
 
     function clickLogin(e) {
         window.Kakao.Auth.authorize({
-            redirectUri: 'https://dough-survey.web.app/login/callback/kakao',
+            redirectUri: 'https://babyak.kr/login/callback/kakao',
             // redirectUri: 'http://localhost:3000/login/callback/kakao',
             scope: 'profile_nickname,profile_image,account_email,gender',
             success: function(response) {
