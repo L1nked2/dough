@@ -74,7 +74,7 @@ function MyShop(props) {
         headers: {
             "Content-Type": `application/json`
         },
-        data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', category: "음식점", tags: []},
+        data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', category: "음식점", tags: []},
     }).then(response => {
         console.log(response);
         dispatch(changeContent('food', indexing(response.data.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
@@ -111,7 +111,7 @@ function MyShop(props) {
             headers: {
                 "Content-Type": `application/json`
             },
-            data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', action: shopPageContent.place_likes?"add":"delete", placeId: shopPageContent.place_uuid},
+            data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', action: shopPageContent.place_likes?"add":"delete", placeId: shopPageContent.place_uuid},
         }).then(response => {
             console.log(response);
         }).catch(err => {
