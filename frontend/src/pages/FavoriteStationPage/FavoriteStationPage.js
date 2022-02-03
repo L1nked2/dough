@@ -48,6 +48,7 @@ function FavoriteStationPage(props){
         showPlaceNotFood={showPlaceNotFood}
         recentFirst={recentFirst}
         placeList={placeList}
+        stationUuid={stationUUID}
       />
     </div>
   );

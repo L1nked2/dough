@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { closeSlideshowPage } from '../../actions/homePageInfo';
 import SlideImages from '../common/SlideImages';
 import BackButton from '../icon/Back';
 import './ImageSlideShow.css';
 
 function ImageSlideShow(props) {
-    const dispatch = useDispatch();
-    function closePage() {
-        dispatch(closeSlideshowPage());
-    }
     const [slideIndex, setSlideIndex] = useState(0);
     return (
     <div className="imgSlidePage">
         <div className="subHeader">
-            <div onClick={closePage} className="backButton">
+            <div onClick={props.closeFunc} className="backButton">
                 <BackButton width={15} color={"#FFFFFF"}/>
             </div>
             <div className="title">

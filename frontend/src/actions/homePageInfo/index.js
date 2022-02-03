@@ -89,14 +89,15 @@ export const applyDrinkList = (list) => {
         payload: list
     };
 };
-export const tempLikeChange = () => {
+export const tempLikeChange = (like) => {
     return {
-        type: 'TEMP_LIKE_CHANGE'
+        type: 'TEMP_LIKE_CHANGE',
+        payload: 1-like
     };
 };
-export const likeChange = (category, rank) => {
+export const likeChange = (category, uuid) => {
     return {
         type: 'LIKE_CHANGE',
-        payload: {category: category, rank: rank}
+        payload: {category: category, uuid: uuid}
     };
 };

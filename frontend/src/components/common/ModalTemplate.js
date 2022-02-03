@@ -29,7 +29,7 @@ function ModalTemplate(props) {
                 {props.content}
                 <div className="buttonSection">
                     <div className="close" onClick={closePage}>닫기</div>
-                    <div className="apply" onClick={props.applyFunc}>{props.applyButton}</div>
+                    <div className={`apply ${props.checkIsChange && props.checkIsChange()?"unactive":""}`} onClick={props.applyFunc}>{props.applyButton}</div>
                 </div>
             </div>
         </div>

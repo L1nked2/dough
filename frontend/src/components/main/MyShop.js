@@ -13,20 +13,16 @@ import MapIcon from '../icon/Map';
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { openLocationPage, openMenuModal, changeContent, changeCurrentCategory } from '../../actions/homePageInfo';
+import { openLocationPage, openMenuModal, changeContent, changeCurrentCategory, likeChange, setShopPageContents} from '../../actions/homePageInfo';
 
 firebaseInit();
 
 function MyShop(props) {
   const dispatch = useDispatch();
   /* Nav bar button controller */
-  const [slideCategory, setSlideCategory] = useState([true, false, false]);
-  const changeRestaurant = () => {
-    dispatch(changeCurrentCategory('food')); setSlideCategory([true, false, false]);}
-  const changeCafe = () => {
-    dispatch(changeCurrentCategory('cafe')); setSlideCategory([false, true, false]);}
-  const changeBar = () => {
-    dispatch(changeCurrentCategory('drink')); setSlideCategory([false, false, true]);}
+  const changeRestaurant = () => {dispatch(changeCurrentCategory('food'));}
+  const changeCafe = () => {dispatch(changeCurrentCategory('cafe'));}
+  const changeBar = () => {dispatch(changeCurrentCategory('drink'));}
     
   function checkAnyActive (list) {
     let anyActive = false;
@@ -59,6 +55,9 @@ function MyShop(props) {
   };
 
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
+  const currCategory = useSelector((state) => state.homePageInfo.currCategory);
+  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
+  const shopPageContent = useSelector((state) => state.homePageInfo.shopPageContent);
 
   const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
   const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
@@ -67,33 +66,32 @@ function MyShop(props) {
   const foodPlaceList = useSelector(state => state.homePageInfo.foodPlaceList);
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
-  const testResult = useSelector((state) => state.userInfo.testResult.sampleTestResult);
 
-
+  const getPlaceList = async () => { 
+    const res = await axios({
+        method: 'POST',
+        url: 'https://dough-survey.web.app/api/info/station',
+        headers: {
+            "Content-Type": `application/json`
+        },
+        data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', category: "음식점", tags: []},
+    }).then(response => {
+        console.log(response);
+        dispatch(changeContent('food', indexing(response.data.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
+        dispatch(changeContent('cafe', indexing(response.data.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
+        dispatch(changeContent('drink', indexing(response.data.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
+        return response.data;
+      }).catch(err => {
+        console.log(err);
+      });
+      
+  }
   useEffect(() => {
     // getAuth().onAuthStateChanged(function(user){
     //   if (user) {
     //     console.log("MyShop.js");
     //     user.getIdToken(true).then(function(idToken) {
-          const getPlaceList = async () => { 
-            const res = await axios({
-                method: 'POST',
-                url: 'https://dough-survey.web.app/api/info/station',
-                headers: {
-                    "Content-Type": `application/json`
-                },
-                data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', category: "음식점", tags: []},
-            }).then(response => {
-                console.log(response);
-                dispatch(changeContent('food', indexing(response.data.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
-                dispatch(changeContent('cafe', indexing(response.data.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
-                dispatch(changeContent('drink', indexing(response.data.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
-                return response.data;
-              }).catch(err => {
-                console.log(err);
-              });
-              
-            }
+          
           if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
             getPlaceList();
           }
@@ -104,6 +102,29 @@ function MyShop(props) {
     // })
   },[]);
 
+  useEffect (() => {
+    if (!shopPageIsOpen && shopPageContent) {
+      const postList = async () => { 
+        const res = await axios({
+            method: 'POST',
+            url: 'https://dough-survey.web.app/api/favorites',
+            headers: {
+                "Content-Type": `application/json`
+            },
+            data: {stationId: "2a2fb6a8-e995-515c-a24b-849030c8d8ea", userToken: '', action: shopPageContent.place_likes?"add":"delete", placeId: shopPageContent.place_uuid},
+        }).then(response => {
+            console.log(response);
+        }).catch(err => {
+            console.log(err);
+        });
+      }
+      console.log(shopPageContent, shopPageContent.prevLike, shopPageContent.place_likes);
+      if (shopPageContent.prevLike !== shopPageContent.place_likes){
+          postList();
+          dispatch(likeChange(currCategory, shopPageContent.place_uuid));
+      }
+    }
+  },[shopPageIsOpen]);
   // 취향 테스트 결과 없는 경우
   // if (!testResult) {
   //   return(
@@ -137,13 +158,13 @@ function MyShop(props) {
         </span>
       </div>
       <nav className="shopCategory">
-        <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
-        <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
-        <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
+        <div className={currCategory==='food' ? "active" : ""} onClick={changeRestaurant}>음식점</div>
+        <div className={currCategory==='cafe' ? "active" : ""} onClick={changeCafe}>카페</div>
+        <div className={currCategory==='drink' ? "active" : ""} onClick={changeBar}>술집</div>
       </nav>
     
       {/* restaurant */}
-      {slideCategory[0] && <>
+      {currCategory==='food' && <>
         <div className="menuChange">
           <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
             {checkAnyActive(stateFood)?`음식 | ${printActiveMenu(stateFood)}`:'음식 종류 바꾸기'}<span>{`>`}</span>
@@ -160,7 +181,7 @@ function MyShop(props) {
       </>}
 
       {/* cafe */}
-      {slideCategory[1] && <>
+      {currCategory==='cafe' && <>
         <div className="menuChange">
           <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
             {checkAnyActive(stateCafe)?`카페 | ${printActiveMenu(stateCafe)}`:'카페 종류 바꾸기'}<span>{`>`}</span>
@@ -177,7 +198,7 @@ function MyShop(props) {
       </>}
 
       {/* bar */}
-      {slideCategory[2] && <>
+      {currCategory==='drink' && <>
         <div className="menuChange">
           <div onClick={()=>{openPage(openMenuModal)}} className="menuChangeButton" id="menuChangeButton">
             {checkAnyActive(stateDrink)?`술 | ${printActiveMenu(stateDrink)}`:'술 종류 바꾸기'}<span>{`>`}</span>

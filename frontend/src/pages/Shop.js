@@ -32,18 +32,17 @@ import SwiperCore, {
     Navigation
 } from 'swiper';
 import ImageSlideShow from '../components/main/ImageSlideShow';
+import ExpandIcon2 from '../components/icon/Expand2';
 
 function ShopModal() {
     SwiperCore.use([Navigation]);
     
     const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
+    const prevLike = shopPageContent.place_likes;
     const dispatch = useDispatch();
 
-    function clickLike (rank) {
-        if (shopPageContent.tag === 'myPlaceList') {
-            dispatch(likeChange(rank));
-            dispatch(tempLikeChange());
-        }
+    function clickLike () {
+        dispatch(tempLikeChange(shopPageContent.place_likes));
     }
 
     const reviewContent = useRef(null);
@@ -74,19 +73,30 @@ function ShopModal() {
             setMenuFold(true);
         }
     }
+    const timeContent = useRef(null);
+    const eachTime = useRef(null);
+    const [timeHeight, setTimeHeight] = useState(0)
+    const [timeFold, setTimeFold] = useState(true);
+    useEffect(() => {
+        if (!timeFold){setTimeHeight(timeContent.current.scrollHeight);}
+    },[timeFold])
+
     const closePage = () => {
         dispatch(closeShopPage())
         document.body.style.overflow = 'unset';
     };
     const goBack = () => {
         window.history.back();
-        closePage();
     }
     useEffect (() => {
         setTimeout(() => {dispatch(appendCurrentShop(shopPageContent))}, 200);
         
         // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
+        setTimeHeight(eachTime.current.scrollHeight);
         setMenuHeight(eachMenu.current.scrollHeight * 3);
+        setStyleDropdown({left: distance.current.offsetLeft,
+                          paddingTop: distance.current.scrollHeight,
+                          minWidth: distance.current.scrollWidth+2,});
         window.history.pushState({page: "shop_modal"}, "shop_modal");
         window.addEventListener("popstate",closePage);
         return () => {
@@ -109,7 +119,7 @@ function ShopModal() {
         else if (galleryType === "food"){setGallery(shopPageContent.place_food_photo_list);}
     }, [galleryType]);
 
-    const isPhotoOpen = useSelector(state => state.homePageInfo.slideShowPageIsOpen);
+    const [isPhotoOpen, setIsPhotoOpen] = useState(false);
     const [photoSlide, setPhotoSlide] = useState(null);
     const [photoSlideTitle, setPhotoSlideTitle] = useState("제목없음");
     const [photoSlideIndex, setPhotoSlideIndex] = useState(0);
@@ -120,12 +130,24 @@ function ShopModal() {
         else if (title==='food'){setPhotoSlideTitle("음식");}
         else {setPhotoSlideTitle(title);}
         setPhotoSlideIndex(index);
-        dispatch(openSlideshowPage())
+        setIsPhotoOpen(true)
     }
 
+    const distance = useRef(null);
+    const dropdown = useRef(null);
+    const [dropdownHeight, setDropdownHeight] = useState('0px');
+    const [styleDropdown, setStyleDropdown] = useState({});
+    function dropdownOpen() {
+        if (dropdownHeight === 0){
+            setDropdownHeight(dropdown.current.scrollHeight);
+        }
+        else {
+            setDropdownHeight(0);
+        }
+    }
     return (<>
         <CSSTransition in={isPhotoOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
-            <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} />
+            <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} closeFunc={()=>{setIsPhotoOpen(false)}}/>
         </CSSTransition>
         <div className="shopPage" id="shopPage">
             <CSSTransition in={isCallModalOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -142,12 +164,21 @@ function ShopModal() {
                     </div>
                     <div className="name">{shopPageContent.place_name}</div>
                     <div className="simpleInfo">
-                        <span className="price">
-                            {shopPageContent.place_menu_info.length === 0 ? null : 
-                            <span className="temp"><WonIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/>{shopPageContent.place_menu_info[0].price}</span>
-                            }
+                        {shopPageContent.place_menu_info &&
+                            <span className="price">
+                                <WonIcon width={"1em"} color={"#575757"}/>
+                                {`${parseInt(parseInt(shopPageContent.place_menu_info[0].price.split(','))/10)} ~ ${parseInt(parseInt(shopPageContent.place_menu_info[0].price.split(','))/10)+1}만원`}
+                            </span>
+                        }
+                        <span className="distance" ref={distance} onClick={dropdownOpen}>
+                            <LocationIcon width={"1em"} color={"#575757"}/>
+                            {`동대문 1.2km`}
+                            <div><ExpandIcon2 width={"1em"} color={"#575757"} /></div>
                         </span>
-                        <span className="location"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/>{`역에서 200m`}</span>
+                        <div className="dropdown" style={{...styleDropdown, maxHeight: dropdownHeight}} ref={dropdown} >
+                            <div>을지로4가 1.6km</div>
+                            <div>동대문역사문화공원 1.8km</div>
+                        </div>
                     </div>
                     <div className="fourPictures" >
                         <div className="twoPictures">
@@ -170,15 +201,17 @@ function ShopModal() {
                         </div>
                         <div className="eachInformation">
                             <div className="icon"><ClockIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"} /></div>
-                            <div className="contents">
-                                {shopPageContent.place_operating_time.map((time, index) => {
-                                    if (!time.isDayOff) {
-                                        return (
-                                            <div key={index} style={{color: "rgba(0,0,0,0.9)"}}>{`(${time.description}${time.type}) ${time.startTime} - ${time.endTime}`}</div> // 나중에
-                                        );
-                                    }
-                                })}
-                                <div style={{color: "#3FB8D5", fontFamily: "SpoqaMedium"}}>{`휴무일 : 월, 화`}</div>
+                            <div className="contents" >
+                                <div className="timeList" style={{maxHeight: `${timeHeight}px`}} ref={timeContent}>
+                                    {shopPageContent.place_operating_time ? shopPageContent.place_operating_time.map((time, index) => {
+                                        if (!time.isDayOff) {
+                                            return (
+                                                <div key={index} style={{color: "rgba(0,0,0,0.9)"}} ref={index===0?eachTime:null}>{`(${time.description} ${time.type}) ${time.startTime} - ${time.endTime}`}{timeFold && shopPageContent.place_operating_time.length!==1 && <span className="more" onClick={()=>{setTimeFold(false)}}>... 더보기</span>}</div>
+                                            );
+                                        }
+                                    })
+                                    : <div style={{color: "#A3A3A3"}}>영업시간 정보가 없습니다</div>}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -215,7 +248,7 @@ function ShopModal() {
                         <div className="eachInformation">
                             <div className="icon"><NaverIcon height={"1.6em"} color={"#a3a3a3"} /></div>
                             <div className="contents">
-                                <div>네이버 검색 바로가기</div>
+                                <div>네이버 지도 바로가기</div>
                                 <a href={shopPageContent.place_naver_link} target="_blank">{shopPageContent.place_naver_link}</a>
                             </div>
                         </div>
@@ -273,7 +306,7 @@ function ShopModal() {
             </Swiper>
             <div className="subNavbar">
                 <div className="buttons">
-                    <div className="likeButton" onClick={()=>{clickLike(shopPageContent.rank)}}>
+                    <div className="likeButton" onClick={clickLike}>
                         {shopPageContent.place_likes
                         ? <HeartFilledIcon width={25} color={"#f17474"}/>
                         : <HeartIcon width={25} color={"#a3a3a3"}/>}

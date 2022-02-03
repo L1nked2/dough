@@ -87,13 +87,13 @@ function Profile(props) {
                 if (index % 2 === 0) {
                   return (<div className="twoPictures" key={index}>
                     <div><img src={photoCategory==='space'?
-                                  currentList[index].place_inside_photo_list[0]:
-                                  currentList[index].place_food_photo_list[0]} alt={index} onClick={()=>{openPage(currentList[index])}}/></div>
+                                  currentList[index].place_main_photo_list[0]:
+                                  currentList[index].place_main_photo_list[1]} alt={index} onClick={()=>{openPage(currentList[index])}}/></div>
                     <div>
                     {currentList.length!==index+1 ?
                       <img src={photoCategory==='space' ?
-                                    currentList[index+1].place_inside_photo_list[0]:
-                                    currentList[index+1].place_food_photo_list[0]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
+                                    currentList[index+1].place_main_photo_list[0]:
+                                    currentList[index+1].place_main_photo_list[1]} alt={index+1} onClick={()=>{openPage(currentList[index+1])}}/>
                     : null}</div>
                   </div>);
                 }
