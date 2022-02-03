@@ -20,4 +20,4 @@ if __name__ == "__main__":
   station_name_to_uuid = reader.get_station_name_to_uuid_dict()
   print(station_name_to_uuid)
   with open("station_name_to_uuid.json", "w") as json_file:
-    json.dump(station_name_to_uuid, json_file)
+    json.dump(station_name_to_uuid, json_file, ensure_ascii=False)
