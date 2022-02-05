@@ -188,7 +188,7 @@ async function getPlaceInfo(req) {
         const userId = await getUserId(userToken);
         const stationId = req.body.stationId;
         const placeId = req.body.placeId;
-        const stationData = await getInfoBase("station", stationId);
+        const stationData = await getInfoBase("station", `${stationId}_rest_0`);
         const placeInfo = await getInfoBase("place", placeId);
         const stationCoor = { lon: stationData.station_coor_x,
             lat: stationData.station_coor_y };
