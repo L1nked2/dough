@@ -14,14 +14,8 @@ function Login() {
     const currAccessToken = cookie.get("accessToken");
     if (currAccessToken) {
         setTimeout(function(){window.location.replace("/survey")}, 2000);
-    }
-
-    function clickLogin(e) {
         window.Kakao.Auth.authorize({
             redirectUri: 'https://babyak.kr/login/callback/kakao',
-            // redirectUri: 'http://localhost:3000/login/callback/kakao',
-            scope: 'profile_nickname,profile_image,account_email,gender',
-            success: function(response) {
                 console.log(response)
             },
             fail: function(error) {

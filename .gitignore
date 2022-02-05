@@ -13,4 +13,7 @@ dough-survey/storage.rules
 
 crawler/.idea
 ImageClassification/data/*
-
+ImageClassification/*.pt
+ImageClassification/__pycache__/*
+ImageClassification/model/__pycache__/*
+ImageClassification/utils/__pycache__/*

@@ -2,103 +2,151 @@ import sys
 sys.path.append('..')
 sys.path.append('.')
 
-from ImageClassification.model.CoAtNet import CoAtNet
 import ImageClassification.utils.ImageLoading as ImageLoading
-from ImageClassification.model.CoAtNet import weight_init
+from ImageClassification.model.I2L import I2L
+from ImageClassification.utils.predict import vote
+
 import torch.nn as nn
 import torch.optim as optim
 import torch
+import matplotlib.pyplot as plt
 
 '''
 Something for training
 '''
 
 
-def train_loop(dataloader, model, loss_fn, optimizer, args):
+def train_loop(dataloader, model, loss_fn, optimizer, scheduler, args):
     size = len(dataloader.dataset)
 
-    for batch, (_, X, y) in enumerate(dataloader):
+    train_loss = 0
+    for batch, (_, X, y, c) in enumerate(dataloader):
         if args.GPU:
             device = torch.device('cuda')
             X = X.to(device)
             y = y.to(device)
-        pred = model(X)
-        # pred = pred.unsqueeze(0)
-        # print(pred.argmax(1), y)
+            c = c.to(device)
+
+        pred = model(X, c)
+
+        '''
+        plt.subplot(1, 2, 1)
+        plt.imshow(np.moveaxis(X.cpu().detach().numpy()[0], 0, -1))
+        plt.subplot(1, 2, 2)
+        plt.imshow(np.moveaxis(X.cpu().detach().numpy()[1], 0, -1))
+        plt.show()
+        '''
+        # print(pred.cpu().detach().numpy())
+
+        # print(pred.argmax(1).cpu().numpy(), y.argmax(1).cpu().numpy())
+
         loss = loss_fn(pred, y)
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-        # if batch % 100 == 0:
-        loss, current = loss.item(), batch * len(X)
-        print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+        train_loss += loss.item()
 
 
-def tes_loop(dataloader, model, loss_fn, args):
+        if batch % 100 == 0:
+            loss, current = loss.item(), batch * len(X)
+            print(f"loss: {loss:>10f}  [{current:>5d}/{size:>5d}]")
+
+    scheduler.step()
+    train_loss /= size
+
+    return train_loss
+
+def val_loop(dataloader, model, loss_fn, args):
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
-    test_loss, correct = 0, 0
+    val_loss, correct = 0, 0
+
+    names = []
+    preds = []
+    reals = []
 
     with torch.no_grad():
-        for _, X, y in dataloader:
+        for name, Xs, ys, cs in dataloader:
             if args.GPU:
                 device = torch.device('cuda')
-                X = X.to(device)
-                y = y.to(device)
-            pred = model(X)
-            # pred = pred.unsqueeze(0)
-            test_loss += loss_fn(pred, y).item()
-            # print(pred.argmax(1), y)
-            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+                Xs = Xs.to(device)
+                ys = ys.to(device)
+                cs = cs.to(device)
 
-    test_loss /= num_batches
-    correct /= size
-    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+            pred = model(Xs, cs)
+            # print(pred.argmax(1).cpu().numpy(), y.argmax(1).cpu().numpy())
+            val_loss += loss_fn(pred, ys).item()
+            correct += (pred.argmax(1) == ys.argmax(1)).type(torch.float).sum().item()
 
-def save_checkpoint(epoch,  model, optimizer, path):
-    state = {
-        'EPOCH' : epoch,
-        'State_dict' : model.state_dict(),
-        'optimizer' : optimizer.state_dict()
-    }
-    torch.save(state, path)
+            for n, p, y in zip(name, pred.argmax(1).cpu().numpy(), ys.argmax(1).cpu().numpy()):  # vote system needed
+                names.append(n)
+                preds.append(p)
+                reals.append(y)  # if real
+
+        answers = {
+            'hash': names,
+            'predict': preds,
+            'answer': reals  # if real
+        }
+
+    _, correct = vote(answers)
+
+    val_loss /= num_batches
+    print(f"Val Error: \n Accuracy: {(100*correct):>0.2f}%, Avg loss: {val_loss:>8f} \n")
+
+    return correct, val_loss
 
 
 def train(args):
+    print('\n------------------Now training------------------')
     learning_rate = args.lr
     EPOCHS = args.epochs
-    image_size = args.img_size
-    classes = args.classes
-    dropout_rate = args.dropout_rate
+    weight_decay = args.weight_decay
 
-    coatnet = CoAtNet(in_ch=3, image_size=image_size, dropout_rate=dropout_rate, classes=classes)
-    coatnet.apply(weight_init)
+    model = I2L(embedding_dim=args.embedding_dim, classes=args.classes, dropout=args.dropout_rate)
 
     if args.GPU:
         device = torch.device('cuda')
-        coatnet.to(device)
-
-    coatnet.train()
+        model.to(device)
 
     PASS = ImageLoading.PassTheData(args)
     train_dataloader = PASS.pass_train_dataloader()
-    test_dataloader = PASS.pass_test_dataloader()
+    val_dataloader = PASS.pass_val_dataloader()
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(coatnet.parameters(), lr=learning_rate)
+    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.MSELoss()
+    # optimizer = optim.AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=5, gamma=0.5)
 
+    history = {'accuracy':[], 'train_loss': [], 'test_loss':[]}
     for t in range(EPOCHS):
         print('\n')
         print(f"Epoch {t+1}\n-------------------------------")
+        # for f in => K-fold
 
-        train_loop(train_dataloader, coatnet, criterion, optimizer, args)
-        tes_loop(test_dataloader, coatnet, criterion, args)
+        model.train()
+        train_loss = train_loop(train_dataloader, model, criterion, optimizer, scheduler, args)
+        model.eval()
+        correct, val_loss = val_loop(val_dataloader, model, criterion, args)
 
-        save_checkpoint(EPOCHS, coatnet, optimizer, './trained_coatnet.pt')
+        history['train_loss'].append(train_loss)
+        history['accuracy'].append(correct)
+        history['test_loss'].append(val_loss)
 
+        if correct >= max(history['accuracy']):
+            torch.save(model, './I2L_net.pt')
+
+
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.title('Accuracy')
+    plt.plot(range(EPOCHS), history['accuracy'])
+    plt.subplot(1, 2, 2)
+    plt.title('loss')
+    plt.plot(range(EPOCHS), history['test_loss'], history['train_loss'])
+    plt.show()
     print("Done!")
-
-# model save and load
-# making submission(to_csv)

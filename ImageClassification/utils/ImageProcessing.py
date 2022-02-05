@@ -1,5 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from torchvision import transforms
 
 
@@ -25,10 +23,13 @@ def center_crop(im):
 
 class ImageTransform():
     def __init__(self, args):
+        self.args = args
         self.data_transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.RandomCrop(args.img_size), # transforms.Resize(args.img_size)
-            transforms.GaussianBlur(kernel_size=3)
+            transforms.Resize((299, 299)), # transforms.Resize(args.img_size) # transforms.CenterCrop(args.img_size)
+            # transforms.GaussianBlur(kernel_size=11),
+            # transforms.AutoAugment(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
     def __call__(self, img):
@@ -37,14 +38,3 @@ class ImageTransform():
 '''
 something more for utils
 '''
-
-if __name__=='__main__':
-    # randimg = np.random.random((1000, 600, 3))
-    randimg = plt.imread('../whale.jpg')
-    plt.imshow(randimg)
-    plt.show()
-    T = ImageTransform()
-    T_img = T(randimg)
-    T_img = np.moveaxis(T_img.numpy(), 0, -1)
-    plt.imshow(T_img)
-    plt.show()
