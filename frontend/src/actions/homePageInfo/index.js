@@ -4,6 +4,18 @@ export const changeLocation = (name, line, range) => {
         payload: {name: name, line: line, range: range}
     };
 };
+export const changeContent = (category, list) => {
+    return {
+        type: 'CHANGE_CONTENT',
+        payload: {category: category, list: list}
+    };
+};
+export const changeCurrentCategory = (category) => {
+    return {
+        type: 'CHANGE_CURRENT_CATEGORY',
+        payload: category
+    };
+};
 
 export const openShopPage = () => {
     return {type: 'OPEN_SHOP_PAGE'};
@@ -22,6 +34,12 @@ export const openMenuModal = () => {
 };
 export const closeMenuModal = () => {
     return {type: 'CLOSE_MENU_MODAL'};
+};
+export const openSlideshowPage = () => {
+    return {type: 'OPEN_SLIDESHOW_PAGE'};
+};
+export const closeSlideshowPage = () => {
+    return {type: 'CLOSE_SLIDESHOW_PAGE'};
 };
 
 export const initialMenuState = (foodList, CafeList, drinkList) => {
@@ -71,8 +89,15 @@ export const applyDrinkList = (list) => {
         payload: list
     };
 };
-export const tempLikeChange = () => {
+export const tempLikeChange = (like) => {
     return {
-        type: 'TEMP_LIKE_CHANGE'
+        type: 'TEMP_LIKE_CHANGE',
+        payload: 1-like
+    };
+};
+export const likeChange = (category, uuid) => {
+    return {
+        type: 'LIKE_CHANGE',
+        payload: {category: category, uuid: uuid}
     };
 };

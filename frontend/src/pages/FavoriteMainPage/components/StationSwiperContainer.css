@@ -1,0 +1,60 @@
+.stationSwiperContainer{
+  padding-top: 50px;
+  display: flex;
+  flex-direction : row;
+  flex-wrap: wrap;
+  width: inherit;
+  padding-bottom: 50px;
+}
+
+.stationSwiperContainer > .twoBoxes {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.737em;
+}
+
+.twoBoxes > .stationBox {
+  position: relative;
+  width: 49%;
+  /* width: calc(50% - 0.3685em); */
+}
+.twoBoxes > .stationBox::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.twoBoxes > .stationBox > .stationBoxLink > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stationBoxLink{
+  text-decoration: none;
+  color: black;
+}
+
+.stationBoxLink > figcaption{
+  position: absolute;
+  top: 100%;
+}
+
+/* .stationBox{
+  flex-grow : 1;
+  flex-shrink : 1;
+  flex-basis : 40%;
+  text-align : center;
+
+  display: flex;
+  flex-direction: column;
+  padding: 1%;
+}
+
+
+
+.stationBoxImg{
+  width: 100%;
+} */

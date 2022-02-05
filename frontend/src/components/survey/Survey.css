@@ -231,12 +231,11 @@
     -webkit-box-pack: center;
 
     width: 100%;
-    margin-top: 7.2em;
-    margin-bottom: 2em;
+    position: absolute;
+    top: 20%;
 }
 .surveyStart .contents .contents9 > img{
     width: 100%;
-    max-width: 468px;
     aspect-ratio: 1;
     object-fit: cover;
 }
@@ -247,7 +246,10 @@
     -webkit-box-align: center;
     justify-content: center;
     -webkit-box-pack: center;
-
+    
+    width: 100%;
+    position: absolute;
+    top: 80%;
     font-size: 1.8em;
     font-family: SpoqaRegular;
     color: #595959;

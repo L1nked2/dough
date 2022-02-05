@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MoreShop.css';
 import LocationIcon from '../icon/Location';
 import MoreIcon from '../icon/More';
@@ -8,17 +8,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openShopPage, setShopPageContents } from "../../actions/homePageInfo"
 
 function MoreShop(props) {  
-  const shopList = useSelector(state => state.myPlaceList).slice(3);
-
-  const renderShopList = shopList.map(shop => {
+  const shopList = props.content;
+  const renderShopList = shopList.map((shop, index) => {
     return (
-      <EachMoreShop shop={shop} key={shop.rank} />
+      <EachMoreShop shop={shop} rank={index + 4} key={index} />
     );
   });
   return (
     <div className="moreShop">
-      <div className="moreShopHeader">{`취향 맛집 더보기 (${props.name})`}</div>
-      {!shopList.length ? <div className="nullList"></div> : renderShopList }
+      <div className="moreShopHeader">{`취향 맛집 더보기`}</div>
+      { renderShopList }
     </div>
   );
 }
@@ -28,29 +27,29 @@ function EachMoreShop(props) {
   const shop = props.shop;
   const openPage = () => {
     dispatch(openShopPage());
-    dispatch(setShopPageContents({...shop, tag: 'myPlaceList'}));
+    dispatch(setShopPageContents({...shop, rank: props.rank, tag: 'myPlaceList'}));
     document.body.style.overflow = 'hidden';
   }
 
   return (
-    <div onClick={openPage} className="eachShop" key={shop.rank}>
+    <div onClick={openPage} className="eachShop" key={props.rank}>
       <div className="image">
-        <div id="image" style={{backgroundImage: `url(${sampleImage})`}}/>
+        <div><div id="image" style={{backgroundImage: `url(${shop.place_main_photo_list[0]})`}}/></div>
       </div>
       <div className="information">
         <div className="rankAndDistance">
-          <span id="rank">{`${shop.rank}위`}</span>
+          <span id="rank">{`${props.rank}위`}</span>
           <span id="icon"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/></span>
-          <span id="distance">{`역에서 ${shop.distance}`}</span>
+          <span id="distance">{`역에서 200m`}</span>
         </div>
         <div className="nameAndMenu">
-          <span id="name">{shop.name}</span>
-          <span id="menu">{shop.menu}</span>
+          <span id="name">{shop.place_name.length > 5 ? shop.place_name.slice(0, 5)+"..." : shop.place_name}</span>
+          <span id="menu">{shop.place_kind.join(', ').length > 10 ? shop.place_kind.join(', ').slice(0, 10)+"..." : shop.place_kind.join(', ')}</span>
         </div>
         <div className="subimages">
-          <div id="subimage" style={{backgroundImage: `url(${sampleImage})`}}/>
-          <div id="subimage" style={{backgroundImage: `url(${sampleImage})`}}/>
-          <div id="plusButton"><MoreIcon width={15}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/></div>
+          <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[2]})`}}/></div>
+          <span id="plusButton"><MoreIcon width={15}/></span>
         </div>
       </div>
     </div>

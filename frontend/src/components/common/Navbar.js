@@ -15,8 +15,8 @@ function Navbar(props) {
         <Link to="/recommend" className='button'>
           <RecommendIcon className="NavIcons" width={18} color={props.page==="recommend"?"#3FB8D5":"#A3A3A3"}/>
         </Link>
-        <Link to="/favorite" className='button'>
-          <HeartIcon className="NavIcons" width={24} color={props.page==="favorite"?"#3FB8D5":"#A3A3A3"}/>
+        <Link to="/favorite_main" className='button'>
+          <HeartIcon className="NavIcons" width={24} color={props.page==="favorite_main"?"#3FB8D5":"#A3A3A3"}/>
         </Link>
         <Link to="/profile" className='button'>
           <ProfileIcon className="NavIcons" width={24} color={props.page==="profile"?"#3FB8D5":"#A3A3A3"}/>

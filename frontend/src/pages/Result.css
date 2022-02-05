@@ -3,7 +3,7 @@
     padding-bottom: 50px;
 }
 
-.resultPage .shareButton {
+.resultPage > .shareButton {
     display: flex;
     display: -webkit-flex;
     align-items: center;
@@ -22,7 +22,7 @@
     user-select: none;
     cursor: pointer;
 }
-.resultPage .shareButton .shareIcon {
+.resultPage > .shareButton .shareIcon {
     display: flex;
     display: -webkit-flex;
     align-items: center;

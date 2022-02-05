@@ -1,9 +1,17 @@
 const initialState = {
     currLocation: {name: "위치 선택", line: "none", range: "none"},
+    
+    currCategory: 'food',
+    foodPlaceList: [],
+    cafePlaceList: [],
+    drinkPlaceList: [],
+
     shopPageIsOpen: false,
-    shopPageContent: {},
+    shopPageContent: null,
     locationPageIsOpen: false,
     menuModalIsOpen: false,
+    slideShowPageIsOpen: false,
+
     fullFoodList:  ['분식', '곱창', '닭발', '국밥', '백반', '돼지고기', '돈카츠', '닭갈비', '소고기', 
                     '일본가정식', '일본카레', '오믈렛', '회', '스시', '샐러드', '샌드위치', '브런치',
                     '수제버거', '파스타', '피자', '스테이크', '베트남', '멕시코', '인도', '태국', '양꼬치', 
@@ -21,6 +29,17 @@ function homePageReducer (state = initialState, action) {
     switch(action.type){
         case "CHANGE_LOCATION":
             return {...state, currLocation: action.payload}
+        case "CHANGE_CONTENT":
+            switch(action.payload.category){
+                case "food":
+                    return {...state, foodPlaceList: action.payload.list}
+                case "cafe":
+                    return {...state, cafePlaceList: action.payload.list}
+                case "drink":
+                    return {...state, drinkPlaceList: action.payload.list}
+            }
+        case "CHANGE_CURRENT_CATEGORY":
+            return {...state, currCategory: action.payload}
         case "OPEN_SHOP_PAGE":
             return {...state, shopPageIsOpen: true}
         case "CLOSE_SHOP_PAGE":
@@ -33,6 +52,10 @@ function homePageReducer (state = initialState, action) {
             return {...state, menuModalIsOpen: true}
         case "CLOSE_MENU_MODAL":
             return {...state, menuModalIsOpen: false}
+        case "OPEN_SLIDESHOW_PAGE":
+            return {...state, slideShowPageIsOpen: true}
+        case "CLOSE_SLIDESHOW_PAGE":
+            return {...state, slideShowPageIsOpen: false}
         case "INITIAL_MENU_STATE":
             return {...state, 
                     tempFoodStateList: action.payload.tempFoodStateList, 
@@ -40,7 +63,7 @@ function homePageReducer (state = initialState, action) {
                     tempDrinkStateList: action.payload.tempDrinkStateList,
                     initializedList: true}
         case "SET_SHOP_PAGE_CONTENTS":
-            return {...state, shopPageContent: action.payload}
+            return {...state, shopPageContent: {...action.payload, prevLike: action.payload.place_likes}}
         case "APPLY_FOOD_LIST":
             return {...state, tempFoodStateList: action.payload}
         case "APPLY_CAFE_LIST":
@@ -48,7 +71,28 @@ function homePageReducer (state = initialState, action) {
         case "APPLY_DRINK_LIST":
             return {...state, tempDrinkStateList: action.payload}
         case "TEMP_LIKE_CHANGE":
-            return {...state, shopPageContent: {...state.shopPageContent, like:!state.shopPageContent.like}}
+            return {...state, shopPageContent: {...state.shopPageContent, place_likes:action.payload}}
+        case "LIKE_CHANGE":
+            switch(action.payload.category){
+                case "food":
+                    var list = state.foodPlaceList.map((place) => {
+                        if (place.place_uuid !== action.payload.uuid) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, foodPlaceList: list}
+                case "cafe":
+                    var list = state.cafePlaceList.map((place) => {
+                        if (place.place_uuid !== action.payload.uuid) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, cafePlaceList: list}
+                case "drink":
+                    var list = state.drinkPlaceList.map((place) => {
+                        if (place.place_uuid !== action.payload.uuid) {return place;}
+                        else {return {...place, place_likes: !place.place_likes}}
+                    });
+                    return {...state, drinkPlaceList: list}
+            }
         default:
             return state
     }

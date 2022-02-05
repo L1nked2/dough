@@ -1,4 +1,5 @@
 import React, {useState, useRef} from 'react';
+import { useSelector } from 'react-redux';
 import './CollapseResult.css';
 import MyResult from './MyResult'
 import Chevron from '../icon/Chevron';
@@ -16,7 +17,16 @@ function CollapseResult() {
         setContHeight(isOpen ? "0px" : `${content.current.scrollHeight}px`);
         setIsRotate(isOpen ? "collapseIcon" : "collapseIcon rotate");
     }
-    
+    const testResult = useSelector((state) => state.userInfo.testResult.sampleTestResult);
+    if (!testResult) {
+        return (
+            <div className="collapse"> 
+                <div className={`panelHeader`} style={{paddingLeft: "1.579em"}}>
+                    내 취향이 궁금하다면?
+                </div>
+            </div>
+        );
+    }
     return(
         <div className="collapse"> 
             <button className={`panelHeader ${isActive}`} onClick={toggleCollapse}>

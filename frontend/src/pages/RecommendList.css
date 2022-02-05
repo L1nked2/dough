@@ -39,7 +39,7 @@
     height: 100%;
     cursor: pointer;
 }
-.listPage .subHeader .shareButton {
+.listPage .subHeader > .shareButton {
     display: flex;
     display: -webkit-flex;
     align-items: center;

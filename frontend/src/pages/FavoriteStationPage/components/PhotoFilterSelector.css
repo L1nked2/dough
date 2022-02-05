@@ -1,0 +1,24 @@
+.photoFilterSelector{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-bottom: 20px;
+}
+
+.photoSelected{
+  /* border: thin solid skyblue;
+  border-radius: 30%; */
+  color: skyblue;
+}
+
+.photoNotSelected{
+  margin: thin;
+}
+
+.timeSelected{
+  opacity: 1;
+}
+
+.timeNotSelected{
+  opacity: 0.4;
+}

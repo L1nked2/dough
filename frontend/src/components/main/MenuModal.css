@@ -1,0 +1,80 @@
+.overlayModal .modal .reset {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  -webkit-box-pack: end;
+  align-items: center;
+  -webkit-box-align: center;
+
+  color: rgba(0,0,0,0.36);
+}
+
+.overlayModal .modal .reset .resetButton {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  -webkit-box-pack: end;
+  align-items: center;
+  -webkit-box-align: center;
+
+  cursor: pointer;
+  padding: 1.228em 1.8425em;
+  font-size: 1.2em;
+  color: rgba(0,0,0,0.36);
+}
+
+.overlayModal .modal .reset .resetIcon{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-box-pack: center;
+  align-items: center;
+  -webkit-box-align: center;
+  margin-left: 0.3685em;
+}
+
+.overlayModal .modal .menuList {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-box-orient: horizontal;
+  flex-wrap: wrap;
+
+  font-size: 1.2em;
+  font-family: "SpoqaRegular";
+  color: rgba(0,0,0,0.65);
+  
+  margin: 0 1.228em;
+  padding: 1.228em 0.921em;
+  padding-top: 0;
+}
+
+.overlayModal .modal .menuList .menuComponent {
+  display: flex;
+  display: -webkit-flex;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 2em;
+  padding: 0.323em 0.798em;
+  margin: 0.491em 0.43em;
+  cursor: pointer;
+}
+.overlayModal .modal .menuList .menuComponent.active {
+  border: 1px solid #3FB8D5;
+  color: #3FB8D5;
+}
+
+
+@media (max-width: 528px){
+  .overlayModal .modal .menuList {
+    margin-left: 0.614em;
+    margin-right: 0.614em;
+    padding-left: 1.228em;
+    padding-right: 1.228em;
+  }
+  .overlayModal .modal .menuList .menuComponent {
+    margin-top: 0.3685em;
+    margin-bottom: 0.3685em;
+    margin-left: 0.246em;
+    margin-right: 0.246em;
+  }
+}
