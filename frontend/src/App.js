@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import { AnimatedSwitch } from 'react-router-transition';
 
 import Home from './pages/Home';
 import Recommend from './pages/Recommend';
@@ -35,13 +34,8 @@ function App() {
             <Route exact path="/survey/result" component={Result} />
             <Route exact path="/favorite_main" component={FavoriteMainPage} />
             <Route path="/login/callback/kakao" component={Oauth} />
-          </Switch>
-          <AnimatedSwitch
-            atEnter={{ opacity: 0 }}
-            atActive={{ opacity: 1 }}
-          > 
             <Route exact path="/favorite_station/:stationUUID/:placeCategory" component={FavoriteStationPage}/>
-          </AnimatedSwitch>
+          </Switch>
         </Router>
       </div>
     </div>

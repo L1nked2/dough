@@ -12,6 +12,8 @@ function PhotoSwiperContainer(props){
   const placeList = props.placeList;
   const stationUuid = props.stationUuid;
 
+  
+
   const thumbnailPhotoList = placeList.map((placeInfo) => 
     <ThumbnailPhotoBox key={placeInfo.place_uuid}
       thumbnailPhoto={showPlaceNotFood? 
@@ -25,9 +27,25 @@ function PhotoSwiperContainer(props){
   const sortedThumbnailPhotoList = recentFirst? 
     thumbnailPhotoList.slice().reverse() : thumbnailPhotoList;
 
+  // dirty trick for equal height between multiple rows
+  // since flex does not support it 
+  // reference : https://stackoverflow.com/questions/36004926/equal-height-rows-in-a-flex-container
+  let pairsList = new Array();
+  for (let i=0; i<sortedThumbnailPhotoList.length; i+=2){
+    let fstBox = sortedThumbnailPhotoList[i];
+    let sndBox = (i+1<sortedThumbnailPhotoList.length) ? sortedThumbnailPhotoList[i+1] : null;
+
+    const pair = <div className="twoBoxes" key={fstBox.key}>
+      {fstBox}
+      {sndBox}
+    </div>;
+
+    pairsList.push(pair);
+  }
+
   return (
     <div className='photoSwiperContainer'>
-      {sortedThumbnailPhotoList}
+      {pairsList}
     </div>
   );
 }
