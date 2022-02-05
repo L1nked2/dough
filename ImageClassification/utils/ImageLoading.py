@@ -60,6 +60,7 @@ def file_list(path, args):
 
     real_test = filtered_colored(real_test, args)
 
+    print(real_train, real_test)
     return real_train, real_test
 
 def inf_file_list(path, args):
@@ -155,7 +156,7 @@ class PassTheData():
         inf_df = pd.DataFrame(columns=['Name'], data=os.listdir(f'{base_path}'))
         inf_df['Cluster_a'] = [-1] * len(inf_df)
         train_dic, test_dic = file_list(base_path, args)
-        train_dic = regular(dic=train_dic, df=df, args=args)
+        # train_dic = regular(dic=train_dic, df=df, args=args)
         inf_dic = inf_file_list(base_path, args)
         # train_test split
 
