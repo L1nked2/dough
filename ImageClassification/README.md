@@ -5,6 +5,5 @@
      depending on whether you are locally connected or on remote.
 (2) `source ~/.bashrc`
 (3) `pyenv activate dough-crawler-env`
-(4) `input data on 'data' directory'
-(5) `python -V` to check current version is <b>3.9.0</b>
-(6) `python run.py -g 0`
+(4) `python -V` to check current version is <b>3.9.0</b>
+(5) `python run.py -g 0`
