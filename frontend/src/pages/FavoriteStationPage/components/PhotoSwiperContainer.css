@@ -5,15 +5,27 @@
   width: inherit;
 }
 
-.thumbnailPhotoBox{
-  flex-grow : 1;
-  flex-shrink : 1;
-  flex-basis : 40%;
-  text-align : center;
-
-  padding-right: 1%;
+.photoSwiperContainer > .twoBoxes {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.737em;
 }
 
-.thumbnailPhoto{
+.twoBoxes > .thumbnailPhotoBox {
+  position: relative;
+  width: 49%;
+  /* width: calc(50% - 0.3685em); */
+}
+.twoBoxes > .thumbnailPhotoBox::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.twoBoxes > .thumbnailPhotoBox > img {
+  position: absolute;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
