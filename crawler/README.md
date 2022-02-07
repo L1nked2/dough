@@ -12,5 +12,5 @@
 
 (3) configure variables in `main.py` and execute
   (3-1) configuring directory paths in our server machine
-        : execute `sudo mount /sdb /media/k` first.
+        : execute `sudo mount /dev/sdb /media/k` first.
 
