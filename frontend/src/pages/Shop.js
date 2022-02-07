@@ -38,26 +38,11 @@ function ShopModal() {
     SwiperCore.use([Navigation]);
     
     const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
-    const prevLike = shopPageContent.place_likes;
     const dispatch = useDispatch();
 
     function clickLike () {
         dispatch(tempLikeChange(shopPageContent.place_likes));
     }
-
-    const reviewContent = useRef(null);
-    const eachReview = useRef(null);
-    const [reviewHeight, setReviewHeight] = useState(0);
-    const [closeExpandButton, setCloseExpandButton] = useState(false);
-    // function expandReviewHeight () {
-    //     if (reviewContent.current.scrollHeight >= (reviewHeight + eachReview.current.scrollHeight*1.0125*3)) {
-    //         setReviewHeight(reviewHeight + eachReview.current.scrollHeight*1.0125*3);
-    //     }
-    //     else {
-    //         setReviewHeight(reviewContent.current.scrollHeight);
-    //         setCloseExpandButton(true);
-    //     }
-    // }
     
     const menuContent = useRef(null);
     const eachMenu = useRef(null);
@@ -90,18 +75,12 @@ function ShopModal() {
     }
     useEffect (() => {
         setTimeout(() => {dispatch(appendCurrentShop(shopPageContent))}, 200);
-        
-        // setReviewHeight(eachReview.current.scrollHeight * 1.1875 * 2.4);
-        setTimeHeight(eachTime.current.scrollHeight);
-        setMenuHeight(eachMenu.current.scrollHeight * 3);
+        if(eachTime.current){setTimeHeight(eachTime.current.scrollHeight);}
+        if(eachMenu.current){setMenuHeight(eachMenu.current.scrollHeight * 3);}
         setStyleDropdown({left: distance.current.offsetLeft,
                           paddingTop: distance.current.scrollHeight,
                           minWidth: distance.current.scrollWidth+2,});
         window.history.pushState({page: "shop_modal"}, "shop_modal");
-        window.addEventListener("popstate",closePage);
-        return () => {
-            window.removeEventListener("popstate",closePage);
-        }
     }, []);
 
     const [isCallModalOpen, setIsCallModalOpen] = useState(false);
@@ -135,14 +114,26 @@ function ShopModal() {
 
     const distance = useRef(null);
     const dropdown = useRef(null);
-    const [dropdownHeight, setDropdownHeight] = useState('0px');
+    const [dropdownHeight, setDropdownHeight] = useState(0);
+    const stationList = ['동대문', '을지로4가', '동대문역사문화공원'];
+    const distanceList = ['1.2km', '1.6km', '1.8km'];
+    const [distanceTarget, setDistanceTarget] = useState(0);
     const [styleDropdown, setStyleDropdown] = useState({});
     function dropdownOpen() {
-        if (dropdownHeight === 0){
-            setDropdownHeight(dropdown.current.scrollHeight);
+        if (dropdownHeight === 0){setDropdownHeight(dropdown.current.scrollHeight);}
+        else {setDropdownHeight(0);}
+    }
+    function changeDistanceTarget(index) {
+        setDistanceTarget(index);
+        dropdownOpen();
+    }
+
+    window.onpopstate = function () {
+        if (isPhotoOpen) {
+            setIsPhotoOpen(false);
         }
         else {
-            setDropdownHeight(0);
+            closePage();
         }
     }
     return (<>
@@ -172,12 +163,17 @@ function ShopModal() {
                         }
                         <span className="distance" ref={distance} onClick={dropdownOpen}>
                             <LocationIcon width={"1em"} color={"#575757"}/>
-                            {`동대문 1.2km`}
+                            {`${stationList[distanceTarget]} ${distanceList[distanceTarget]}`}
                             <div><ExpandIcon2 width={"1em"} color={"#575757"} /></div>
                         </span>
-                        <div className="dropdown" style={{...styleDropdown, maxHeight: dropdownHeight}} ref={dropdown} >
-                            <div>을지로4가 1.6km</div>
-                            <div>동대문역사문화공원 1.8km</div>
+                        <div className="dropdown" style={{...styleDropdown, maxHeight: dropdownHeight}} ref={dropdown}>
+                            {stationList.map((station, index) => {
+                                if (index !== distanceTarget){
+                                    return (
+                                        <div key={index} onClick={()=>{changeDistanceTarget(index)}}>{`${station} ${distanceList[index]}`}</div>
+                                    );
+                                }
+                            })}
                         </div>
                     </div>
                     <div className="fourPictures" >
@@ -230,7 +226,7 @@ function ShopModal() {
                             <div className="icon"><MenuIcon height={"1.8em"} color={"rgba(0,0,0,0.36)"}/></div>
                             <div className="contents">
                                 <div className='menuList' style={{maxHeight: `${menuHeight}px`}} ref={menuContent}>
-                                    {shopPageContent.place_menu_info.map((menu, index) => {
+                                    {shopPageContent.place_menu_info ? shopPageContent.place_menu_info.map((menu, index) => {
                                         return (
                                             <div className="eachMenu" key={index} ref={index===0?eachMenu:null}>
                                                 <div className="name">{menu.name}</div>
@@ -238,7 +234,8 @@ function ShopModal() {
                                                 <div className="price">{menu.price}</div>
                                             </div>
                                         );
-                                    })}
+                                    })
+                                    : <div className="eachMenu">업체 문의</div> }
                                 </div>
                                 <div onClick={()=>{changeMenuHeight()}} className='expandButton' style={{transform:`rotate(${menuFold?"0":"180"}deg)`}}>
                                     <ExpandIcon width={"1.2em"} color={"rgba(0,0,0,0.36)"} />
@@ -252,21 +249,6 @@ function ShopModal() {
                                 <a href={shopPageContent.place_naver_link} target="_blank">{shopPageContent.place_naver_link}</a>
                             </div>
                         </div>
-                        
-                        {/* <div className="eachInformation">
-                            <div className="icon naver"><img src={naverBlogIcon} style={{width: "2em"}}/></div>
-                            <div className="contents reviews" style={{height: `${reviewHeight}px`}} ref={reviewContent}>
-                                리뷰
-                                {shopPageContent.reviews.map((review,index) => {
-                                    return (
-                                        <a className="eachReview" href={review.link} target="_blank" ref={index===0?eachReview:null} key={index}>
-                                            <div className="title">{`[ ${review.title} ]`}</div>
-                                            <div className="content">{review.content}</div>
-                                        </a>
-                                    );
-                                })}
-                            </div>
-                        </div> */}
                     </div>
                     <div className="infoChange">
                         <div className="icon"><img src={info_icon} alt="info_icon"/></div>
@@ -274,11 +256,6 @@ function ShopModal() {
                             <div>{"정보 수정 요청하러 가기 >"}</div>
                         </div>
                     </div>
-                    {/* {!closeExpandButton ? 
-                    <div onClick={()=>{expandReviewHeight()}} className="expandButton">
-                        <ExpandIcon width={25} color={"rgba(0,0,0,0.36)"} />
-                    </div> 
-                    : null} */}
                 </SwiperSlide>
                 <SwiperSlide className={`gallery`}>
                     <div className="subHeader">

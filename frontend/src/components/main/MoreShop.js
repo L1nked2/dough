@@ -39,12 +39,12 @@ function EachMoreShop(props) {
       <div className="information">
         <div className="rankAndDistance">
           <span id="rank">{`${props.rank}위`}</span>
-          <span id="icon"><LocationIcon width={"1em"} color={"rgba(0,0,0,0.65)"}/></span>
+          <span id="icon"><LocationIcon width={"1em"} color={"#A3A3A3"}/></span>
           <span id="distance">{`역에서 200m`}</span>
         </div>
         <div className="nameAndMenu">
-          <span id="name">{shop.place_name.length > 5 ? shop.place_name.slice(0, 5)+"..." : shop.place_name}</span>
-          <span id="menu">{shop.place_kind.join(', ').length > 10 ? shop.place_kind.join(', ').slice(0, 10)+"..." : shop.place_kind.join(', ')}</span>
+          <div id="name">{shop.place_name.length > 20 ? shop.place_name.slice(0, 20)+"..." : shop.place_name}</div>
+          <div id="menu">{shop.place_kind.join(', ').length > 20 ? shop.place_kind.join(', ').slice(0, 20)+"..." : shop.place_kind.join(', ')}</div>
         </div>
         <div className="subimages">
           <div><div id="subimage" style={{backgroundImage: `url(${shop.place_main_photo_list[1]})`}}/></div>

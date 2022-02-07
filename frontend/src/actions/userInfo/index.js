@@ -1,3 +1,17 @@
+export const changeName = (name) => {
+    return {
+        type: 'CHANGE_NAME',
+        payload: name
+    };
+};
+
+export const changeProfileImg = (file, previewURL) => {
+    return {
+        type: 'CHANGE_PROFILE_IMG',
+        payload: {imgFile: file, imgPreviewURL: previewURL}
+    };
+};
+
 export const refreshResult = (result) => {
     return {
         type: 'REFRESH_RESULT',

@@ -11,7 +11,7 @@
   display: flex;
   display: -webkit-flex;
   width: 528px;
-  min-width: 320px;
+  min-width: 280px;
   min-height: 100vh;
   background-color: white;
   font-family: "SpoqaMedium";
@@ -36,7 +36,16 @@
   display: none;
 }
 
-
+@media (max-width: 768px){
+  .viewPage {
+      font-size: 16px;
+  }
+}
+@media (max-width: 664px){
+  .viewPage {
+      font-size: 13.5714px;
+  }
+}
 @media (max-width: 528px){
   .viewPage {
       font-size: 12px;
@@ -60,6 +69,11 @@
 @media (max-width: 320px){
   .viewPage {
       font-size: 8px;
+  }
+}
+@media (max-width: 280px){
+  .viewPage {
+      font-size: 7px;
   }
 }
 @font-face {

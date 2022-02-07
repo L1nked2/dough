@@ -1,8 +1,9 @@
-import React, {useState, useRef } from 'react';
+import React, {useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import './Profile.css';
 import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
+import { changeName, changeProfileImg } from "../actions/userInfo";
 
 import Header from '../components/common/Header';
 import Navbar from '../components/common/Navbar';
@@ -13,10 +14,12 @@ import Chevron from '../components/icon/Chevron';
 
 import sampleImage from "../img/login_background.png";
 import { customer_center, info_icon, unknown_profile_icon } from '../data/imgPath';
+import BackButton from '../components/icon/Back';
 
 function Profile(props) {
   const dispatch = useDispatch();
   const [photoCategory, setPhotoCategory] = useState("space");
+  const [profileChangeModalIsOpen, setProfileChangeModalIsOpen] = useState(false); 
   const [retestModalIsOpen, setRetestModalIsOpen] = useState(false); 
   const [settingPageIsOpen, setSettingPageIsOpen] = useState(false); 
   const [noResultModalIsOpen, setNoResultModalIsOpen] = useState(false); 
@@ -30,6 +33,9 @@ function Profile(props) {
     dispatch(setShopPageContents({...shop, tag: 'currentList'}));
   }
 
+  const userName = useSelector(state => state.userInfo.name);
+  const imgFile = useSelector(state => state.userInfo.imgFile);
+  const imgPreviewURL = useSelector(state => state.userInfo.imgPreviewURL);
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
   const isLogin = true;
@@ -43,6 +49,9 @@ function Profile(props) {
                        closeFunc={()=>{setRetestModalIsOpen(false)}}
                        applyFunc={()=>{setRetestModalIsOpen(false);window.location.replace("/survey");}}
                        applyButton="다시하기"/>
+      </CSSTransition>
+      <CSSTransition in={profileChangeModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+        <ProfileChangePage closeFunc={()=>{setProfileChangeModalIsOpen(false)}}/>
       </CSSTransition>
       <CSSTransition in={settingPageIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
         <SettingPage closeFunc={()=>{setSettingPageIsOpen(false)}}/>
@@ -59,18 +68,21 @@ function Profile(props) {
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
-        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?sampleImage:unknown_profile_icon})`}} /></div>
+        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?imgFile===''?sampleImage:imgPreviewURL:unknown_profile_icon})`}} /></div>
         <div className="text">
-          <div className="name">{isLogin?"신혜영":"unknown"}</div>
+          <div className="name">{isLogin?userName:"unknown"}</div>
+          {isLogin && <div className="profileChange" onClick={()=>{openModal(setProfileChangeModalIsOpen)}}>프로필 편집</div>}
           {cluster >= 0 && <div className="re-test" onClick={()=>{openModal(setRetestModalIsOpen)}}>취향테스트 다시하기</div>}
         </div>
       </div>
       <div className={`testResult ${isLogin?"active":""}`}
            onClick={()=>{if(cluster < 0){
                            openModal(setNoResultModalIsOpen)
+                         } else {
+                           window.location.replace("/survey/result");
                          }}}>
-        <div style={{fontSize: '1.1em', color: 'rgba(0,0,0,0.36)'}}>MY</div>
-        <div style={{fontSize: '1.2em', color: 'rgba(0,0,0,0.65)'}}>취향 테스트 결과</div>
+        <div style={{fontSize: '1.1em', color: '#A3A3A3'}}>MY</div>
+        <div style={{fontSize: '1.2em', color: '#575757'}}>취향 테스트 결과</div>
       </div>
       <div className="content">
         <div className="tag"><span>최근 본 가게</span></div>
@@ -112,17 +124,131 @@ function Profile(props) {
 
 export default Profile;
 
+function ProfileChangePage (props) {
+  const closeModal = () => {
+    props.closeFunc();
+    document.body.style.overflow = 'unset';
+  };
+  useEffect (() => {
+    window.history.pushState({page: "profile_change_modal"}, "profile_change_modal");
+  }, []);
+
+  const dispatch = useDispatch();
+  const userName = useSelector(state => state.userInfo.name);
+  const imgFile = useSelector(state => state.userInfo.imgFile);
+  const imgPreviewURL = useSelector(state => state.userInfo.imgPreviewURL);
+
+  const [isEnter, setIsEnter] = useState(false);
+  function inputName() {
+    if (!isEnter) {
+      setIsEnter(true);
+    }
+  }
+  function exitInputName() {
+    if (isEnter) {
+      setIsEnter(false);
+    }
+  }
+  function resetName() {
+    document.getElementById('_name').value = '';
+    document.getElementById('_name').focus();
+  }
+  function enterName() {
+    if (document.getElementById('_name').value !== ''){
+      dispatch(changeName(document.getElementById('_name').value))
+    }
+    else{
+      document.getElementById('_name').value = userName;
+    }
+    setIsEnter(false);
+    window.blur();
+  }
+  function enterkey() {
+    if (window.event.keyCode == 13) {
+      enterName();
+    }
+  }
+
+  function onLoadFile (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      dispatch(changeProfileImg(file, reader.result));
+    }
+    reader.readAsDataURL(file);
+    setProfileImgModalIsOpen(false);
+  }
+  const changeFile = (e) => {
+    e.preventDefault();
+    onLoadFile(e.target.files[0]);
+  }
+  const dropHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onLoadFile(e.dataTransfer.files[0]);
+  };
+
+  const [profileImgModalIsOpen, setProfileImgModalIsOpen] = useState(false);
+  window.onpopstate = function () {
+    if (!profileImgModalIsOpen) {
+      closeModal();
+    }
+  }
+  return (
+    <div className="profileChangePage">
+      <CSSTransition in={profileImgModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
+        <ModalTemplate header="프로필 사진 수정"
+                       content={<><div className="profileAlert">{"사진을 여기에 끌어다 놓으세요."}</div>
+                                  <div className="button">
+                                    <div>
+                                      컴퓨터에서 불러오기
+                                      <input type="file" id="image" accept="img/*" onChange={changeFile} style={{display: isEnter?"none":"block"}}/>
+                                    </div>
+                                  </div>
+                                </>}
+                       closeFunc={()=>{setProfileImgModalIsOpen(false)}}
+                       applyFunc={()=>{setProfileImgModalIsOpen(false)}}
+                       closeButton="취소"
+                       applyButton="저장"
+                       dropHandler={dropHandler}
+                       />
+      </CSSTransition>
+      <div className="subHeader">
+        <div onClick={!isEnter?closeModal:exitInputName} className="backButton"><BackButton width={"0.6em"} color={"rgba(0,0,0,0.9)"}/></div>
+        {!isEnter?"프로필 편집":"닉네임 수정"}
+      </div>
+      <div className="content">
+        <div className="profileImage" style={{opacity: isEnter?"0":"1"}}>
+          <div style={{backgroundImage: `url(${imgFile===''?sampleImage:imgPreviewURL})`}} onClick={()=>{setProfileImgModalIsOpen(true)}}/>
+        </div>
+        <div className="name" onClick={inputName} style={{top: isEnter?"50%":"120%"}}>
+          <input id="_name" type="text" defaultValue={userName} placeholder={userName} autoComplete="off" onKeyUp={enterkey}/>
+          {!isEnter ? <div className="button"><Chevron width={"0.7em"} color={"rgba(0,0,0,0.9)"}/></div>
+                    : <div className="button" onClick={resetName}><CloseButton width={"0.9em"} color={"rgba(0,0,0,0.9)"}/></div>}
+        </div>
+      </div>
+      <div className="enter" onClick={enterName} style={{opacity: isEnter?"1":"0"}}>완료</div>
+    </div>
+  );
+}
 function SettingPage (props) {
-  const closeModal = (closeFunc) => {
-    closeFunc();
+  const closeModal = () => {
+    props.closeFunc();
     document.body.style.overflow = 'unset';
   };
   const openModal = (openFunc) => {
     openFunc(true);
     document.body.style.overflow = 'hidden';
   };
+  useEffect (() => {
+    window.history.pushState({page: "setting_modal"}, "setting_modal");
+  }, []);
   const [resignModalIsOpen, setResignModalIsOpen] = useState(false);
   const [logoutModalIsOpen, setLogoutModalIsOpen] = useState(false);
+  window.onpopstate = function () {
+    if (!(logoutModalIsOpen || resignModalIsOpen)) {
+      closeModal();
+    }
+  }
   return (
     <div className="settingPage">
       <CSSTransition in={logoutModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -145,7 +271,7 @@ function SettingPage (props) {
       </CSSTransition>
       
       <div className="subHeader">
-        <div onClick={()=>{closeModal(props.closeFunc)}} className="backButton"><CloseButton width={"1.5em"} color={"rgba(0,0,0,0.9)"}/></div>
+        <div onClick={closeModal} className="backButton"><CloseButton width={"1.5em"} color={"rgba(0,0,0,0.9)"}/></div>
       </div>
       <div className="mainButtons">
         <div>

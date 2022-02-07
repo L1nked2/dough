@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SlideImages from '../common/SlideImages';
 import BackButton from '../icon/Back';
 import './ImageSlideShow.css';
 
 function ImageSlideShow(props) {
+    const closeSlide = () => {
+        props.closeFunc();
+        document.body.style.overflow = 'unset';
+    };
+    useEffect (() => {
+        window.history.pushState({page: "image_slide_modal"}, "image_slide_modal");
+    }, []);
+
     const [slideIndex, setSlideIndex] = useState(0);
     return (
     <div className="imgSlidePage">
         <div className="subHeader">
-            <div onClick={props.closeFunc} className="backButton">
+            <div onClick={closeSlide} className="backButton">
                 <BackButton width={15} color={"#FFFFFF"}/>
             </div>
             <div className="title">
