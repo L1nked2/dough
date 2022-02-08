@@ -47,7 +47,7 @@ function Profile(props) {
                                   {"계속을 누르면\n취향 테스트를 다시할 수 있는 화면으로\n넘어가고, 이전 취향 테스트 결과가\n삭제됩니다. 계속하시겠습니까?"}
                                 </div>}
                        closeFunc={()=>{setRetestModalIsOpen(false)}}
-                       applyFunc={()=>{setRetestModalIsOpen(false);window.location.replace("/survey");}}
+                       applyFunc={()=>{setRetestModalIsOpen(false);window.location.href="/survey";}}
                        applyButton="다시하기"/>
       </CSSTransition>
       <CSSTransition in={profileChangeModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -62,7 +62,7 @@ function Profile(props) {
                                   {"약속장소 취향테스트를 하지 않아\n결과를 볼 수 없습니다\n\n내 약속장소 취향 결과를 보고싶다면\n취향테스트 하러가기 버튼을 눌러주세요."}
                                 </div>}
                        closeFunc={()=>{setNoResultModalIsOpen(false)}}
-                       applyFunc={()=>{setNoResultModalIsOpen(false);window.location.replace("/survey");}}
+                       applyFunc={()=>{setNoResultModalIsOpen(false);window.location.href="/survey";}}
                        applyButton="취향테스트 하러가기"/>
       </CSSTransition>
 
@@ -79,7 +79,7 @@ function Profile(props) {
            onClick={()=>{if(cluster < 0){
                            openModal(setNoResultModalIsOpen)
                          } else {
-                           window.location.replace("/survey/result");
+                           window.location.href="/survey/result";
                          }}}>
         <div style={{fontSize: '1.1em', color: '#A3A3A3'}}>MY</div>
         <div style={{fontSize: '1.2em', color: '#575757'}}>취향 테스트 결과</div>
@@ -314,7 +314,7 @@ function ToggleButton (props) {
   function toggleCollapse() {
     setIsOpen(!isOpen);
     setIsActive(isOpen ? "" : "active")
-    setContHeight(isOpen ? "0px" : `${content.current.scrollHeight}px`);
+    setContHeight(isOpen ? "0px" : `${content.current.scrollHeight+2}px`);
     setIsRotate(isOpen ? "collapseIcon" : "collapseIcon rotate");
   }
   return (

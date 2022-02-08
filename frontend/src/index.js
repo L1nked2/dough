@@ -5,16 +5,22 @@ import App from './App';
 
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+
 import allReducers from './reducers'
-import axios from 'axios';
 
 let store = createStore(
     allReducers,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+const persistor = persistStore(store);
+
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+            <App />
+        </PersistGate>
     </Provider>
     , document.getElementById('app'));

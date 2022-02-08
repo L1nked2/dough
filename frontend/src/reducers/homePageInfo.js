@@ -1,5 +1,5 @@
 const initialState = {
-    currLocation: {name: "위치 선택", line: "none", range: "none"},
+    currLocation: {name: "위치 선택", line: "none", range: "none", spell: "none"},
     
     currCategory: 'food',
     foodPlaceList: [],

@@ -335,9 +335,9 @@ input:focus {outline: none;}
     font-size: 1.4em;
     font-family: SpoqaRegular;
     line-height: 1.5em;
-    padding-top: 6em;
+    padding-top: 10em;
     padding-bottom: 1em;
-    color: rgba(0, 0, 0, 0.9);
+    color: #A3A3A3;
     white-space: pre-wrap;
 }
 .profilePage .profileChangePage .overlayModal .modal .button {
@@ -350,6 +350,8 @@ input:focus {outline: none;}
 
     position: relative;
     width: 100%;
+    margin-top: 1em;
+    margin-bottom: 5em;
 }
 .profilePage .profileChangePage .overlayModal .modal .button > div {
     display: flex;
@@ -370,7 +372,6 @@ input:focus {outline: none;}
     font-family: SpoqaRegular;
     border-radius: 0.4em;
     padding: 0.5em 2em;
-    margin: 1em 0;
 }
 .profilePage .profileChangePage .overlayModal .modal .button > div > input {
     position: absolute;
@@ -380,6 +381,11 @@ input:focus {outline: none;}
     cursor: pointer;
 }
 .profilePage .settingPage {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+
     position: fixed;
     width: inherit;
     min-width: 320px;
@@ -423,8 +429,8 @@ input:focus {outline: none;}
     align-items: center;
     -webkit-box-align: center;
     gap: 15%;
-    height: 20em;
-    margin-top: 60px;
+    margin-top: calc(60px + 5em);
+    margin-bottom: 5em;
 }
 .profilePage .settingPage .mainButtons > div {
     cursor: pointer;
@@ -439,7 +445,9 @@ input:focus {outline: none;}
     padding-top: 0.5em;
 }
 .profilePage .settingPage .details {
-    padding: 0 2.211em;
+    flex: 1 1 auto;
+    padding: 3em 2.211em;
+    background-color: #F7F7F7;
 }
 .settingCollapse {
     display: flex;
@@ -453,15 +461,15 @@ input:focus {outline: none;}
     align-items: center;
     -webkit-box-align: center;
 
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0);
     color: #575757;
     font-size: 1.1em;
     cursor: pointer;
-    padding: 0;
-    padding-bottom: 1.25em;
+    padding: 0.825em 0;
     border: none;
+    font-family: SpoqaRegular;
+    border-bottom: 1px solid #E9E9E9;
     outline: none;
-    transition: background-color 0.4s ease;
 }
 .settingCollapse .header .collapseIcon {
     margin-right: 0.5265em;
@@ -471,33 +479,38 @@ input:focus {outline: none;}
     transform: rotate(90deg);
 }
 .settingCollapse .collapseContent {
-    background-color: white;
     overflow: hidden;
     transition: max-height 0.4s ease;
-    padding-left: 1.1em;
 }
 .settingCollapse .collapseContent .normal {
     font-size: 1.1em;
-    margin-bottom: 1.25em;
+    padding: 0.625em 0;
     color: #575757;
+    border-bottom: 1px solid #E9E9E9;
+    padding-left: 1em;
 }
 .settingCollapse .collapseContent .normal.cursor {
     cursor: pointer;
 }
 .settingCollapse .collapseContent .policy {
     font-size: 1.1em;
-    margin-bottom: 1.25em;
+    padding: 0.625em 0;
     color: rgba(0, 0, 0, 0.36);
     position: relative;
+    border-bottom: 1px solid #E9E9E9;
+    padding-left: 1em;
 }
 .settingCollapse .collapseContent .policy .click {
     position: absolute;
     right: 0;
+    top: 0;
     height: 100%;
     cursor: pointer;
 }
 .settingCollapse .collapseContent .companyInfo {
-    margin-bottom: 1.25em;
+    padding: 0.625em 0;
+    border-bottom: 1px solid #E9E9E9;
+    padding-left: 1.1em;
 }
 .settingCollapse .collapseContent .companyInfo .tag {
     font-size: 0.9em;

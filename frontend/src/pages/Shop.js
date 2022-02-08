@@ -41,7 +41,7 @@ function ShopModal() {
     const dispatch = useDispatch();
 
     function clickLike () {
-        dispatch(tempLikeChange(shopPageContent.place_likes));
+        dispatch(tempLikeChange(!shopPageContent.place_likes));
     }
     
     const menuContent = useRef(null);
@@ -67,14 +67,29 @@ function ShopModal() {
     },[timeFold])
 
     const closePage = () => {
-        dispatch(closeShopPage())
+        dispatch(appendCurrentShop(shopPageContent));
+        dispatch(closeShopPage());
         document.body.style.overflow = 'unset';
     };
     const goBack = () => {
         window.history.back();
     }
     useEffect (() => {
-        setTimeout(() => {dispatch(appendCurrentShop(shopPageContent))}, 200);
+        const getPlaceDB = async () => { 
+            const res = await axios({
+                method: 'POST',
+                url: 'https://dough-survey.web.app/api/info/place',
+                headers: {
+                    "Content-Type": `application/json`
+                },
+                data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', placeId: shopPageContent.place_uuid},
+            }).then(response => {
+                console.log(response.data);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+        getPlaceDB(); // 추후에 firebase 속도가 빨라지면 uuid만 갖고 open한 뒤 여기에서 shopPageContent를 받아와 저장할 예정
         if(eachTime.current){setTimeHeight(eachTime.current.scrollHeight);}
         if(eachMenu.current){setMenuHeight(eachMenu.current.scrollHeight * 3);}
         setStyleDropdown({left: distance.current.offsetLeft,
