@@ -16,3 +16,7 @@
 
 (4) depending on your purpose,
 	`python main.py --execution_kind {crawl, upload, update_station, update_cluster}`
+	(4-1) we'll run `upload` with 4 terminals, for parallel uploads.
+        In order to do so, open 4 terminals and run, for each terminal,
+        `python main.py --execution_kind upload --upload_num <terminal_num>`
+        where terminal_num is in {0,1,2,3} and unique for each terminal.

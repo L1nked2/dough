@@ -13,6 +13,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     execution_kind = args.execution_kind
     upload_num = args.upload_num
+    
+    if execution_kind == 'upload':
+        assert upload_num in [0,1,2,3], "use should provided different upload num for each terminal, chosen from 0,1,2,3"
 
     ## shared configs
     DB_DIR_PATH = "/media/k/DIR_FOR_CRAWLING/raw_db"
@@ -32,9 +35,12 @@ if __name__ == "__main__":
 
     ## configs for upload
     DO_UPLOAD = execution_kind=='upload'
+    UPLOAD_NUM = int(upload_num)
     ALREADY_UPLOADED_STATIONS = ['효창공원앞역_맛집', '범골역_카페', '마포구청역_맛집', '까치산역_카페', '풍산역_술집', '돌곶이역_맛집', '상갈역_카페', '김유정역_술집', '동두천중앙역_맛집', '서울대입구역_카페', '사리역_술집', '양재시민의숲역_맛집', '예술회관역_술집', '동인천역_술집', '야목역_술집', '솔밭공원역_카페', '수지구청역_술집', '영등포구청역_카페', '동두천역_술집', '전대.에버랜드역_맛집', '남한산성입구역_카페', '청명역_카페', '백석역_맛집', '모란역_술집', '개봉역_카페', '서현역_술집', '안국역_맛집', '금촌역_술집', '온수역_술집', '고잔역_카페', '어룡역_술집', '서현역_맛집', '강매역_술집']
     STATIONS_CRAWLED = os.listdir(DB_DIR_PATH)
-    STATIONS_TO_UPLOAD = sorted(list(set(STATIONS_CRAWLED)-set(ALREADY_UPLOADED_STATIONS)))
+    ALL_STATIONS_TO_UPLOAD = sorted(list(set(STATIONS_CRAWLED)-set(ALREADY_UPLOADED_STATIONS)))
+    NUM_STATIONS_TO_UPLOAD_PER_TERMINAL = int(len(ALL_STATIONS_TO_UPLOAD) / len([0,1,2,3]))
+    STATIONS_TO_UPLOAD = ALL_STATIONS_TO_UPLOAD[UPLOAD_NUM*NUM_STATIONS_TO_UPLOAD_PER_TERMINAL : (UPLOAD_NUM+1)*NUM_STATIONS_TO_UPLOAD_PER_TERMINAL]
     print(STATIONS_TO_UPLOAD)
 
     ## configs for upload_station
