@@ -11,12 +11,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from tqdm import tqdm
 import os
+from PIL import UnidentifiedImageError
 
 def filtered_colored(path_list, args):
     input_list = {'list' : [], 'color' : []}
     for path in tqdm(path_list):
         if os.path.getsize(path) == 0 : pass
-        im = plt.imread(path)
+        try:
+            im = plt.imread(path)
+        except UnidentifiedImageError:
+            pass
         H, W, C = np.shape(im)
         if H >= 299 and W >= 299 and C == 3:
             input_list['list'].append(path)
