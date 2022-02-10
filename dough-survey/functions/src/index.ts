@@ -4,6 +4,7 @@ import {kakaoLogin} from "./auth";
 import {getInfo} from "./dataLoader";
 import {submitSurvey, updateFavorites} from "./userPreference";
 import cors from "cors";
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -24,10 +25,6 @@ app.post("/api/survey", (req, res) => {
 });
 
 // favorites management
-app.get("/api/favorites", (req, res) => {
-  res.send("Forbidden GET /favorites");
-});
-
 app.post("/api/favorites", (req, res) => {
   updateFavorites(req).then((updateStatus) => {
     res.json({result: updateStatus});

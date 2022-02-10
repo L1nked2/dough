@@ -4,7 +4,7 @@ import {Request} from "express";
 import {getUserId} from "./dataLoader";
 import {transpose, multiply, distance, pow} from "mathjs";
 import {coeffs_a, pca_a_inv_mat, centroid_a} from "./data";
-
+firebaseAdmin.initializeApp();
 const db = firebaseAdmin.firestore();
 const DIM_A = 3;
 
@@ -102,7 +102,7 @@ async function updateFavorites(
   const placeId = req.body.placeId;
   const userId = await getUserId(user_token);
   const placeDocRef = db.doc(`place_db/${placeId}`);
-  const stationDocRef = db.doc(`station_db/${stationId}`);
+  const stationDocRef = db.doc(`station_db/${stationId}_rest_0`);
   const userDocRef = db.doc(`user_db/${userId}`);
   let res;
   if (action === "delete") {

@@ -20,9 +20,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getInfoBase = exports.getUserId = exports.getInfo = void 0;
+/* eslint-disable camelcase */
 const firebaseAdmin = __importStar(require("firebase-admin"));
 const userPreference_1 = require("./userPreference");
+const data_1 = require("./data");
 const db = firebaseAdmin.firestore();
+const ELEMENT_PER_PAGE = 30;
+const CLUSTER_NUM = 8;
 /**
  * getUserId
  *
@@ -141,7 +145,7 @@ async function getStationInfo(req) {
         let category = req.body.category;
         const tags = req.body.tags;
         const page = req.body.page;
-        let categoryAll = false;
+        const doBlockShuffle = true;
         if (category === "음식점") {
             category = "rest";
         }
@@ -151,25 +155,21 @@ async function getStationInfo(req) {
         else if (category === "술집") {
             category = "bar";
         }
-        else if (category === "") {
-            category = "";
-            categoryAll = true;
+        else {
+            throw new Error("Invalid category");
         }
         console.log(`getStationInfo: ${stationId}`);
-        if (categoryAll === true) {
-            const userInfo = await getInfoBase("user", userId);
-            const stationBaseInfo = await getInfoBase("station", `${stationId}`);
-            const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${page}`);
-            const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
-            return { stationInfo: stationInfo };
+        const userInfo = await getInfoBase("user", userId);
+        const clusterA = userInfo.user_cluster_a;
+        const stationTotalInfo = await getInfoBase("station", `${stationId}_${category}_0`);
+        for (let i = 1; i < 6; i++) {
+            const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${i}`);
+            stationTotalInfo.place_list.concat(stationPageInfo.place_list);
         }
-        else {
-            const userInfo = await getInfoBase("user", userId);
-            const stationBaseInfo = await getInfoBase("station", `${stationId}`);
-            const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${page}`);
-            const stationInfo = Object.assign(stationBaseInfo, stationPageInfo);
-            return { stationInfo: stationInfo };
-        }
+        stationTotalInfo.place_list = await filterByTag(stationTotalInfo.place_list, tags);
+        stationTotalInfo.place_list = await sortByPriority(stationTotalInfo.place_list, clusterA, doBlockShuffle);
+        stationTotalInfo.place_list = stationTotalInfo.place_list.slice(page * ELEMENT_PER_PAGE, (page + 1) * ELEMENT_PER_PAGE);
+        return { stationInfo: stationTotalInfo };
     }
     catch (error) {
         console.log(error);
@@ -188,7 +188,7 @@ async function getPlaceInfo(req) {
         const userId = await getUserId(userToken);
         const stationId = req.body.stationId;
         const placeId = req.body.placeId;
-        const stationData = await getInfoBase("station", stationId);
+        const stationData = await getInfoBase("station", `${stationId}_rest_0`);
         const placeInfo = await getInfoBase("place", placeId);
         const stationCoor = { lon: stationData.station_coor_x,
             lat: stationData.station_coor_y };
@@ -218,6 +218,64 @@ async function getPostInfo(req) {
         const postInfo = await getInfoBase("post", postId);
         console.log(`getPostInfo: ${postId}`);
         return { postInfo: postInfo };
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+/**
+ * filterByTag
+ *
+ * @param  {any[]} placeList
+ * @param  {string} tags
+ * @return {Promise<any>}
+ */
+async function filterByTag(placeList, tags) {
+    try {
+        let result;
+        if (tags.length === 0) {
+            result = placeList;
+        }
+        else {
+            result = placeList.filter((element) => tags.some((eachTag) => element.place_kind.includes(eachTag)));
+        }
+        return result;
+    }
+    catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+/**
+ * sortByPriority
+ *
+ * @param  {any[]} placeList
+ * @param  {number} clusterA
+ * @param  {boolean} shuffleBlock
+ * @return {Promise<any>}
+ */
+async function sortByPriority(placeList, clusterA, shuffleBlock = true) {
+    try {
+        const clusterBlock = [];
+        const currentPriority = data_1.priority_cluster_a[clusterA];
+        // build block using priority array
+        for (let i = 0; i < CLUSTER_NUM; i++) {
+            clusterBlock[i] = placeList.filter((element) => (element.place_cluster_a === currentPriority[i]));
+        }
+        // concat places that cluster_a is not initialized
+        clusterBlock[CLUSTER_NUM] = placeList.filter((element) => (element.place_cluster_a === null));
+        if (shuffleBlock === true) {
+            for (let i = 0; i < clusterBlock.length; i++) {
+                for (let j = clusterBlock[i].length - 1; j > 0; j--) {
+                    const k = Math.floor(Math.random() * (j + 1));
+                    [clusterBlock[i][j], clusterBlock[i][k]] =
+                        [clusterBlock[i][k], clusterBlock[i][j]];
+                }
+            }
+        }
+        const result = clusterBlock.flat();
+        return result;
     }
     catch (error) {
         console.log(error);

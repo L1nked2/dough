@@ -25,6 +25,7 @@ const firebaseAdmin = __importStar(require("firebase-admin"));
 const dataLoader_1 = require("./dataLoader");
 const mathjs_1 = require("mathjs");
 const data_1 = require("./data");
+firebaseAdmin.initializeApp();
 const db = firebaseAdmin.firestore();
 const DIM_A = 3;
 /**
@@ -112,7 +113,7 @@ async function updateFavorites(req) {
     const placeId = req.body.placeId;
     const userId = await (0, dataLoader_1.getUserId)(user_token);
     const placeDocRef = db.doc(`place_db/${placeId}`);
-    const stationDocRef = db.doc(`station_db/${stationId}`);
+    const stationDocRef = db.doc(`station_db/${stationId}_rest_0`);
     const userDocRef = db.doc(`user_db/${userId}`);
     let res;
     if (action === "delete") {
