@@ -15,6 +15,7 @@ import os
 def filtered_colored(path_list, args):
     input_list = {'list' : [], 'color' : []}
     for path in tqdm(path_list):
+        if os.path.getsize(path) == 0 : pass
         im = plt.imread(path)
         H, W, C = np.shape(im)
         if H >= 299 and W >= 299 and C == 3:
