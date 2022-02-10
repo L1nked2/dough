@@ -252,20 +252,16 @@ class DB_and_CDN:
             print(f"no document with name {place_uuid} exists in place_db")
 
 
-def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
-    category_to_tag_table_dir_path : str):
+def convert_documents_and_upload_to_db(stations_to_upload : str, db_dir_path: str,  photo_dir_path : str, category_to_tag_table_dir_path : str):
     
     db_cdn = DB_and_CDN()
     station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
  
     place_uuids_in_photo_dir = os.listdir(photo_dir_path)
 
-    for entry in os.listdir(raw_db_path):
-        filename = os.path.join(raw_db_path, entry)
-        if not os.path.isfile(filename): continue
-
+    for station_category in stations_to_upload:
         # e.g. 강남역_맛집, 뚝섬역_술집
-        station_category_dumped = filename 
+        station_category_dumped = os.path.join(db_dir_path, station_category)
         print(station_category_dumped)
         raw_station_dict, place_dict_list = dill.load(open(station_category_dumped, "rb"))
 
@@ -284,16 +280,13 @@ def convert_documents_and_upload_to_db(raw_db_path : str, photo_dir_path : str,
 
     db_cdn.update_station_db(station_id_names)
 
-def update_station_db_in_case_convert_documents_and_upload_to_db_terminated_unexpectedly(raw_db_path):
+def update_station_db_in_case_convert_documents_and_upload_to_db_terminated_unexpectedly(stations, db_dir_path):
     db_cdn = DB_and_CDN()
     station_id_names : list[tuple[str, str]] = list() # will store [(station_uid, station_name), ...]
 
-    for entry in os.listdir(raw_db_path):
-        filename = os.path.join(raw_db_path, entry)
-        if not os.path.isfile(filename): continue
-
+    for station_category in stations:
         # e.g. 강남역_맛집, 뚝섬역_술집
-        station_category_dumped = filename 
+        station_category_dumped = os.path.join(db_dir_path, station_category)
         print(station_category_dumped)
         raw_station_dict, _ = dill.load(open(station_category_dumped, "rb"))
 
