@@ -65,7 +65,7 @@ def file_list(path, args):
 
     real_test = filtered_colored(real_test, args)
 
-    print(real_train, real_test)
+    # print(real_train, real_test)
     return real_train, real_test
 
 def inf_file_list(path, args):
