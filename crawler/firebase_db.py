@@ -181,16 +181,16 @@ class DB_and_CDN:
 
         # try to open the file on local path
         filename_to_upload = photo_local_path
-        if not os.path.exists(photo_local_path):
-            # early-crawled cases : local image paths in raw_db is 
-            # stored as "/media/k/DB/DIR_FOR_CRAWLING/temp_img/...", 
-            # not "/media/k/DIR_FORCRAWLING/temp_img/..."
-            # so we need to deal with it.
-            if filename_to_upload.startswith("/media/k/DB/"):
-                filename_to_upload = filename_to_upload.replace("/media/k/DB", "/media/k", 1)
+        
+        # early-crawled cases : local image paths in raw_db is 
+        # stored as "/media/k/DB/DIR_FOR_CRAWLING/temp_img/...", 
+        # not "/media/k/DIR_FORCRAWLING/temp_img/..."
+        # so we need to deal with it.
+        if filename_to_upload.startswith("/media/k/DB/"):
+            filename_to_upload = filename_to_upload.replace("/media/k/DB", "/media/k", 1)
 
-            # case where image does not exists
-            # download it again from naver
+        # download it again from naver
+        if not os.path.exists(filename_to_upload):
             with open(filename_to_upload, 'wb+') as f:
                 response = requests.get(naver_link)
                 f.write(response.content)
