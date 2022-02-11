@@ -180,9 +180,17 @@ class DB_and_CDN:
         path_to_store_on_CDN = f'restaurant_images/{place_id}/{photo_file_name}'
 
         # try to open the file on local path
-        # if it fails, use naver_link to download the photo
         filename_to_upload = photo_local_path
         if not os.path.exists(photo_local_path):
+            # early-crawled cases : local image paths in raw_db is 
+            # stored as "/media/k/DB/DIR_FOR_CRAWLING/temp_img/...", 
+            # not "/media/k/DIR_FORCRAWLING/temp_img/..."
+            # so we need to deal with it.
+            if filename_to_upload.startswith("/media/k/DB/"):
+                filename_to_upload = filename_to_upload.replace("/media/k/DB", "/media/k", 1)
+
+            # case where image does not exists
+            # download it again from naver
             with open(filename_to_upload, 'wb+') as f:
                 response = requests.get(naver_link)
                 f.write(response.content)
