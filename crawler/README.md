@@ -20,3 +20,5 @@
         In order to do so, open 4 terminals and run, for each terminal,
         `python main.py --execution_kind upload --upload_num <terminal_num>`
         where terminal_num is in {0,1,2,3} and unique for each terminal.
+
+(5) after uploading, run `python get_uploaded_stations.py 220211upload_terminal0.txt 220211upload_terminal1.txt 220211upload_terminal2.txt 220211upload_terminal3.txt` to get uploaded stations and update `ALREADY_UPLOADED_STATIONS` in `main.py`
