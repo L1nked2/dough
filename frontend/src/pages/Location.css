@@ -2,7 +2,7 @@
     position: fixed;
     width: inherit;
     top: 0;
-    min-width: 320px;
+    min-width: 280px;
     height: calc(100% - 51px - 4.5em);
     background-color: white;
     overflow-y: scroll;

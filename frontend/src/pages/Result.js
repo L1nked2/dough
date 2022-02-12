@@ -30,32 +30,7 @@ function Result(props) {
   const dispatch = useDispatch();
   dispatch(refreshResult({sampleTestResult: sampleTestResult, mainCuration: mainCuration, sampleCuration: sampleCuration}));
   useEffect(() => {
-    getAuth().onAuthStateChanged(function(user){
-      if (user) {
-        console.log("Result.js");
-        console.log(user);
-        user.getIdToken(true).then(function(idToken) {
-          const getUserDB = async () => { 
-            const res = await axios({
-                method: 'POST',
-                url: 'https://dough-survey.web.app/api/user',
-                headers: {
-                    "Content-Type": `application/json`
-                },
-                data: {userToken: idToken},
-            }).then(response => {
-                console.log(response);
-                return response.data;
-            }).catch(err => {
-                console.log(err);
-              });
-            }
-            getUserDB();
-        }).catch(function(error) {
-          console.log(error);
-        });
-      }
-    })
+    // result axios or query string으로 URL 연결
   },[]);
   
   const curationPageIsOpen = useSelector((state) => state.recommendPageInfo.curationPageIsOpen);

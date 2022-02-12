@@ -20,7 +20,6 @@ export function firebaseInit() {
 
 export function getFirebaseAuth(func) {
   getAuth().onAuthStateChanged(function(user){
-    console.log(user);
     if (user) {
       user.getIdToken(true).then(func).catch(function(error) {
         console.log(error);

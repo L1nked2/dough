@@ -5,10 +5,10 @@ export const changeName = (name) => {
     };
 };
 
-export const changeProfileImg = (file, previewURL) => {
+export const changeProfileImg = (previewURL) => {
     return {
         type: 'CHANGE_PROFILE_IMG',
-        payload: {imgFile: file, imgPreviewURL: previewURL}
+        payload: previewURL
     };
 };
 

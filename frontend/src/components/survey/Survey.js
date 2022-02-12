@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from 'axios';
 import { sumScore, changeScore, nextPage, previousPage, reset } from "../../actions/survey";
 import { setCluster } from "../../actions/userInfo";
+import { firebaseInit, getFirebaseAuth } from "../../firebaseInit";
 
 import { survey_preview, survey_loading, survey } from '../../data/imgPath';
 
@@ -13,6 +14,8 @@ import BackButton from "../icon/Back";
 
 import "./Survey.css"
 import { Link, useHistory } from "react-router-dom";
+
+firebaseInit();
 
 function Survey() {
   const scores = useSelector((state) => state.survey.scores);
@@ -116,14 +119,14 @@ function PostSurvey(props) {
   let history = useHistory();
   const dispatch = props.dispatch;
   const scores = useSelector((state) => state.survey.scores);
-  const getCluster = async () => { 
+  const getCluster = async (userToken) => { 
     const res = await axios({
       method: 'POST',
       url: 'https://dough-survey.web.app/api/survey',
       headers: {
           "Content-Type": `application/json`
       },
-      data: {userToken: '', surveyResult: scores},
+      data: {userToken: userToken, surveyResult: scores},
     }).then(response => {
       console.log(response);
       for (let i = 0; i < scores.length; i++) {
@@ -136,8 +139,8 @@ function PostSurvey(props) {
     });
   }
   if (props.isActive) {
-    // axios post scores
-    getCluster();
+    getFirebaseAuth(getCluster); // 런칭용 코드
+    // getCluster("") // 개발용 코드
     setTimeout(() => {
       dispatch(reset());
       history.replace('/survey/result');

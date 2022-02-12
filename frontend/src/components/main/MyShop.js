@@ -54,6 +54,8 @@ function MyShop(props) {
     document.body.style.overflow = 'hidden';
   };
 
+  const cluster = useSelector(state => state.userInfo.cluster);
+
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
   const currCategory = useSelector((state) => state.homePageInfo.currCategory);
 
@@ -86,33 +88,34 @@ function MyShop(props) {
   }
   useEffect(() => {
     if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
-      getFirebaseAuth(getPlaceList);
+      getFirebaseAuth(getPlaceList); // 런칭용 코드
+      // getPlaceList(""); // 개발용 코드
     }
   },[]);
 
   
   // 취향 테스트 결과 없는 경우
-  // if (!testResult) {
-  //   return(
-  //     <div className="myShop">
-  //       <div className="myShopHeader">
-  //         <span id="myShop">내 취향 가게</span>
-  //       </div>
-  //       <nav className="shopCategory">
-  //         <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
-  //         <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
-  //         <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
-  //       </nav>
-  //       <div className="noResult">
-  //         <div>아직 약속장소 취향 테스트를</div>
-  //         <div>하지 않았습니다.</div>
-  //         <div>내 취향에 맞는 가게가 궁금하다면,</div>
-  //         <div>아래 버튼을 눌러주세요 :)</div>
-  //         <span>취향테스트 시작하기</span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (cluster < 0) {
+    return(
+      <div className="myShop">
+        <div className="myShopHeader">
+          <span id="myShop">내 취향 가게</span>
+        </div>
+        <nav className="shopCategory">
+          <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
+          <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
+          <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
+        </nav>
+        <div className="noResult">
+          <div>아직 약속장소 취향 테스트를</div>
+          <div>하지 않았습니다.</div>
+          <div>내 취향에 맞는 가게가 궁금하다면,</div>
+          <div>아래 버튼을 눌러주세요 :)</div>
+          <span>취향테스트 시작하기</span>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="myShop">
