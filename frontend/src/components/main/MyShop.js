@@ -102,11 +102,11 @@ function MyShop(props) {
           <span id="myShop">내 취향 가게</span>
         </div>
         <nav className="shopCategory">
-          <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
-          <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
-          <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
+          <div className={currCategory==='food' ? "active" : ""} onClick={changeRestaurant}>음식점</div>
+          <div className={currCategory==='cafe' ? "active" : ""} onClick={changeCafe}>카페</div>
+          <div className={currCategory==='drink' ? "active" : ""} onClick={changeBar}>술집</div>
         </nav>
-        <div className="noResult">
+        <div className="noResult" onClick={()=>{window.location.href = '/survey'}}>
           <div>아직 약속장소 취향 테스트를</div>
           <div>하지 않았습니다.</div>
           <div>내 취향에 맞는 가게가 궁금하다면,</div>

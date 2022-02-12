@@ -139,8 +139,8 @@ function PostSurvey(props) {
     });
   }
   if (props.isActive) {
-    getFirebaseAuth(getCluster); // 런칭용 코드
-    // getCluster("") // 개발용 코드
+    // getFirebaseAuth(getCluster); // 런칭용 코드
+    getCluster("") // 개발용 코드
     setTimeout(() => {
       dispatch(reset());
       history.replace('/survey/result');

@@ -40,7 +40,6 @@ function Profile(props) {
   }
 
   const userName = useSelector(state => state.userInfo.name);
-  const imgFile = useSelector(state => state.userInfo.imgFile);
   const imgPreviewURL = useSelector(state => state.userInfo.imgPreviewURL);
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
@@ -106,7 +105,7 @@ function Profile(props) {
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
-        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?imgFile===''?sampleImage:imgPreviewURL:unknown_profile_icon})`}} /></div>
+        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?imgPreviewURL===''?sampleImage:imgPreviewURL:unknown_profile_icon})`}} /></div>
         <div className="text">
           <div className="name">{isLogin?userName:"unknown"}</div>
           {isLogin && <div className="profileChange" onClick={()=>{openModal(setProfileChangeModalIsOpen)}}>프로필 편집</div>}
