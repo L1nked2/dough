@@ -1,9 +1,12 @@
 import React, {useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
+import axios from 'axios';
+
 import './Profile.css';
 import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
 import { changeName, changeProfileImg } from "../actions/userInfo";
+import { firebaseInit, getFirebaseAuth } from "../firebaseInit";
 
 import Header from '../components/common/Header';
 import Navbar from '../components/common/Navbar';
@@ -15,6 +18,8 @@ import Chevron from '../components/icon/Chevron';
 import sampleImage from "../img/login_background.png";
 import { customer_center, info_icon, unknown_profile_icon } from '../data/imgPath';
 import BackButton from '../components/icon/Back';
+
+firebaseInit();
 
 function Profile(props) {
   const dispatch = useDispatch();
@@ -39,6 +44,25 @@ function Profile(props) {
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
   const isLogin = true;
+
+  const getUserInfo = async (userToken) => { 
+    const res = await axios({
+        method: 'POST',
+        url: 'https://dough-survey.web.app/api/info/user',
+        headers: {
+            "Content-Type": `application/json`
+        },
+        data: {userToken: userToken},
+    }).then(response => {
+        console.log(response.data);
+    }).catch(err => {
+        console.log(err);
+    });
+  }
+  useEffect (() => {
+    getFirebaseAuth(getUserInfo);
+  }, []);
+
   return (
     <div className="profilePage">
       <CSSTransition in={retestModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>

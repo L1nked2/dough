@@ -3,7 +3,7 @@ import { CSSTransition } from "react-transition-group";
 import axios from 'axios';
 
 import { getAuth } from 'firebase/auth';
-import { firebaseInit } from "../../firebaseInit";
+import { firebaseInit, getFirebaseAuth } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
 import MoreShop from '../main/MoreShop';
@@ -65,14 +65,14 @@ function MyShop(props) {
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
 
-  const getPlaceList = async () => { 
+  const getPlaceList = async (userToken) => { 
     const res = await axios({
         method: 'POST',
         url: 'https://dough-survey.web.app/api/info/station',
         headers: {
             "Content-Type": `application/json`
         },
-        data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', category: "음식점", page: "0" ,tags: []},
+        data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: userToken, category: "음식점", page: "0" ,tags: []},
     }).then(response => {
         console.log(response);
         dispatch(changeContent('food', response.data.stationInfo.place_list));
@@ -85,19 +85,9 @@ function MyShop(props) {
       
   }
   useEffect(() => {
-    // getAuth().onAuthStateChanged(function(user){
-    //   if (user) {
-    //     console.log("MyShop.js");
-    //     user.getIdToken(true).then(function(idToken) {
-          
-          if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
-            getPlaceList();
-          }
-    //     }).catch(function(error) {
-    //       console.log(error);
-    //     });
-    //   }
-    // })
+    if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
+      getFirebaseAuth(getPlaceList);
+    }
   },[]);
 
   
