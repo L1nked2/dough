@@ -3,7 +3,7 @@ const initialState = {
     name: '신혜영',
     imgFile: '', 
     imgPreviewURL: '',
-    myType: '주택가 레스토랑',
+    myType: '주택가 레스토랑', // 삭제 예정
     cluster: -1,
     currentList: [],
 }

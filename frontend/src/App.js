@@ -15,7 +15,7 @@ import './App.css';
 import Survey from './components/survey/Survey';
 import Result from './pages/Result' ;
 import { useSelector, useDispatch } from 'react-redux';
-import { likeChange} from './actions/homePageInfo';
+import { likeChange } from './actions/homePageInfo';
 import { CSSTransition } from "react-transition-group";
 import ShopModal from './pages/Shop';
 
@@ -42,7 +42,7 @@ function App() {
       }
       // 임시로 home page에 있는 리스트에만 like 변경을 하는 코드(다른 페이지에선 like 변경 제대로 작동 안함) 
       // place api에서 호출할 때 like가 바뀌도록 데이터 설정해야함
-      dispatch(likeChange(currCategory, shopPageContent.place_uuid)); 
+      dispatch(likeChange(currCategory, shopPageContent.place_uuid, shopPageContent.place_likes)); 
       postList();
     }
   },[shopPageIsOpen]);

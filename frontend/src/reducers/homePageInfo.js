@@ -63,7 +63,7 @@ function homePageReducer (state = initialState, action) {
                     tempDrinkStateList: action.payload.tempDrinkStateList,
                     initializedList: true}
         case "SET_SHOP_PAGE_CONTENTS":
-            return {...state, shopPageContent: {...action.payload, prevLike: action.payload.place_likes}}
+            return {...state, shopPageContent: {...action.payload }}
         case "APPLY_FOOD_LIST":
             return {...state, tempFoodStateList: action.payload}
         case "APPLY_CAFE_LIST":
@@ -77,19 +77,19 @@ function homePageReducer (state = initialState, action) {
                 case "food":
                     var list = state.foodPlaceList.map((place) => {
                         if (place.place_uuid !== action.payload.uuid) {return place;}
-                        else {return {...place, place_likes: !place.place_likes}}
+                        else {return {...place, place_likes: action.payload.like}}
                     });
                     return {...state, foodPlaceList: list}
                 case "cafe":
                     var list = state.cafePlaceList.map((place) => {
                         if (place.place_uuid !== action.payload.uuid) {return place;}
-                        else {return {...place, place_likes: !place.place_likes}}
+                        else {return {...place, place_likes: action.payload.like}}
                     });
                     return {...state, cafePlaceList: list}
                 case "drink":
                     var list = state.drinkPlaceList.map((place) => {
                         if (place.place_uuid !== action.payload.uuid) {return place;}
-                        else {return {...place, place_likes: !place.place_likes}}
+                        else {return {...place, place_likes: action.payload.like}}
                     });
                     return {...state, drinkPlaceList: list}
             }

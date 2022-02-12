@@ -7,12 +7,12 @@ import userFavoritesReducer from "./userFavoritesReducer";
 
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage/session";
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["userInfo"]
+    whitelist: ["userInfo", "homePageInfo"] // local storage에 저장 --> 추후 api로 받아오는 것으로 변경할 예정
 };
 
 const allReducers = combineReducers({
