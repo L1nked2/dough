@@ -9,6 +9,7 @@ import FavoriteStationPage from './pages/FavoriteStationPage/FavoriteStationPage
 import Profile from './pages/Profile';
 import Login from './pages/Login' ;
 import Oauth from './pages/Oauth' ;
+import Shop from './pages/SeveralShop' ;
 
 import './App.css';
 import Survey from './components/survey/Survey';
@@ -59,6 +60,7 @@ function App() {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/survey" component={Survey} />
             <Route exact path="/survey/result" component={Result} />
+            <Route path="/shop/:stationId/:uuid" component={Shop} />
             <Route exact path="/favorite_main" component={FavoriteMainPage} />
             <Route path="/login/callback/kakao" component={Oauth} />
             <Route exact path="/favorite_station/:stationUUID/:placeCategory" component={FavoriteStationPage}/>
