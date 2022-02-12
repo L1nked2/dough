@@ -61,6 +61,17 @@ app.post("/api/account/:action", (req, res) => {
     if (action === "") {
         res.send(`not implemented ${action}`);
     }
+    else if (action === "deleteUser") {
+        try {
+            (0, auth_1.deleteUser)(req).then((uid) => {
+                res.send(`successfully deleted ${uid}`);
+            });
+        }
+        catch (e) {
+            const error = e;
+            res.send(`delete user failed ${error.message}`);
+        }
+    }
 });
 // getInfo routes, provide test data
 app.get("/api/info/:infoType", (req, res) => {

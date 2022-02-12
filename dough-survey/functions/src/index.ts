@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import express = require("express");
-import {kakaoLogin} from "./auth";
+import {kakaoLogin, deleteUser} from "./auth";
 import {getInfo} from "./dataLoader";
 import {submitSurvey, updateFavorites} from "./userPreference";
 import cors from "cors";
@@ -41,6 +41,15 @@ app.post("/api/account/:action", (req, res) => {
   const action = req.params.action;
   if (action === "") {
     res.send(`not implemented ${action}`);
+  } else if (action === "deleteUser") {
+    try {
+      deleteUser(req).then((uid) => {
+        res.send(`successfully deleted ${uid}`);
+      });
+    } catch (e) {
+      const error = e as Error;
+      res.send(`delete user failed ${error.message}`);
+    }
   }
 });
 

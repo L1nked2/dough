@@ -25,6 +25,7 @@ const firebaseAdmin = __importStar(require("firebase-admin"));
 const userPreference_1 = require("./userPreference");
 const data_1 = require("./data");
 const db = firebaseAdmin.firestore();
+const auth = firebaseAdmin.auth();
 const ELEMENT_PER_PAGE = 30;
 const CLUSTER_NUM = 8;
 /**
@@ -122,7 +123,10 @@ exports.getInfoBase = getInfoBase;
 async function getUserInfo(req) {
     try {
         const userId = await getUserId(req.body.userToken);
+        const userProfile = await auth.getUser(userId);
         const userInfo = await getInfoBase("user", userId);
+        userInfo.user_name = userProfile.displayName;
+        userInfo.user_photo_url = userProfile.photoURL;
         console.log(`getUserInfo: ${userId}`);
         return { userInfo: userInfo };
     }
