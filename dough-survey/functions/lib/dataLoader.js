@@ -170,9 +170,11 @@ async function getStationInfo(req) {
             const stationPageInfo = await getInfoBase("station", `${stationId}_${category}_${i}`);
             stationTotalInfo.place_list.concat(stationPageInfo.place_list);
         }
-        stationTotalInfo.place_list = await filterByTag(stationTotalInfo.place_list, tags);
-        stationTotalInfo.place_list = await sortByPriority(stationTotalInfo.place_list, clusterA, doBlockShuffle);
-        stationTotalInfo.place_list = stationTotalInfo.place_list.slice(page * ELEMENT_PER_PAGE, (page + 1) * ELEMENT_PER_PAGE);
+        if (stationTotalInfo.place_list.length > 0) {
+            stationTotalInfo.place_list = await filterByTag(stationTotalInfo.place_list, tags);
+            stationTotalInfo.place_list = await sortByPriority(stationTotalInfo.place_list, clusterA, doBlockShuffle);
+            stationTotalInfo.place_list = stationTotalInfo.place_list.slice(page * ELEMENT_PER_PAGE, (page + 1) * ELEMENT_PER_PAGE);
+        }
         return { stationInfo: stationTotalInfo };
     }
     catch (error) {
