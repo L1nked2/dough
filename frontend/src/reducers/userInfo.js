@@ -1,7 +1,6 @@
 const initialState = {
     testResult: {},
     name: '신혜영',
-    imgFile: '', 
     imgPreviewURL: '',
     myType: '주택가 레스토랑', // 삭제 예정
     cluster: -1,
@@ -13,7 +12,7 @@ function userInfoReducer (state = initialState, action) {
         case "CHANGE_NAME":
             return {...state, name: action.payload}
         case "CHANGE_PROFILE_IMG":
-            return {...state, imgFile: action.payload.imgFile, imgPreviewURL: action.payload.imgPreviewURL}
+            return {...state, imgPreviewURL: action.payload}
         case "REFRESH_RESULT":
             return {...state, testResult: action.payload}
         case "SET_CLUSTER":

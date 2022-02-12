@@ -8,6 +8,7 @@ import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
 import { changeName, changeProfileImg } from "../actions/userInfo";
 import { firebaseInit, getFirebaseAuth } from "../firebaseInit";
 
+import ClipLoader from "react-spinners/ClipLoader";
 import Header from '../components/common/Header';
 import Navbar from '../components/common/Navbar';
 import NoLogin from '../components/common/NoLogin';
@@ -39,12 +40,12 @@ function Profile(props) {
   }
 
   const userName = useSelector(state => state.userInfo.name);
-  const imgFile = useSelector(state => state.userInfo.imgFile);
   const imgPreviewURL = useSelector(state => state.userInfo.imgPreviewURL);
   const cluster = useSelector(state => state.userInfo.cluster);
   const currentList = useSelector(state => state.userInfo.currentList);
-  const isLogin = true;
 
+  const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const getUserInfo = async (userToken) => { 
     const res = await axios({
         method: 'POST',
@@ -55,15 +56,27 @@ function Profile(props) {
         data: {userToken: userToken},
     }).then(response => {
         console.log(response.data);
+        dispatch(changeName(response.data.userInfo.user_name));
+        dispatch(changeProfileImg(response.data.userInfo.user_photo_url));
+        setIsLoading(false);
+        setIsLogin(true);
     }).catch(err => {
         console.log(err);
     });
   }
   useEffect (() => {
+    // 런칭용 코드
     getFirebaseAuth(getUserInfo);
+
+    // 개발용 코드
+    // dispatch(changeName("신혜영"));
+    // dispatch(changeProfileImg(sampleImage));
+    // setIsLoading(false);
+    // setIsLogin(true);
   }, []);
 
   return (
+    isLoading ? <div style={{width:"100%", height:"100vh", display:"flex", justifyContent:"center", alignItems:"center"}}><ClipLoader/></div> : 
     <div className="profilePage">
       <CSSTransition in={retestModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
         <ModalTemplate header="테스트 다시하기"
@@ -92,7 +105,7 @@ function Profile(props) {
 
       <Header className="profile" settingFunc={()=>{openModal(setSettingPageIsOpen)}}/>
       <div className="individual">
-        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?imgFile===''?sampleImage:imgPreviewURL:unknown_profile_icon})`}} /></div>
+        <div className="profileImage" ><div style={{backgroundImage: `url(${isLogin?imgPreviewURL===''?sampleImage:imgPreviewURL:unknown_profile_icon})`}} /></div>
         <div className="text">
           <div className="name">{isLogin?userName:"unknown"}</div>
           {isLogin && <div className="profileChange" onClick={()=>{openModal(setProfileChangeModalIsOpen)}}>프로필 편집</div>}
@@ -159,7 +172,6 @@ function ProfileChangePage (props) {
 
   const dispatch = useDispatch();
   const userName = useSelector(state => state.userInfo.name);
-  const imgFile = useSelector(state => state.userInfo.imgFile);
   const imgPreviewURL = useSelector(state => state.userInfo.imgPreviewURL);
 
   const [isEnter, setIsEnter] = useState(false);
@@ -179,7 +191,7 @@ function ProfileChangePage (props) {
   }
   function enterName() {
     if (document.getElementById('_name').value !== ''){
-      dispatch(changeName(document.getElementById('_name').value))
+      dispatch(changeName(document.getElementById('_name').value));
     }
     else{
       document.getElementById('_name').value = userName;
@@ -196,7 +208,7 @@ function ProfileChangePage (props) {
   function onLoadFile (file) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      dispatch(changeProfileImg(file, reader.result));
+      dispatch(changeProfileImg(reader.result));
     }
     reader.readAsDataURL(file);
     setProfileImgModalIsOpen(false);
@@ -242,7 +254,7 @@ function ProfileChangePage (props) {
       </div>
       <div className="content">
         <div className="profileImage" style={{opacity: isEnter?"0":"1"}}>
-          <div style={{backgroundImage: `url(${imgFile===''?sampleImage:imgPreviewURL})`}} onClick={()=>{setProfileImgModalIsOpen(true)}}/>
+          <div style={{backgroundImage: `url(${imgPreviewURL===''?sampleImage:imgPreviewURL})`}} onClick={()=>{setProfileImgModalIsOpen(true)}}/>
         </div>
         <div className="name" onClick={inputName} style={{top: isEnter?"50%":"120%"}}>
           <input id="_name" type="text" defaultValue={userName} placeholder={userName} autoComplete="off" onKeyUp={enterkey}/>
@@ -273,6 +285,21 @@ function SettingPage (props) {
       closeModal();
     }
   }
+  const deleteUser = async (userToken) => { 
+    const res = await axios({
+        method: 'POST',
+        url: 'https://dough-survey.web.app/api/account/deleteUser',
+        headers: {
+            "Content-Type": `application/json`
+        },
+        data: {userToken: userToken},
+    }).then(response => {
+        console.log(response.data);
+        setResignModalIsOpen(false);
+    }).catch(err => {
+        console.log(err);
+    });
+  }
   return (
     <div className="settingPage">
       <CSSTransition in={logoutModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -290,7 +317,7 @@ function SettingPage (props) {
                                   {"정말로 탈퇴하시겠습니까?\n탈퇴하시면 이전의 데이터 모두 삭제됩니다."}
                                 </div>}
                        closeFunc={()=>{setResignModalIsOpen(false)}}
-                       applyFunc={()=>{setResignModalIsOpen(false)}}
+                       applyFunc={()=>{getFirebaseAuth(deleteUser)}}
                        applyButton="탈퇴하기"/>
       </CSSTransition>
       
