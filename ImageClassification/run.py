@@ -17,7 +17,7 @@ def parse():
     parser.add_argument('-e', '--epochs', type=int, default=100, help='Number of epochs')
     parser.add_argument('-c', '--classes', type=int, default=8, help='Number of classes')
     parser.add_argument('-l', '--lr', type=float, default=0.1, help='Learning rate')
-    parser.add_argument('-t', '--test-size', type=int, default=50, help='Size of test dataset')
+    parser.add_argument('-t', '--test-size', type=int, default=1, help='Size of test dataset')
     parser.add_argument('-p', '--path', type=str, default='./data', help='Train part module is in utils dir')
     parser.add_argument('-d', '--dropout-rate', type=float, default=1e-7, help='Dropout rate to tune')
     parser.add_argument('-w', '--weight-decay', type=float, default=1e-9, help='Weight decay constant')

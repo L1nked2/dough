@@ -128,12 +128,12 @@ class DoughDataset(data.Dataset):
         img = plt.imread(img_path)
         img = self.transform(img)
         color = self.colors[idx]
-        # change if csv changes
-        # print(self.annotation)
-        # print(img_path)
-        # print(self.annotation[self.annotation['Name']==img_path[7:43]])
-        index = self.annotation.index[self.annotation['Name']==img_path[7:43]].tolist()[0] # label = self.annotation[self.annotation['hash']==img_path[8:44]].iloc[0, 2]
-        name = self.annotation[self.annotation['Name']==img_path[7:43]].iloc[0, 0]
+        
+        # img_path : ./data/ffff32fe-5606-5d94-8e17-14c2374e880b/i10.jpg
+        # uuid : ffff32fe-5606-5d94-8e17-14c2374e880b
+        uuid = img_path.split("/")[2]
+        index = self.annotation.index[self.annotation['Name']==uuid].tolist()[0]
+        name = self.annotation[self.annotation['Name']==uuid].iloc[0, 0]
         label = self.annotation.iloc[index, 1]
         hot_label = [0] * self.args.classes
         hot_label[label] = 1
