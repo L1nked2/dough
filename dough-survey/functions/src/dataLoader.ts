@@ -5,6 +5,7 @@ import {updateRecent} from "./userPreference";
 import {priority_cluster_a} from "./data";
 
 const db = firebaseAdmin.firestore();
+const auth = firebaseAdmin.auth();
 const ELEMENT_PER_PAGE = 30;
 const CLUSTER_NUM = 8;
 
@@ -93,7 +94,10 @@ async function getInfoBase(infotype: string, id:string): Promise<any> {
 async function getUserInfo(req: Request) {
   try {
     const userId = await getUserId(req.body.userToken);
+    const userProfile = await auth.getUser(userId);
     const userInfo = await getInfoBase("user", userId);
+    userInfo.user_name = userProfile.displayName;
+    userInfo.user_photo_url = userProfile.photoURL;
     console.log(`getUserInfo: ${userId}`);
     return {userInfo: userInfo};
   } catch (error) {
@@ -135,12 +139,14 @@ async function getStationInfo(req: Request): Promise<any> {
         await getInfoBase("station", `${stationId}_${category}_${i}`);
       stationTotalInfo.place_list.concat(stationPageInfo.place_list);
     }
-    stationTotalInfo.place_list = await filterByTag(
-        stationTotalInfo.place_list, tags);
-    stationTotalInfo.place_list = await sortByPriority(
-        stationTotalInfo.place_list, clusterA, doBlockShuffle);
-    stationTotalInfo.place_list = stationTotalInfo.place_list.slice(
-        page*ELEMENT_PER_PAGE, (page+1)*ELEMENT_PER_PAGE);
+    if (stationTotalInfo.place_list.length > 0) {
+      stationTotalInfo.place_list = await filterByTag(
+          stationTotalInfo.place_list, tags);
+      stationTotalInfo.place_list = await sortByPriority(
+          stationTotalInfo.place_list, clusterA, doBlockShuffle);
+      stationTotalInfo.place_list = stationTotalInfo.place_list.slice(
+          page*ELEMENT_PER_PAGE, (page+1)*ELEMENT_PER_PAGE);
+    }
     return {stationInfo: stationTotalInfo};
   } catch (error) {
     console.log(error);
