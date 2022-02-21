@@ -12,7 +12,8 @@
 
 (3) configure variables in `main.py` and execute
   (3-1) configuring directory paths in our server machine
-        : execute `sudo mount /dev/sdb /media/k` first.
+        : execute `sudo mount /dev/sdb /media/k` 
+	  execute `sudo mount /dev/sdc /media/k2`
 
 (4) depending on your purpose,
 	`python main.py --execution_kind {crawl, upload, update_station, update_cluster}`
