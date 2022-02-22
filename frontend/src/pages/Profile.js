@@ -6,7 +6,7 @@ import axios from 'axios';
 import './Profile.css';
 import { openShopPage, setShopPageContents } from "../actions/homePageInfo";
 import { changeName, changeProfileImg } from "../actions/userInfo";
-import { firebaseInit, getFirebaseAuth } from "../firebaseInit";
+import { firebaseInit, getFirebaseAuth, logout } from "../firebaseInit";
 
 import ClipLoader from "react-spinners/ClipLoader";
 import Header from '../components/common/Header';
@@ -66,7 +66,7 @@ function Profile(props) {
   }
   useEffect (() => {
     // 런칭용 코드
-    getFirebaseAuth(getUserInfo);
+    setIsLogin(getFirebaseAuth(getUserInfo));
 
     // 개발용 코드
     // dispatch(changeName("신혜영"));
@@ -295,7 +295,6 @@ function SettingPage (props) {
         data: {userToken: userToken},
     }).then(response => {
         console.log(response.data);
-        setResignModalIsOpen(false);
     }).catch(err => {
         console.log(err);
     });
@@ -308,7 +307,7 @@ function SettingPage (props) {
                                   {"정말로 로그아웃하시겠습니까?\n맞으시면 로그아웃 버튼을 눌러주세요."}
                                 </div>}
                        closeFunc={()=>{setLogoutModalIsOpen(false)}}
-                       applyFunc={()=>{setLogoutModalIsOpen(false)}}
+                       applyFunc={()=>{logout();setLogoutModalIsOpen(false)}}
                        applyButton="로그아웃"/>
       </CSSTransition>
       <CSSTransition in={resignModalIsOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
@@ -317,7 +316,7 @@ function SettingPage (props) {
                                   {"정말로 탈퇴하시겠습니까?\n탈퇴하시면 이전의 데이터 모두 삭제됩니다."}
                                 </div>}
                        closeFunc={()=>{setResignModalIsOpen(false)}}
-                       applyFunc={()=>{getFirebaseAuth(deleteUser)}}
+                       applyFunc={()=>{getFirebaseAuth(deleteUser);setResignModalIsOpen(false);}}
                        applyButton="탈퇴하기"/>
       </CSSTransition>
       

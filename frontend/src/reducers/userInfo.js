@@ -19,6 +19,8 @@ function userInfoReducer (state = initialState, action) {
             return {...state, cluster: action.payload}
         case "APPEND_CURRENT_SHOP":
             return {...state, currentList: [action.payload, ...state.currentList.filter(shop=>shop.place_uuid !== action.payload.place_uuid).slice(0,9)]}
+        case "INITIALIZE_USER_INFO":
+            return {...initialState}
         default:
             return state
     }

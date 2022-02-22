@@ -32,3 +32,9 @@ export const appendCurrentShop = (uuid) => {
         payload: uuid
     };
 };
+
+export const initializeUserInfo = () => {
+    return {
+        type: 'INITIALIZE_USER_INFO'
+    }
+}
