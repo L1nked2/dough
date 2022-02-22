@@ -10,18 +10,18 @@ Functions
   update_cluster
 """
 
+from email.mime import image
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud.firestore_v1 import transaction
 from google.oauth2 import service_account
 from firebase_admin import firestore
-from google.cloud import storage
+import boto3 #from google.cloud import storage
 import os 
 import dill, pickle
 import requests
 
 from firebase_document import PlaceDocument, StationDocument
-
 
 """
 FireStore(DB)
@@ -45,8 +45,9 @@ class DB_and_CDN:
     initialize interfaces to Firebase DB and CDN with credentials.
     """
     def __init__(self, 
-        bucket_root_url='dough-survey.appspot.com',
-        certificate_file='./service-account.json'):
+        certificate_file='./service-account.json',
+        naver_cloud_secret_key_file='./naver_cloud_secret_key'
+        ):
 
         # create credentials and intialize firebase_admin
         firebase_cred = credentials.Certificate(certificate_file)
@@ -66,10 +67,15 @@ class DB_and_CDN:
         self._db_user_collection = self._db.collection('user_db')
         self._db_post_collection = self._db.collection('post_db')
 
-        # create interfaces to CDN
-        self._cdn = storage.Client(credentials=google_cred) # CDN (= storage)
-        self._bucket_root_url = bucket_root_url
-        self._cdn_root_url = f'https://storage.googleapis.com/{bucket_root_url}/'
+        # create interfaces to NaverCloud CDN
+        service_name = 's3'
+        endpoint_url = 'https://kr.object.ncloudstorage.com'
+        access_key = 'Eh08eVeDmki73GchREuJ'
+        secret_key = open(naver_cloud_secret_key_file).read().rstrip("\n")
+        self._cdn = boto3.client(service_name, endpoint_url=endpoint_url, 
+            aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+        self._bucket_name = "dough-test-bucket"
+        self._cdn_root_url = f"https://kr.object.ncloudstorage.com/{self._bucket_name}/"
 
         # info about station_db
         self._MAX_NUM_PLACES_PER_STATION_AND_CATEGORY = 300 # e.g. at most 300 places for "강남역 맛집"
@@ -177,8 +183,7 @@ class DB_and_CDN:
         # 0. path to store on CDN
         photo_file_name = photo_local_path.split("/")[-1] # e.g. f2.jpg
         assert photo_file_name.endswith(".jpg")
-        path_to_store_on_CDN = f'restaurant_images/{place_id}/{photo_file_name}'
-
+     
         # try to open the file on local path
         filename_to_upload = photo_local_path
         
@@ -196,11 +201,10 @@ class DB_and_CDN:
                 f.write(response.content)
 
         # upload the photo on CDN and return CDN link
-        bucket = self._cdn.get_bucket(self._bucket_root_url)
-        blob = bucket.blob(path_to_store_on_CDN)
-        blob.upload_from_filename(filename_to_upload)
-
-        CDN_link = self._cdn_root_url + path_to_store_on_CDN
+        image_file_object_name = f'{place_id}/{photo_file_name}'
+        self._cdn.upload_file(filename_to_upload, self._bucket_name, image_file_object_name, 
+            ExtraArgs={'ACL': 'public-read'})
+        CDN_link = self._cdn_root_url + image_file_object_name
 
         return CDN_link
 

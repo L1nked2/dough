@@ -149,3 +149,6 @@ __pycache__/
 
 # pickel
 *.pkl
+
+# naver cloud api secret key
+naver_cloud_api_secret_key
