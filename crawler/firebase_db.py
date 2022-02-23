@@ -124,14 +124,33 @@ class DB_and_CDN:
         assert len(same_place_docs) == 0 or len(same_place_docs) == 1, \
             "document for one place must not exist or only one exists"
         
-        if len(same_place_docs) == 1: # document for current place already exists 
-                                      # -> update parent_station_list
-            place_doc_ref = same_place_docs[0].reference
+        if len(same_place_docs) == 1: 
+            same_place_doc = same_place_docs[0]
+            place_doc_ref = same_place_doc.reference
+            
+            # document for current place already exists
+            # -> update parent_station_List
             DB_and_CDN._add_parent_station(self._db_transaction, 
                 place_doc_ref, current_parent_station)
+            
+            # Check if this place has been already uploaded to firebase DB
+            # before we change the CDN from firebase storage to naver cloud storage.
+            # Then change the links of photos.
+            existing_photo_links = same_place_doc._data['place_main_photo_list'] \
+                + same_place_doc._data['place_provided_photo_list'] \
+                + same_place_doc._data['place_food_photo_list'] \
+                + same_place_doc._data['place_inside_photo_list'] \
+                + same_place_doc._data['place_menu_photo_list']
+            has_naver_cloud_link = any(('kr.object.ncloudstorage.com' in photo_link for photo_link in existing_photo_links)) 
+            if not has_naver_cloud_link:
+                self._upload_photos_and_replace_link(place_doc)
+                place_doc._parent_station = place_doc_ref.get()._data['parent_station_list'][0]
+                self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
+
         else: # no document for current place on placedb -> create new one & upload photos
             self._upload_photos_and_replace_link(place_doc)
             self._db_place_collection.document(place_doc.get_uuid()).set(place_doc.into_dict())
+
 
     """
     transaction of
