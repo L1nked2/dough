@@ -10,7 +10,6 @@ Functions
   update_cluster
 """
 
-from email.mime import image
 import firebase_admin
 from firebase_admin import credentials
 from google.cloud.firestore_v1 import transaction
@@ -20,6 +19,7 @@ import boto3 #from google.cloud import storage
 import os 
 import dill, pickle
 import requests
+from collections import defaultdict
 
 from firebase_document import PlaceDocument, StationDocument
 
@@ -283,6 +283,55 @@ class DB_and_CDN:
         else:
             print(f"no document with name {place_uuid} exists in place_db")
 
+    """
+    new_photo_link_maps:
+        UUIDs -> (Links -> {food, inside, trash})
+    """
+    def update_food_inside_photo_lists(self, new_photo_link_maps: \
+            dict[str, dict[str, str]]):
+        for uuid in new_photo_link_maps:
+            link_to_kind = new_photo_link_maps[uuid] # each link to {food, inside, trash}
+            
+            # inverse the dictionary
+            kind_to_link = defaultdict(list)
+            for link in link_to_kind:
+                kind = link_to_kind[link]
+                kind_to_link[kind].append(link)
+            assert all(kind in {"food", "inside", "trash"} for kind in kind_to_link)
+
+            # update photo_lists
+            # No concurrent acces to SAME place document will be committed.
+            place_doc_ref = self._db_place_collection.document(uuid)
+            place_dict = place_doc_ref.get().to_dict()
+            place_dict['place_food_photo_list'] = kind_to_link['food']
+            place_dict['place_inside_photo_list'] = kind_to_link['inside']
+            place_dict['place_trash_photo_list'] = kind_to_link['trash']
+            place_doc_ref.set(place_dict)
+
+    """
+    new_photo_link_maps:
+        UUIDs -> ({[provided, food, inside} -> (Links -> Boolean))
+        # Boolean represe. is a thumbnail or not
+    """
+    def update_main_photo_lists(self, new_photo_link_maps : \
+            dict[str, dict[str, dict[str, str]]]):
+        for uuid in new_photo_link_maps:
+            # get thumbnail(=main) photo lists
+            new_place_main_photo_list = []
+            kind_to_map = new_photo_link_maps[uuid] # {food, inside} -> (Links -> Boolean)
+            for kind in kind_to_map:
+                assert kind in {"provided", "food", "inside"}
+                link_to_is_thumbnail = kind_to_map[kind] # Links -> Boolean
+                for link in link_to_is_thumbnail:
+                    if link_to_is_thumbnail[link]:
+                        new_place_main_photo_list.append(link)
+            # update
+            # No concurrent acces to SAME place document will be committed.
+            place_doc_ref = self._db_place_collection.document(uuid)
+            place_dict = place_doc_ref.get().to_dict()
+            place_dict['place_main_photo_list'] = new_place_main_photo_list
+            place_doc_ref.set(place_dict)
+
 
 def convert_documents_and_upload_to_db(stations_to_upload : str, db_dir_path: str,  photo_dir_path : str, category_to_tag_table_dir_path : str):
     
@@ -338,3 +387,15 @@ def update_cluster(cluster_result_path : str):
         assigned_cluster = cluster_result[place_uuid]
         print(place_uuid)
         db_cdn.update_place_cluster(place_uuid, assigned_cluster)
+
+
+def update_place_inside_photo_lists(new_photo_link_maps_path : str):
+    db_cdn = DB_and_CDN()
+    new_photo_link_maps: dict[str, dict[str, str]] = pickle.load(open(new_photo_link_maps_path, 'rb'))
+    db_cdn.update_food_inside_photo_lists(new_photo_link_maps)
+
+
+def update_main_photo_lists(new_photo_link_maps_path : str):
+    db_cdn = DB_and_CDN()
+    new_photo_link_maps: dict[str, dict[str, dict[str, str]]] = pickle.load(open(new_photo_link_maps_path, 'rb'))
+    db_cdn.update_main_photo_lists(new_photo_link_maps)
