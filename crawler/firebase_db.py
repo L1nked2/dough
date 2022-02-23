@@ -70,11 +70,11 @@ class DB_and_CDN:
         # create interfaces to NaverCloud CDN
         service_name = 's3'
         endpoint_url = 'https://kr.object.ncloudstorage.com'
-        access_key = 'Eh08eVeDmki73GchREuJ'
+        access_key = 'LoVhG4P2Gx7IEp5GJmzJ'
         secret_key = open(naver_cloud_secret_key_file).read().rstrip("\n")
         self._cdn = boto3.client(service_name, endpoint_url=endpoint_url, 
             aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-        self._bucket_name = "dough-test-bucket"
+        self._bucket_name = "dough-photos"
         self._cdn_root_url = f"https://kr.object.ncloudstorage.com/{self._bucket_name}/"
 
         # info about station_db
@@ -141,7 +141,8 @@ class DB_and_CDN:
                 + same_place_doc._data['place_food_photo_list'] \
                 + same_place_doc._data['place_inside_photo_list'] \
                 + same_place_doc._data['place_menu_photo_list']
-            has_naver_cloud_link = any(('kr.object.ncloudstorage.com' in photo_link for photo_link in existing_photo_links)) 
+            has_naver_cloud_link = any(('kr.object.ncloudstorage.com/dough-photos' \
+                    in photo_link for photo_link in existing_photo_links)) 
             if not has_naver_cloud_link:
                 self._upload_photos_and_replace_link(place_doc)
                 place_doc._parent_station = place_doc_ref.get()._data['parent_station_list'][0]
