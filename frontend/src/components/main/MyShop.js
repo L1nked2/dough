@@ -3,7 +3,7 @@ import { CSSTransition } from "react-transition-group";
 import axios from 'axios';
 
 import { getAuth } from 'firebase/auth';
-import { firebaseInit } from "../../firebaseInit";
+import { firebaseInit, getFirebaseAuth } from "../../firebaseInit";
 
 import SlideImages from '../common/SlideImages';
 import MoreShop from '../main/MoreShop';
@@ -54,10 +54,11 @@ function MyShop(props) {
     document.body.style.overflow = 'hidden';
   };
 
+  const cluster = useSelector(state => state.userInfo.cluster);
+  const [isLogin, setIsLogin] = useState(false);
+
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
   const currCategory = useSelector((state) => state.homePageInfo.currCategory);
-  const shopPageIsOpen = useSelector((state) => state.homePageInfo.shopPageIsOpen);
-  const shopPageContent = useSelector((state) => state.homePageInfo.shopPageContent);
 
   const stateFood = useSelector((state) => state.homePageInfo.tempFoodStateList);
   const stateCafe = useSelector((state) => state.homePageInfo.tempCafeStateList);
@@ -67,19 +68,19 @@ function MyShop(props) {
   const cafePlaceList = useSelector(state => state.homePageInfo.cafePlaceList);
   const drinkPlaceList = useSelector(state => state.homePageInfo.drinkPlaceList);
 
-  const getPlaceList = async () => { 
+  const getPlaceList = async (userToken) => { 
     const res = await axios({
         method: 'POST',
         url: 'https://dough-survey.web.app/api/info/station',
         headers: {
             "Content-Type": `application/json`
         },
-        data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', category: "음식점", page: "0" ,tags: []},
+        data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: userToken, category: "음식점", page: "0" ,tags: []},
     }).then(response => {
         console.log(response);
-        dispatch(changeContent('food', indexing(response.data.stationInfo.place_list,[11, 14, 18, 22, 23, 34, 36, 40, 45, 57, 58, 68, 70])));
-        dispatch(changeContent('cafe', indexing(response.data.stationInfo.place_list,[3, 16, 17, 21, 28, 29, 35, 39, 56, 59, 67, 69])));
-        dispatch(changeContent('drink', indexing(response.data.stationInfo.place_list,[8, 12, 14, 20, 33, 38, 41, 42, 46, 48, 50, 61])));
+        dispatch(changeContent('food', response.data.stationInfo.place_list));
+        dispatch(changeContent('cafe', response.data.stationInfo.place_list));
+        dispatch(changeContent('drink', response.data.stationInfo.place_list));
         return response.data;
       }).catch(err => {
         console.log(err);
@@ -87,66 +88,41 @@ function MyShop(props) {
       
   }
   useEffect(() => {
-    // getAuth().onAuthStateChanged(function(user){
-    //   if (user) {
-    //     console.log("MyShop.js");
-    //     user.getIdToken(true).then(function(idToken) {
-          
-          if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
-            getPlaceList();
-          }
-    //     }).catch(function(error) {
-    //       console.log(error);
-    //     });
-    //   }
-    // })
+    if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
+      getFirebaseAuth(getPlaceList); // 런칭용 코드
+      // getPlaceList(""); // 개발용 코드
+    }
+    setIsLogin(getFirebaseAuth());
   },[]);
 
-  useEffect (() => {
-    if (!shopPageIsOpen && shopPageContent) {
-      const postList = async () => { 
-        const res = await axios({
-            method: 'POST',
-            url: 'https://dough-survey.web.app/api/favorites',
-            headers: {
-                "Content-Type": `application/json`
-            },
-            data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', action: shopPageContent.place_likes?"add":"delete", placeId: shopPageContent.place_uuid},
-        }).then(response => {
-            console.log(response);
-        }).catch(err => {
-            console.log(err);
-        });
-      }
-      console.log(shopPageContent, shopPageContent.prevLike, shopPageContent.place_likes);
-      if (shopPageContent.prevLike !== shopPageContent.place_likes){
-          postList();
-          dispatch(likeChange(currCategory, shopPageContent.place_uuid));
-      }
-    }
-  },[shopPageIsOpen]);
+  
   // 취향 테스트 결과 없는 경우
-  // if (!testResult) {
-  //   return(
-  //     <div className="myShop">
-  //       <div className="myShopHeader">
-  //         <span id="myShop">내 취향 가게</span>
-  //       </div>
-  //       <nav className="shopCategory">
-  //         <div className={slideCategory[0] ? "active" : ""} onClick={changeRestaurant}>음식점</div>
-  //         <div className={slideCategory[1] ? "active" : ""} onClick={changeCafe}>카페</div>
-  //         <div className={slideCategory[2] ? "active" : ""} onClick={changeBar}>술집</div>
-  //       </nav>
-  //       <div className="noResult">
-  //         <div>아직 약속장소 취향 테스트를</div>
-  //         <div>하지 않았습니다.</div>
-  //         <div>내 취향에 맞는 가게가 궁금하다면,</div>
-  //         <div>아래 버튼을 눌러주세요 :)</div>
-  //         <span>취향테스트 시작하기</span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!isLogin || cluster < 0) {
+    return(
+      <div className="myShop">
+        <div className="myShopHeader">
+          <span id="myShop">내 취향 가게</span>
+        </div>
+        <nav className="shopCategory">
+          <div className={currCategory==='food' ? "active" : ""} onClick={changeRestaurant}>음식점</div>
+          <div className={currCategory==='cafe' ? "active" : ""} onClick={changeCafe}>카페</div>
+          <div className={currCategory==='drink' ? "active" : ""} onClick={changeBar}>술집</div>
+        </nav>
+        <div className="noResult" onClick={()=>{window.location.href = !isLogin?'/':'/survey'}}>
+          {!isLogin ? <>
+            <div>아직 약속장소 취향 테스트를</div>
+            <div>하지 않았습니다.</div>
+            <div>내 취향에 맞는 가게가 궁금하다면,</div>
+            <div>아래 버튼을 눌러주세요 :)</div>
+            <span>취향테스트 시작하기</span> </>:<>
+            <div>로그인 정보가 없어 다른 정보를</div>
+            <div>불러올 수 없습니다.</div>
+            <span>로그인 하러 가기</span> </>
+          }
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="myShop">

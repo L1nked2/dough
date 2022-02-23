@@ -1,3 +1,17 @@
+export const changeName = (name) => {
+    return {
+        type: 'CHANGE_NAME',
+        payload: name
+    };
+};
+
+export const changeProfileImg = (previewURL) => {
+    return {
+        type: 'CHANGE_PROFILE_IMG',
+        payload: previewURL
+    };
+};
+
 export const refreshResult = (result) => {
     return {
         type: 'REFRESH_RESULT',
@@ -18,3 +32,9 @@ export const appendCurrentShop = (uuid) => {
         payload: uuid
     };
 };
+
+export const initializeUserInfo = () => {
+    return {
+        type: 'INITIALIZE_USER_INFO'
+    }
+}

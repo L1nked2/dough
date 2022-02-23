@@ -32,7 +32,7 @@
     margin-top: 1.1055em;
   
     background-color: white;
-    border-radius: 0.737em;
+    border-radius: 1.2em;
   }
   
   
@@ -41,7 +41,7 @@
     display: -webkit-flex;
     justify-content: space-between;
     -webkit-justify-content: space-between;
-    padding: 1.053em 0.526em;
+    padding: 1.3em 0.526em;
     margin: 0 1.053em;
     font-size: 1.4em;
     font-family: "SpoqaMedium";

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert2';
 import './Shop.css';
-import { closeShopPage, tempLikeChange } from '../actions/homePageInfo';
-import { appendCurrentShop } from '../actions/userInfo';
 import CallModal from '../components/main/CallModal';
+import ClipLoader from "react-spinners/ClipLoader";
 import { CSSTransition } from 'react-transition-group';
 
 import { info_icon } from '../data/imgPath';
@@ -33,14 +33,14 @@ import SwiperCore, {
 import ImageSlideShow from '../components/main/ImageSlideShow';
 import ExpandIcon2 from '../components/icon/Expand2';
 
-function ShopModal() {
+function Shop () {
+    const {stationId, uuid} = useParams();
     SwiperCore.use([Navigation]);
     
-    const shopPageContent = useSelector(state => state.homePageInfo.shopPageContent);
-    const dispatch = useDispatch();
+    const [shopPageContent, setShopPageContent] = useState({});
 
     function clickLike () {
-        dispatch(tempLikeChange(!shopPageContent.place_likes));
+        setShopPageContent({...shopPageContent, place_likes: !shopPageContent.place_likes});
     }
     function copyLink () {
         const shareURL = document.createElement('textarea');
@@ -64,7 +64,10 @@ function ShopModal() {
         });
         shareURL.remove();
     }
-
+    function goHome() {
+        window.location.href = "/home";
+    }
+    
     const menuContent = useRef(null);
     const eachMenu = useRef(null);
     const [menuHeight, setMenuHeight] = useState(0)
@@ -87,14 +90,15 @@ function ShopModal() {
         if (!timeFold){setTimeHeight(timeContent.current.scrollHeight);}
     },[timeFold])
 
-    const closePage = () => {
-        dispatch(appendCurrentShop(shopPageContent));
-        dispatch(closeShopPage());
-        document.body.style.overflow = 'unset';
-    };
-    const goBack = () => {
-        window.history.back();
-    }
+    const [galleryType, setGalleryType] = useState("store");
+    const [gallery, setGallery] = useState([]);
+    useEffect(() => {
+        // axios 
+        if (galleryType === "store"){setGallery(shopPageContent.place_provided_photo_list);}
+        else if (galleryType === "inside"){setGallery(shopPageContent.place_inside_photo_list);}
+        else if (galleryType === "food"){setGallery(shopPageContent.place_food_photo_list);}
+    }, [galleryType]);
+
     useEffect (() => {
         const getPlaceDB = async () => { 
             const res = await axios({
@@ -103,36 +107,33 @@ function ShopModal() {
                 headers: {
                     "Content-Type": `application/json`
                 },
-                data: {stationId: "cd853a8d-3376-55fb-858c-0d2bfa16aa48", userToken: '', placeId: shopPageContent.place_uuid},
+                data: {stationId: stationId, userToken: '', placeId: uuid},
             }).then(response => {
                 console.log(response.data);
+                setGallery(response.data.placeInfo.place_provided_photo_list);
+                setShopPageContent(response.data.placeInfo);
             }).catch(err => {
                 console.log(err);
             });
         }
         getPlaceDB(); // 추후에 firebase 속도가 빨라지면 uuid만 갖고 open한 뒤 여기에서 shopPageContent를 받아와 저장할 예정
-        if(eachTime.current){setTimeHeight(eachTime.current.scrollHeight);}
-        if(eachMenu.current){setMenuHeight(eachMenu.current.scrollHeight * 3);}
-        setStyleDropdown({left: distance.current.offsetLeft,
-                          paddingTop: distance.current.scrollHeight,
-                          minWidth: distance.current.scrollWidth+2,});
-        window.history.pushState({page: "shop_modal"}, "shop_modal");
     }, []);
+    
+    useEffect (() => {
+        if (Object.keys(shopPageContent).length !== 0){
+            setTimeHeight(eachTime.current.scrollHeight);
+            setMenuHeight(eachMenu.current.scrollHeight * 3);
+            setStyleDropdown({left: distance.current.offsetLeft,
+                              paddingTop: distance.current.scrollHeight,
+                              minWidth: distance.current.scrollWidth+2,});
+        }
+    }, [shopPageContent]);
 
     const [isCallModalOpen, setIsCallModalOpen] = useState(false);
     function openCallModal () {
         setIsCallModalOpen(true);
         document.body.style.overflow = 'hidden';
     }
-
-    const [galleryType, setGalleryType] = useState("store");
-    const [gallery, setGallery] = useState(shopPageContent.place_provided_photo_list);
-    useEffect(() => {
-        // axios 
-        if (galleryType === "store"){setGallery(shopPageContent.place_provided_photo_list);}
-        else if (galleryType === "inside"){setGallery(shopPageContent.place_inside_photo_list);}
-        else if (galleryType === "food"){setGallery(shopPageContent.place_food_photo_list);}
-    }, [galleryType]);
 
     const [isPhotoOpen, setIsPhotoOpen] = useState(false);
     const [photoSlide, setPhotoSlide] = useState(null);
@@ -168,11 +169,10 @@ function ShopModal() {
         if (isPhotoOpen) {
             setIsPhotoOpen(false);
         }
-        else {
-            closePage();
-        }
     }
-    return (<>
+    return (Object.keys(shopPageContent).length===0 ? 
+        <div style={{width:"100%", height:"100vh", display:"flex", justifyContent:"center", alignItems:"center"}}><ClipLoader/></div> : 
+        <>
         <CSSTransition in={isPhotoOpen} unmountOnExit classNames="fadeOverlay" timeout={{enter: 200, exit: 200}}>
             <ImageSlideShow imgList={photoSlide} title={photoSlideTitle} index={photoSlideIndex} closeFunc={()=>{setIsPhotoOpen(false)}}/>
         </CSSTransition>
@@ -185,7 +185,7 @@ function ShopModal() {
                 centeredSlides={true} spaceBetween={10} className='shopSwiper'>
                 <SwiperSlide className={`mainContent`}>
                     <div className="subHeader">
-                        <div onClick={() => {goBack()}} className="backButton">
+                        <div className="backButton" onClick={goHome}>
                             <BackButton width={15} color={"rgba(0,0,0,0.9)"}/>
                         </div>
                     </div>
@@ -332,4 +332,4 @@ function ShopModal() {
     );
 }
 
-export default ShopModal;
+export default Shop;

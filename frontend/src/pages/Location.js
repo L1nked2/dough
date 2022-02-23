@@ -12,15 +12,28 @@ function LocationModal(props) {
     const [tempCurrLoc, setTempCurrLoc] = useState(currLocation.name);
     const [mainNav, setMainNav] = useState("지하철 노선");
     const [stationRangeNav, setStationRangeNav] = useState(currLocation.range === "none" ? "1호선~4호선" : currLocation.range);
-    const stationRange = {"1호선~4호선": ["1호선", "2호선", "3호선", "4호선"],
-                          "5호선~9호선": ["5호선", "6호선", "7호선", "8호선", "9호선"],
-                          "기타": ["None"]};
+    const stationRange = {'1호선~4호선': ['1호선', '2호선', '3호선', '4호선'],
+                          '5호선~9호선': ['5호선', '6호선', '7호선', '8호선', '9호선'],
+                          '기타': [['경강선', '경의중앙선', '경춘선', '공항철도', '김포골드'], ['서해선', '수인분당선', '신분당선', '에버라인'], ['우의신설선', '의정부선', '인천1호선', '인천2호선']]};
+    const [spellRangeNav, setSpellRangeNav] = useState(currLocation.spell === "none" ? "ㄱㄴㄷㄹ" : currLocation.spell);
+    const spellRange = {'ㄱㄴㄷㄹ':['ㄱ','ㄴ','ㄷ','ㄹ'],
+                        'ㅁㅂㅅ': ['ㅁ','ㅂ','ㅅ'],
+                        'ㅇㅈㅊㅋ': ['ㅇ','ㅈ','ㅊ','ㅋ'],
+                        'ㅌㅍㅎ': ['ㅌ','ㅍ','ㅎ']};
     const [stationLineNav, setStationLineNav] = useState(currLocation.line === "none" ? stationRange[stationRangeNav][0] : currLocation.line);
 
-    function changeRange (key) {
+   function changeRange (key) {
         if (key !== stationRangeNav){
             setStationRangeNav(key);
-            setStationLineNav(stationRange[key][0]);
+            if (key === '기타'){setStationLineNav(stationRange[key][0][0]);}
+            else {setStationLineNav(stationRange[key][0]);}
+            setSpellRangeNav('ㄱㄴㄷㄹ');
+        }
+    } 
+    function changeLine (line){
+        if (line !== stationLineNav){
+            setStationLineNav(line);
+            setSpellRangeNav('ㄱㄴㄷㄹ');
         }
     }
     function changeStation (station) {
@@ -33,7 +46,7 @@ function LocationModal(props) {
     }
 
     function changeCurrLocation () {
-        dispatch(changeLocation(tempCurrLoc, stationLineNav, stationRangeNav));
+        dispatch(changeLocation(tempCurrLoc, stationLineNav, spellRangeNav ,stationRangeNav));
         if (tempCurrLoc !== currLocation.name) {
             goBack();
         }
@@ -45,15 +58,13 @@ function LocationModal(props) {
     };
     const goBack = () => {
         window.history.back();
-        closePage();
     }
     useEffect (() => {
         window.history.pushState({page: "location_modal"}, "location_modal");
-        window.addEventListener("popstate",closePage);
-        return () => {
-            window.removeEventListener("popstate",closePage);
-        }
     }, []);
+    window.onpopstate = function () {
+        closePage();
+    }
 
     return (
         <div className="locationPage">
@@ -74,15 +85,32 @@ function LocationModal(props) {
                     <div className={stationRangeNav === "5호선~9호선" ? "active" : ""} onClick={()=>changeRange("5호선~9호선")}>5호선~9호선</div>
                     <div className={stationRangeNav === "기타" ? "active" : ""} onClick={()=>changeRange("기타")}>기타</div>
                 </nav>
-                <nav className="stationLine">
-                    {stationRange[stationRangeNav].map((key)=>{
-                        return <div className={stationLineNav === key ? "active" : ""} onClick={()=>{setStationLineNav(key)}} key={key}>{key}</div>
-                    })}
+                <nav className={`stationLine ${stationRangeNav==="기타"?"oor":""}`}>
+                    {stationRangeNav!=="기타" ?
+                        stationRange[stationRangeNav].map((line)=>{
+                            return <div className={stationLineNav === line ? "active" : ""} onClick={()=>{changeLine(line)}} key={line}>{line}</div>
+                        }) : 
+                        stationRange[stationRangeNav].map((column)=>{
+                            return <div key={column}>
+                                        {column.map((line)=>{
+                                            return <div className={stationLineNav === line ? "active" : ""} onClick={()=>{changeLine(line)}} key={line}>{line}</div>
+                                        })} 
+                                   </div>
+                        })
+                    }
                 </nav>
+                {stationRangeNav!=="기타" && 
+                <nav className={`stationLine ${stationRangeNav==="기타"?"oor":""}`}>
+                    <div className={spellRangeNav === "ㄱㄴㄷㄹ" ? "active" : ""} onClick={()=>setSpellRangeNav("ㄱㄴㄷㄹ")}>ㄱㄴㄷㄹ</div>
+                    <div className={spellRangeNav === "ㅁㅂㅅ" ? "active" : ""} onClick={()=>setSpellRangeNav("ㅁㅂㅅ")}>ㅁㅂㅅ</div>
+                    <div className={spellRangeNav === "ㅇㅈㅊㅋ" ? "active" : ""} onClick={()=>setSpellRangeNav("ㅇㅈㅊㅋ")}>ㅇㅈㅊㅋ</div>
+                    <div className={spellRangeNav === "ㅌㅍㅎ" ? "active" : ""} onClick={()=>setSpellRangeNav("ㅌㅍㅎ")}>ㅌㅍㅎ</div>
+                </nav>
+                }
                 <div className="station" >
                     {Object.entries(stationDictionary[stationLineNav]).map((list) => {
-                        if (list[1].length !== 0) {
-                            return <div className="spellStation">
+                        if (list[1].length !== 0 && (stationRangeNav==='기타' || spellRange[spellRangeNav].includes(list[0]))) {
+                            return <div className="spellStation" key={list}>
                                 {list[1].map((station, index)=>{
                                     return <div onClick={()=>{changeStation(station)}} key={index}
                                                 className={`eachStation ${tempCurrLoc === station ? "active" : ""}`}>{station}</div>

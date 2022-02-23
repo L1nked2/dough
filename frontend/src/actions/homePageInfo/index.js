@@ -1,7 +1,7 @@
-export const changeLocation = (name, line, range) => {
+export const changeLocation = (name, line, spell, range) => {
     return {
         type: 'CHANGE_LOCATION',
-        payload: {name: name, line: line, range: range}
+        payload: {name: name, line: line, spell:spell, range: range}
     };
 };
 export const changeContent = (category, list) => {
@@ -92,12 +92,12 @@ export const applyDrinkList = (list) => {
 export const tempLikeChange = (like) => {
     return {
         type: 'TEMP_LIKE_CHANGE',
-        payload: 1-like
+        payload: like
     };
 };
-export const likeChange = (category, uuid) => {
+export const likeChange = (category, uuid, like) => {
     return {
         type: 'LIKE_CHANGE',
-        payload: {category: category, uuid: uuid}
+        payload: {category: category, uuid: uuid, like: like}
     };
 };
