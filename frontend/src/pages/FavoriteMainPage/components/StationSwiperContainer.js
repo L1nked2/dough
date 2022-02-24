@@ -28,6 +28,9 @@ function StationSwiperContainer(props){
       />);
   }
 
+  // sort in ASCII order
+  stationBoxList.sort( (stationBoxA, stationBoxB) =>  -(stationBoxA.stationName < stationBoxB.stationName))
+
   // dirty trick for equal height between multiple rows
   // since flex does not support it 
   // reference : https://stackoverflow.com/questions/36004926/equal-height-rows-in-a-flex-container
