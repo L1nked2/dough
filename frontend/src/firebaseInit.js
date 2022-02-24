@@ -20,7 +20,7 @@ export function firebaseInit() {
     const analytics = getAnalytics(app);
 };
 
-export function getFirebaseAuth(func = null) {
+export function getFirebaseAuth(func = null, noUserFunc = null) {
   getAuth().onAuthStateChanged(function(user){
     if (user) {
       user.getIdToken(true).then(func).catch(function(error) {
@@ -28,7 +28,10 @@ export function getFirebaseAuth(func = null) {
       });
       return true;
     }
-    else { return false; }
+    else { 
+      noUserFunc();
+      return false; 
+    }
   })
 }
 

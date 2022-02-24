@@ -110,7 +110,7 @@ function ShopModal() {
                 console.log(err);
             });
         }
-        getPlaceDB(); // 추후에 firebase 속도가 빨라지면 uuid만 갖고 open한 뒤 여기에서 shopPageContent를 받아와 저장할 예정
+        getPlaceDB(); // 추후에 axios 속도가 빨라지면 uuid만 갖고 open한 뒤 여기에서 shopPageContent를 받아와 저장할 예정
         if(eachTime.current){setTimeHeight(eachTime.current.scrollHeight);}
         if(eachMenu.current){setMenuHeight(eachMenu.current.scrollHeight * 3);}
         setStyleDropdown({left: distance.current.offsetLeft,
