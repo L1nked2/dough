@@ -109,7 +109,7 @@ function MyShop(props) {
           <div className={currCategory==='drink' ? "active" : ""} onClick={changeBar}>술집</div>
         </nav>
         <div className="noResult" onClick={()=>{window.location.href = !isLogin?'/':'/survey'}}>
-          {!isLogin ? <>
+          {isLogin ? <>
             <div>아직 약속장소 취향 테스트를</div>
             <div>하지 않았습니다.</div>
             <div>내 취향에 맞는 가게가 궁금하다면,</div>
