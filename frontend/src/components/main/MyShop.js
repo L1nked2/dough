@@ -14,7 +14,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { openLocationPage, openMenuModal, changeContent, changeCurrentCategory, likeChange, setShopPageContents} from '../../actions/homePageInfo';
+import { openLocationPage, openMenuModal, changeContent, changeCurrentCategory, initializeHomePageInfo } from '../../actions/homePageInfo';
 
 firebaseInit();
 
@@ -57,6 +57,7 @@ function MyShop(props) {
 
   const cluster = useSelector(state => state.userInfo.cluster);
   const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const currLocation = useSelector((state) => state.homePageInfo.currLocation);
   const currCategory = useSelector((state) => state.homePageInfo.currCategory);
@@ -82,16 +83,21 @@ function MyShop(props) {
         dispatch(changeContent('food', response.data.stationInfo.place_list));
         dispatch(changeContent('cafe', response.data.stationInfo.place_list));
         dispatch(changeContent('drink', response.data.stationInfo.place_list));
+        setIsLoading(false);
+        setIsLogin(true);
         return response.data;
       }).catch(err => {
         console.log(err);
       });
       
+  } 
+  function noUserFunc () {
+    setIsLoading(false);
+    dispatch(initializeHomePageInfo());
   }
   useEffect(() => {
-    getFirebaseAuth(getPlaceList); // 런칭용 코드
+    setIsLogin(getFirebaseAuth(getPlaceList, noUserFunc)); // 런칭용 코드
     // getPlaceList(""); // 개발용 코드
-    setIsLogin(getFirebaseAuth());
   },[]);
 
   

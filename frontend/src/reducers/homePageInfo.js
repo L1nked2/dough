@@ -93,6 +93,8 @@ function homePageReducer (state = initialState, action) {
                     });
                     return {...state, drinkPlaceList: list}
             }
+        case "INITIALIZE_HOME_PAGE_INFO":
+            return {...initialState}
         default:
             return state
     }

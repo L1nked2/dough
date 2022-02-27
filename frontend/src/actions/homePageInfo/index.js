@@ -101,3 +101,8 @@ export const likeChange = (category, uuid, like) => {
         payload: {category: category, uuid: uuid, like: like}
     };
 };
+export const initializeHomePageInfo = () => {
+    return {
+        type: 'INITIALIZE_HOME_PAGE_INFO'
+    }
+}
