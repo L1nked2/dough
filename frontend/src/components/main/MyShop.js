@@ -10,6 +10,7 @@ import MoreShop from '../main/MoreShop';
 import MenuModal from '../main/MenuModal';
 
 import MapIcon from '../icon/Map';
+import ClipLoader from "react-spinners/ClipLoader";
 
 import './MyShop.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -88,17 +89,15 @@ function MyShop(props) {
       
   }
   useEffect(() => {
-    if(foodPlaceList.length === 0 || cafePlaceList.length === 0 || drinkPlaceList.length === 0){
-      getFirebaseAuth(getPlaceList); // 런칭용 코드
-      // getPlaceList(""); // 개발용 코드
-    }
+    getFirebaseAuth(getPlaceList); // 런칭용 코드
+    // getPlaceList(""); // 개발용 코드
     setIsLogin(getFirebaseAuth());
   },[]);
 
   
-  // 취향 테스트 결과 없는 경우
-  if (!isLogin || cluster < 0) {
-    return(
+  return (
+    isLoading ? <div style={{width:"100%", height:"100vh", display:"flex", justifyContent:"center", alignItems:"center"}}><ClipLoader/></div> :
+    !isLogin || cluster < 0 ? 
       <div className="myShop">
         <div className="myShopHeader">
           <span id="myShop">내 취향 가게</span>
@@ -121,10 +120,7 @@ function MyShop(props) {
           }
         </div>
       </div>
-    );
-  }
-  
-  return (
+    :
     <div className="myShop">
       <div className="myShopHeader">
         <span id="myShop">내 취향 가게</span>
