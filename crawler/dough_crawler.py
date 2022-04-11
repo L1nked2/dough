@@ -293,7 +293,11 @@ class DoughCrawler:
         place_db['parent_station_list'] = [self.naver_station_name]
         place_db['place_last_timestamp'] = datetime.date.today().isoformat()
         place_db['place_uuid'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, link))
-        place_db['place_time'] = res['previewImages'][-1]['modDate']
+
+        try :
+            place_db['place_time'] = res['previewImages'][-1]['modDate']
+        except :
+            place_db['place_time'] = None
 
 
         # make directory for images
@@ -387,7 +391,7 @@ class DoughCrawler:
             place_menu_info=[],
             place_naver_link=None,
 
-	    place_reviews=None.
+	    place_reviews=None,
             place_time=None,
 
             place_main_photo_list=[],
@@ -411,9 +415,9 @@ class DoughCrawler:
         for link in self.place_link_list:
             try:
                 validity = self._get_place_info_naver_basic(link)
-                if validity:
-                    self._get_place_info_naver_photo(link, relations='food')
-                    self._get_place_info_naver_photo(link, relations='inside')
+                # if validity:
+                    # self._get_place_info_naver_photo(link, relations='food')
+                    # self._get_place_info_naver_photo(link, relations='inside')
             except TypeError:
                 self.crawler_msg(f'type error occurred while getting place_info_naver, {link}')
                 continue

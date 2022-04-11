@@ -1,7 +1,7 @@
 anyio==3.5.0
 attrs==21.4.0
 boto3==1.6.19
-botocore==1.9.23
+botocore
 CacheControl==0.12.10
 cachetools==4.2.4
 certifi==2021.10.8
@@ -41,7 +41,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyparsing==3.0.6
 pytest==6.2.5
-python-dateutil==2.6.1
+python-dateutil
 pytz==2021.3
 requests==2.26.0
 rfc3986==1.5.0
