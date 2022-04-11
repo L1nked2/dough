@@ -11,7 +11,7 @@ WHAT FUNCTION IS API?
 (3) Request query (음식점 id) to graphql_url => (유저들이 찍어놓은 음식/내부 사진) list
 (4) Convert the collected data to our DB's format, in `firestore_lib.py`
 """
-  
+
 import time
 import copy
 import os
@@ -49,6 +49,7 @@ parse_table_naver = dict(
     phone='place_telephone',
     x='place_coor_x',
     y='place_coor_y',
+    reviewCount='place_reviews'
 )
 
 
@@ -292,6 +293,8 @@ class DoughCrawler:
         place_db['parent_station_list'] = [self.naver_station_name]
         place_db['place_last_timestamp'] = datetime.date.today().isoformat()
         place_db['place_uuid'] = str(uuid.uuid5(uuid.NAMESPACE_DNS, link))
+        place_db['place_time'] = res['previewImages'][-1]['modDate']
+
 
         # make directory for images
         place_uuid = place_db['place_uuid']
@@ -383,6 +386,9 @@ class DoughCrawler:
             place_kind=None,
             place_menu_info=[],
             place_naver_link=None,
+
+	    place_reviews=None.
+            place_time=None,
 
             place_main_photo_list=[],
             place_provided_photo_list=[],
