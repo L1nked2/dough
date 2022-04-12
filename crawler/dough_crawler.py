@@ -312,8 +312,8 @@ class DoughCrawler:
             os.mkdir(f'{local_path}/thumbnail_food')
 
         # download menu, provided images
-        self._download_photo(place_db, 'menu')
-        self._download_photo(place_db, 'provided')
+        # self._download_photo(place_db, 'menu')
+        # self._download_photo(place_db, 'provided')
         
         return True
 
@@ -371,7 +371,7 @@ class DoughCrawler:
         self.current_place_db[f'place_{relations}_photo_list'] = img_links
 
         # download images
-        self._download_photo(self.current_place_db, relations)
+        # self._download_photo(self.current_place_db, relations)
         return
 
     def get_place_info_naver(self):
